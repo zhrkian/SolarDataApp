@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import s from './App.css'
 
 export default class App extends Component {
   props: {
@@ -8,7 +9,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className={s.container}>
         {this.props.children}
       </div>
     );

@@ -2,6 +2,8 @@
 
 body {
   position: relative;
+  margin: 0;
+  padding: 0;
   color: white;
   height: 100vh;
   background-color: #232C39;
@@ -10,21 +12,21 @@ body {
   overflow-y: hidden;
 }
 
-h2 {
-  margin: 0;
-  font-size: 2.25rem;
-  font-weight: bold;
-  letter-spacing: -.025em;
-  color: #fff;
-}
+/*h2 {*/
+  /*margin: 0;*/
+  /*font-size: 2.25rem;*/
+  /*font-weight: bold;*/
+  /*letter-spacing: -.025em;*/
+  /*color: #fff;*/
+/*}*/
 
-p {
-  font-size: 24px;
-}
+/*p {*/
+  /*font-size: 24px;*/
+/*}*/
 
-li {
-  list-style: none;
-}
+/*li {*/
+  /*list-style: none;*/
+/*}*/
 
 a {
   color: white;
@@ -32,8 +34,8 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
-}
+/*a:hover {*/
+  /*opacity: 1;*/
+  /*text-decoration: none;*/
+  /*cursor: pointer;*/
+/*}*/
