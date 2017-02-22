@@ -25,7 +25,9 @@
     "package-win": "npm run build && build --win --x64",
     "package-linux": "npm run build && build --linux",
     "package-all": "npm run build && build -mwl",
-    "cleanup": "mop -v"
+    "cleanup": "mop -v",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "browserslist": "electron 1.4",
   "build": {
@@ -88,6 +90,7 @@
     "react-hot"
   ],
   "devDependencies": {
+    "@kadira/storybook": "^2.21.0",
     "asar": "^0.13.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -139,10 +142,18 @@
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
     "mocha": "^3.2.0",
+    "postcss-assets": "^4.1.0",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-each": "^0.9.3",
+    "postcss-import": "^9.1.0",
+    "postcss-loader": "^1.2.2",
+    "postcss-mixins": "^5.4.1",
+    "postcss-reporter": "^3.0.0",
     "react-addons-test-utils": "^15.4.2",
     "redux-logger": "^2.7.4",
     "sinon": "^1.17.7",
     "spectron": "^3.4.1",
+    "storybook-addon-material-ui": "^0.7.7",
     "style-loader": "^0.13.1",
     "tcomb": "^3.2.16",
     "url-loader": "^0.5.7",
@@ -155,6 +166,7 @@
   "dependencies": {
     "electron-debug": "^1.1.0",
     "font-awesome": "^4.7.0",
+    "histogramjs": "0.0.1",
     "material-ui": "^0.17.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

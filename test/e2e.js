@@ -2,7 +2,7 @@ import { Application } from 'spectron';
 import { expect } from 'chai';
 import electronPath from 'electron';
 import path from 'path';
-import homeStyles from '../app/components/Home.css';
+import homeStyles from '../app/components/Initial/Home.css';
 import counterStyles from '../app/components/Counter.css';
 
 const delay = time => new Promise(resolve => setTimeout(resolve, time));

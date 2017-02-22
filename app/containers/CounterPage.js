@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Counter from '../components/Counter';
-import * as CounterActions from '../actions/counter';
+import * as ItemActions from '../actions/items';
 
 function mapStateToProps(state) {
   return {
@@ -9,8 +9,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(CounterActions, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+export default connect(mapStateToProps)(Counter);
