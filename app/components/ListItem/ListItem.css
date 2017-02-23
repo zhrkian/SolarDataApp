@@ -1,0 +1,32 @@
+.container {
+    background-color: rgba(0, 1, 127, .7);
+    /*background-image: linear-gradient(45deg, rgba(0, 216, 255, .5) 10%, rgba(0, 1, 127, .7));*/
+    height: 250px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    position: relative;
+}
+
+.body {
+    flex: 0 1 auto;
+    /*margin: 0 0.2em;*/
+}
+
+.footer {
+    flex: 0 0 0;
+    /*padding: 1em 2em;*/
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    margin: -20px;
+    transition: opacity 1s;
+}

@@ -1,14 +1,14 @@
 // @flow
-import { INCREMENT_COUNTER, DECREMENT_COUNTER } from '../actions/items'
+import { ITEMS_UPDATE_ALL } from '../actions/items'
 
-const initialState = {}
+const initialState = {
+  items: []
+}
 
 const items = (state = initialState, action) => {
   switch (action.type) {
-    case INCREMENT_COUNTER:
-      return state + 1
-    case DECREMENT_COUNTER:
-      return state - 1
+    case ITEMS_UPDATE_ALL:
+      return {...state, items: action.items}
     default:
       return state
   }

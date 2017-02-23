@@ -4,8 +4,6 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 import * as itemCreator from '../../utils/item_creator'
 
-//import s from './OpenFITS.css';
-
 const styles = {
   button: {
     margin: 12,
@@ -23,15 +21,8 @@ const styles = {
 };
 
 export default class OpenFITS extends Component {
-  //static contextTypes = {
-  //  router: React.PropTypes.object.isRequired
-  //}
 
-  componentWillMount() {
-
-  }
-
-  onChange = () => itemCreator.getFITSItem(this.fileUpload.files[0])
+  onChange = () => this.props.onOpenFiles(this.fileUpload.files)
 
   render() {
     console.log()
@@ -42,7 +33,7 @@ export default class OpenFITS extends Component {
         style={styles.button}
         containerElement="label"
       >
-        <input type="file" accept=".fits, .fit, .fts, .FTS" style={styles.exampleImageInput} ref={(ref) => this.fileUpload = ref} onChange={this.onChange} />
+        <input type="file" accept=".fits, .fit, .fts, .FTS" style={styles.exampleImageInput} ref={(ref) => this.fileUpload = ref} onChange={this.onChange} multiple />
       </RaisedButton>
     )
   }

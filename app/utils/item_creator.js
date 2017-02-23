@@ -1,3 +1,6 @@
+//http-server -p 3030 --cors
+//In fits folder
+
 const chunkArray =  (array,  n) => {
   if ( !array.length ) return []
   return [ array.slice( 0, n ) ].concat( chunkArray(array.slice(n), n) )
@@ -20,8 +23,8 @@ const setDatePixelColor = (pixel, min, max, minColor, maxColor) => {
 }
 
 const getFrameImage = (frame, width, height) => {
-  const min = Math.min.apply(null, frame)
-  const max = Math.max.apply(null, frame)
+  const min = 0.4 // Math.min.apply(null, frame)
+  const max = 1 //Math.max.apply(null, frame)
   const bufferLength = width * height * 4
   let buffer = new Uint8ClampedArray(bufferLength)
 
@@ -31,9 +34,9 @@ const getFrameImage = (frame, width, height) => {
       let pos = (y * width + x) * 4
       let pixel = setDatePixelColor(frame[framePos], min, max, 0, 255)
 
-      buffer[pos  ] = 0.2989 * pixel
-      buffer[pos+1] = 0.5870 * pixel
-      buffer[pos+2] = 0.1140 * pixel
+      buffer[pos  ] = 1 * pixel
+      buffer[pos+1] = 0.4 * pixel
+      buffer[pos+2] = 0 * pixel
       buffer[pos+3] = 255
 
       framePos += 1
@@ -50,6 +53,14 @@ const getFrameImage = (frame, width, height) => {
   ctx.putImageData(idata, 0, 0)
 
   const dataImageUrl = canvas.toDataURL()
+
+
+  var elem = document.createElement("img");
+  elem.setAttribute("src", dataImageUrl);
+  document.body.appendChild(elem);
+
+
+
   return dataImageUrl
 }
 
@@ -72,6 +83,7 @@ export const getFITSItem = (file, cb) => {
     item.width = data.width
     item.height = data.height
 
-    createFITSImage(FITS_DATA)
+    cb(item)
+    //createFITSImage(FITS_DATA)
   })
 }

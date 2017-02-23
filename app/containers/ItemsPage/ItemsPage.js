@@ -1,31 +1,33 @@
 // @flow
-import React, { Component } from 'react';
-//import Initial from '../../components/Initial/Initial';
-import s from './ItemsPage.css'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import MainLayout from '../../components/Layouts/MainLayout'
+import Items from '../../components/Items/Items'
 
-import OpenFITS from '../../components/OpenFITS/OpenFITS'
+import * as ItemsAction from '../../actions/items'
 
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  gridList: {
-    width: '100%',
-    height: 450,
-    overflowY: 'auto',
-  },
-};
+class ItemsPage extends Component {
+  componentWillMount() {
 
+  }
 
-export default class InitialPage extends Component {
+  onOpenFiles = files => this.props.dispatch(ItemsAction.getItems(files))
+
   render() {
+    const { items } = this.props.items
     return (
-      <div className={s.container}>
-        ITEMS
-        <OpenFITS />
-      </div>
+      <MainLayout>
+        <Items items={items}
+               onOpenFiles={this.onOpenFiles} />
+      </MainLayout>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    items: state.items
+  }
+}
+
+export default connect(mapStateToProps)(ItemsPage)
