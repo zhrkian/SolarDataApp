@@ -2,20 +2,13 @@
 import * as Utils from '../utils'
 import * as FITS from '../utils/item_creator'
 
-export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
-export const DECREMENT_COUNTER = 'DECREMENT_COUNTER';
+import * as Frame from './frames'
+
 export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL';
 
-export function increment() {
-  return {
-    type: INCREMENT_COUNTER
-  };
-}
-
-export function decrement() {
-  return {
-    type: DECREMENT_COUNTER
-  };
+const isFileExist = (file, items) => {
+  const { name, path } = file
+  return items.filter(item => item.url === name || item.url === path)[0]
 }
 
 const getFileInfoPromise = (id, file) =>
@@ -30,6 +23,7 @@ export const getItems = files =>
     let { items } = getState().items
 
     let promises = files.map(file => {
+      if (isFileExist(file, items)) return
       const id = Utils.generatePortId(items)
       items = [{ id, item_thinking: true },...items]
       return getFileInfoPromise(id, file)
@@ -39,8 +33,13 @@ export const getItems = files =>
 
     Promise.all(promises).then(itemsWithInfo => {
       items = items.map(item => {
-        const itemWithInfo = itemsWithInfo.filter(i => i.id === item.id)[0]
-        return itemWithInfo || item
+        const itemWithInfo = itemsWithInfo.filter(i => i && i.id === item.id)[0]
+        if (itemWithInfo) {
+          dispatch(Frame.updateFrameArray(itemWithInfo.id, itemWithInfo.frame))
+          delete itemWithInfo.frame
+          return itemWithInfo
+        }
+        return item
       })
 
 

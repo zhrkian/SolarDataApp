@@ -27,14 +27,25 @@ export default class OpenFITS extends Component {
   render() {
     console.log()
     return (
-      <RaisedButton
-        label="Choose FITS"
-        labelPosition="before"
-        style={styles.button}
-        containerElement="label"
-      >
-        <input type="file" accept=".fits, .fit, .fts, .FTS" style={styles.exampleImageInput} ref={(ref) => this.fileUpload = ref} onChange={this.onChange} multiple />
-      </RaisedButton>
+      <div>
+        <RaisedButton
+          label="Choose FITS"
+          labelPosition="before"
+          style={styles.button}
+          containerElement="label"
+        >
+          <input type="file" accept=".fits, .fit, .fts, .FTS" style={styles.exampleImageInput} ref={(ref) => this.fileUpload = ref} onChange={this.onChange} multiple />
+        </RaisedButton>
+        <RaisedButton
+          label="Cleat FITS List"
+          labelPosition="before"
+          secondary={true}
+          style={styles.button}
+          containerElement="label"
+          onClick={this.props.onClearAll}
+        />
+      </div>
+
     )
   }
 }

@@ -6,7 +6,7 @@ const chunkArray =  (array,  n) => {
   return [ array.slice( 0, n ) ].concat( chunkArray(array.slice(n), n) )
 }
 
-export const createFITSImage = (FITS_DATA, cb) => {
+export const getFITSFrame = (FITS_DATA) => {
   const { header, data } = FITS_DATA
   const bitpix = header.get('BITPIX')
   const bzero = header.get('BZERO')
@@ -14,8 +14,8 @@ export const createFITSImage = (FITS_DATA, cb) => {
   const { buffer } =  data
   const frame = data._getFrame(buffer, bitpix, bzero, bscale)
 
-
-  console.log(getFrameImage(frame, data.width, data.height))
+  return frame
+  //console.log(getFrameImage(frame, data.width, data.height))
 }
 
 const setDatePixelColor = (pixel, min, max, minColor, maxColor) => {
@@ -71,7 +71,7 @@ export const getFITSItem = (file, cb) => {
 
   const url = path || `http://127.0.0.1:3030/${name}`
 
-  let item = {}
+  let item = { url }
 
   new FITS(url, response => {
     const { hdus } = response
@@ -83,7 +83,8 @@ export const getFITSItem = (file, cb) => {
     item.width = data.width
     item.height = data.height
 
+    item.frame = getFITSFrame(FITS_DATA)
+
     cb(item)
-    //createFITSImage(FITS_DATA)
   })
 }

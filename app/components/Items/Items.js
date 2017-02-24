@@ -19,7 +19,7 @@ class Items extends Component {
       <div className={s.container}>
         <h2>Solar Data Application</h2>
         <div className={s.main}>
-          <OpenFITS onOpenFiles={onOpenFiles} />
+          <OpenFITS onOpenFiles={onOpenFiles} onClearAll={() => {}} />
         </div>
         <div className={s.footer}>
           <Grid>
