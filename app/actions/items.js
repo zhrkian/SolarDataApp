@@ -35,16 +35,18 @@ export const getItems = files =>
       items = items.map(item => {
         const itemWithInfo = itemsWithInfo.filter(i => i && i.id === item.id)[0]
         if (itemWithInfo) {
-          dispatch(Frame.updateFrameArray(itemWithInfo.id, itemWithInfo.frame))
+          console.log(itemWithInfo)
+          const { id, frame, image } = itemWithInfo
+          console.log({ id, frame, image })
+          dispatch(Frame.updateFrameArray(id, frame))
+          dispatch(Frame.updateFrameImage(id, image))
+
           delete itemWithInfo.frame
+          delete itemWithInfo.image
           return itemWithInfo
         }
         return item
       })
-
-
-      console.log(items)
-
       setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 1000)
     })
   }

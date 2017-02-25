@@ -1,11 +1,11 @@
 import React from 'react'
 import s from './Spinner.css'
-import RefreshIndicator from 'material-ui/RefreshIndicator'
+import CircularProgress from 'material-ui/CircularProgress'
 
 const Spinner = props =>
   <div className={s.container}>
     <div className={s.spinner} style={props.style || {}}>
-      <RefreshIndicator
+      <CircularProgress
         size={40}
         left={10}
         top={0}

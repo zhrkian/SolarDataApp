@@ -13,7 +13,7 @@ import ListItem from '../ListItem/ListItem'
 //}
 class Items extends Component {
   render() {
-    const { onOpenFiles, items } = this.props
+    const { onOpenFiles, items, frames } = this.props
 
     return (
       <div className={s.container}>
@@ -24,7 +24,7 @@ class Items extends Component {
         <div className={s.footer}>
           <Grid>
             {
-              items.map(item => <ListItem key={item.id} item={item} />)
+              items.map(item => <ListItem key={item.id} item={item} frame={frames[item.id]} />)
             }
           </Grid>
         </div>

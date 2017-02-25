@@ -25,7 +25,6 @@ export default class OpenFITS extends Component {
   onChange = () => this.props.onOpenFiles(this.fileUpload.files)
 
   render() {
-    console.log()
     return (
       <div>
         <RaisedButton

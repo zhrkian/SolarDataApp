@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 import s from './ListItem.css'
 import Paper from 'material-ui/Paper'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -18,25 +19,28 @@ const PaperStyle = {
 }
 
 const ListItem = props => {
-  const { item } = props
+  const { item, frame } = props
+  const { image } = frame || {}
   const { header } = item
   const { item_thinking } = item
   return (
-    <Paper style={PaperStyle} zDepth={3}>
+    <div className={s.container}>
       {
-        item_thinking ? <Spinner style={{backgroundColor: 'white'}}/> : (
-          <div>
-            <div className={s.body}>
-              <img src="http://placehold.it/150x150" />
-            </div>
-            <div className={s.footer}>
-              <p>{header['DATE-OBS'].value} {header['TIME-OBS'].value}</p>
-              {'FOOTER'}
-            </div>
+        item_thinking ? <Spinner /> : (
+        <Link to={`/items/${item.id}`}>
+          <div className={s.body}>
+            <img src={image} style={{width: 'auto', height: '250px'}}/>
           </div>
+          <div className={s.close}>
+            <ActionDelete />
+          </div>
+          <div className={s.footer}>
+            {'FOOTER'}
+          </div>
+        </Link>
         )
       }
-    </Paper>
+    </div>
   )
 }
 
