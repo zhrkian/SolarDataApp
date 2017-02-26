@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 
-import s from './ImageControls.css'
+import s from './DataLevelControls.css'
 
-class ImageControls extends Component {
+class DataLevelControls extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -13,11 +13,11 @@ class ImageControls extends Component {
   }
 
 
-  handleFirstSlider = (event, value) => {
+  handleMinLevel = (event, value) => {
     this.setState({min_value: value});
   }
 
-  handleSecondSlider = (event, value) => {
+  handleMaxLevel = (event, value) => {
     this.setState({max_value: value});
   }
 
@@ -30,7 +30,8 @@ class ImageControls extends Component {
     const { frame_min_value, frame_max_value, min, max } = this.props
     const { min_value, max_value } = this.state
     return (
-      <div>
+      <div className={s.container}>
+        { min_value ? <span>{'The min data value is: '}{min_value.toFixed(3)}</span> : null }
         <Slider
           min={min < 0 ? 0 : min}
           max={max_value}
@@ -38,16 +39,9 @@ class ImageControls extends Component {
           defaultValue={frame_min_value}
           value={min_value}
           onDragStop={this.onDragStop}
-          onChange={this.handleFirstSlider}
+          onChange={this.handleMinLevel}
         />
-        {
-          min_value ? (
-            <p>
-              <span>{'The min level value is: '}</span>
-              <span>{min_value.toFixed(3)}</span>
-            </p>
-          ) : null
-        }
+        { max_value ? <span>{'The max data value is: '}{max_value.toFixed(3)}</span> : null }
         <Slider
           min={min_value}
           max={max}
@@ -55,20 +49,13 @@ class ImageControls extends Component {
           defaultValue={frame_max_value}
           value={max_value}
           onDragStop={this.onDragStop}
-          onChange={this.handleSecondSlider}
+          onChange={this.handleMaxLevel}
         />
-        {
-          max_value ? (
-            <p>
-              <span>{'The max level value is: '}</span>
-              <span>{max_value.toFixed(3)}</span>
-            </p>
-          ) : null
-        }
+
 
       </div>
     )
   }
 }
 
-export default ImageControls
+export default DataLevelControls

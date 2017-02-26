@@ -1,7 +1,9 @@
 // @flow
+import s from './ItemPage.css'
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
+import FontIcon from 'material-ui/FontIcon'
 import MainLayout from '../../components/Layouts/MainLayout'
 import Item from '../../components/Item/Item'
 
@@ -26,6 +28,7 @@ class ItemPage extends Component {
 
   onScaleUpdate = (id, scale) => this.props.dispatch(ItemsAction.updateItemScale(id, scale))
   onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
+  onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
 
   render() {
     if (!this.props.params) {
@@ -47,8 +50,11 @@ class ItemPage extends Component {
               frame={frame}
               onScaleUpdate={this.onScaleUpdate}
               onImageLevelChange={this.onImageLevelChange}
+              onImageRadiusChange={this.onImageRadiusChange}
         />
-        <Link to={`/items`}>BACK</Link>
+        <Link className={s.backLink} to={`/items`}>
+          {'< BACK'}
+        </Link>
       </MainLayout>
     );
   }

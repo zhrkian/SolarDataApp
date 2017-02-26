@@ -78,6 +78,30 @@ export const getFrameImageBuffer = (width, height, min, max, lvl, frame) => {
   return buffer
 }
 
+const modifyImageCenter = header => {
+  header.cards.CRPIX2.value = header.cards.NAXIS2.value - header.cards.CRPIX2.value
+  console.log(header.cards.CRPIX2.value)
+  return header
+}
+
+const modifyRaduis = header => {
+  const { CRVAL1, CRVAL2, NAXIS1 } = header.cards
+  if (!CRVAL1.value) {
+    header.cards.CRVAL1.value = CRVAL2.value || NAXIS1.value / 2
+  }
+  if (!CRVAL2.value) {
+    header.cards.CRVAL2.value = CRVAL1.value || NAXIS1.value / 2
+  }
+  return header
+}
+
+const modifyHeader = header => {
+  header = modifyImageCenter(header)
+  header = modifyRaduis(header)
+
+  return header.cards
+}
+
 export const getFrameImage = item => {
   const { frame, frame_min_value, frame_max_value, width, height, lvl } = item
 
@@ -142,13 +166,16 @@ export const getFITSItem = (file, cb) => {
     const { hdus } = response
 
     const FITS_DATA = hdus[0]
-    const { header, data } = FITS_DATA
+    let { header, data } = FITS_DATA
 
-    header.cards.CRPIX2.value = data.height - header.cards.CRPIX2.value
+    const modifiedHeader = modifyHeader(header)
 
+    console.log(modifiedHeader)
+
+
+    item.header = modifiedHeader
     item.lvl = 100
     item.scale = data.height > 500 ? 1 : 2
-    item.header = header.cards
     item.width = data.width
     item.height = data.height
     item.frame = getFITSFrame(FITS_DATA)

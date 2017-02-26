@@ -7,6 +7,7 @@ import * as Frame from './frames'
 export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL';
 export const ITEMS_UPDATE_ITEM_SCALE = 'ITEMS_UPDATE_ITEM_SCALE';
 export const ITEMS_UPDATE_ITEM_LEVEL = 'ITEMS_UPDATE_ITEM_LEVEL';
+export const ITEMS_UPDATE_ITEM_RADIUS = 'ITEMS_UPDATE_ITEM_RADIUS';
 
 const isFileExist = (file, items) => {
   const { name, path } = file
@@ -58,4 +59,8 @@ export const updateItemScale = (id, scale) => {
 export const updateItemLevel = (id, min, max) => {
   console.log((id, min, max))
   return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max }
+}
+
+export const updateItemRadius = (id, radius, xCenter, yCenter) => {
+  return { type: ITEMS_UPDATE_ITEM_RADIUS, id, radius, xCenter, yCenter }
 }

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import s from './ItemImage.css'
-import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
-import ItemImageControls from '../ItemImageControls/ImageControls'
+import DataLevelControls from '../DataLevelControls/DataLevelControls'
+import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
+
 import * as FITSLib from '../../utils/item_creator'
 
 
@@ -19,27 +21,32 @@ class ItemImage extends Component {
   componentWillReceiveProps(props) {
     if (this.props !== props) {
       console.log(this.props.item.frame_min_value.toString(), props.item.frame_min_value.toString())
-      console.log('SALUPA')
       this.buildCanvasImage()
       this.drawRadius()
 
-      const {currentMarkers } = this.state
+      const { currentMarkers, contourCreated } = this.state
       this.renderMarkers(currentMarkers)
+
+      if (contourCreated) this.drawContour(currentMarkers)
     }
   }
 
   drawRadius = () => {
     //Draw Solar center
-    const { header, scale } = this.props.item
+    const { header, scale, radius, xCenter, yCenter } = this.props.item
     const { CRPIX1, CRPIX2, CRVAL1, CRVAL2 } = header
 
-    let radius = 0
-    if (CRVAL1 && CRVAL2) {
-      radius = (CRVAL1.value + CRVAL2.value) / 2 || 100
+    let radiusValue = radius
+    let xCenterValue = xCenter || CRPIX1.value
+    let yCenterValue = yCenter || CRPIX2.value
+
+    if (!radiusValue) {
+      radiusValue = (CRVAL1.value + CRVAL2.value) / 2 || 100
     }
 
-    this.drawMarker(this.CanvasDrawRadius, scale * CRPIX1.value, scale * CRPIX2.value, 1, 'red')
-    this.drawCircle(this.CanvasDrawRadius, scale * CRPIX1.value, scale * CRPIX2.value, scale * radius, 'red')
+
+    this.drawMarker(this.CanvasDrawRadius, scale * xCenterValue, scale * yCenterValue, 1, 'red')
+    this.drawCircle(this.CanvasDrawRadius, scale * xCenterValue, scale * yCenterValue, scale * radiusValue, 'red')
   }
 
   drawCircle = (canvas, cx, cy, r, color) => {
@@ -60,6 +67,7 @@ class ItemImage extends Component {
     context.strokeStyle = color || 'red'
     context.stroke()
     context.closePath()
+    this.setState({ contourCreated: true })
   }
 
   drawMarker = (canvas, x, y, size = 3, color) => {
@@ -134,9 +142,9 @@ class ItemImage extends Component {
     imageData.data.set(buffer)
     ctx.putImageData(imageData, 0, 0)
 
-    const mainCTX = this.Canvas.getContext('2d')
-    this.Canvas.width = scaledWidth
-    this.Canvas.height = scaledHeight
+    const mainCTX = this.CanvasImage.getContext('2d')
+    this.CanvasImage.width = scaledWidth
+    this.CanvasImage.height = scaledHeight
     this.CanvasCross.width = scaledWidth
     this.CanvasCross.height = scaledHeight
     this.CanvasDraw.width = scaledWidth
@@ -151,12 +159,12 @@ class ItemImage extends Component {
     const { currentMarkers } = this.state
     currentMarkers.pop()
     this.renderMarkers(currentMarkers)
-    this.setState({ currentMarkers })
+    this.setState({ currentMarkers, contourCreated: false })
   }
 
   onRemoveAllMarker = () => {
     this.renderMarkers([])
-    this.setState({ currentMarkers: [] })
+    this.setState({ currentMarkers: [], contourCreated: false })
   }
 
   gravity = () => {
@@ -169,7 +177,9 @@ class ItemImage extends Component {
     this.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
   }
 
-  onImageLevelChange = (min, max) => console.log(min, max) & this.props.onImageLevelChange(this.props.item.id, min, max)
+  onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
+
+  onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
   render() {
     const { currentMarkers } = this.state
@@ -178,21 +188,22 @@ class ItemImage extends Component {
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
-          <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+          <canvas ref={(c) => { this.CanvasImage = c; }}></canvas>
           <canvas ref={(c) => { this.CanvasCross = c; }} className={s.cross}></canvas>
           <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius}></canvas>
           <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw}></canvas>
         </div>
 
 
-        <div className={s.controlsContainer}>
-          <RaisedButton label="Remove Last marker" onClick={this.onRemoveLastMarker} disabled={!currentMarkers.length}/>
-          <RaisedButton label="Remove All markers" onClick={this.onRemoveAllMarker} disabled={!currentMarkers.length}/>
-          <RaisedButton label="Gravity" onClick={this.gravity} disabled={currentMarkers.length < 5}/>
-          <RaisedButton label="Draw contour" onClick={this.drawContour.bind(this, currentMarkers)} disabled={currentMarkers.length < 5}/>
+        <div className={s.buttonsContainer}>
+          <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
+          <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
+          <FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 5}/>
+          <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.drawContour.bind(this, currentMarkers)} primary disabled={currentMarkers.length < 5}/>
         </div>
         <div className={s.controlsContainer}>
-          <ItemImageControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+          <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+          <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
         </div>
       </div>
     )
