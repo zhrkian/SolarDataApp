@@ -12,9 +12,11 @@ import MainLayout from '../app/components/Layouts/MainLayout'
 import ListItem from '../app/components/ListItem/ListItem'
 import { Grid, GridItem } from '../app/components/Layouts/Grid'
 import Item from '../app/components/Item/Item'
+import ItemImage from '../app/components/ItemImage/ItemImage'
 
 import item from './item'
 console.log(item)
+
 const _item = {
   path: 'http://127.0.0.1:3030/D0612115.fts'
 }
@@ -47,6 +49,13 @@ storiesOf('Pages', module)
   ));
 
 storiesOf('Components', module)
+  .add('Item Image', () => (
+    <MUI>
+      <MainLayout>
+        <ItemImage {...item} />
+      </MainLayout>
+    </MUI>
+  ))
   .add('Item', () => (
     <MUI>
       <MainLayout>
@@ -78,14 +87,6 @@ storiesOf('Components', module)
       <MainLayout>
         <Items items={[]} />
       </MainLayout>
-    </MUI>
-  ))
-  .add('ItemThumbnail', () => (
-    <ItemThumbnail item={_item} />
-  ))
-  .add('Open FITS', () => (
-    <MUI>
-      <OpenFITS />
     </MUI>
   ))
 

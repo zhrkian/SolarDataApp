@@ -15,16 +15,11 @@ const frames = (state = initialState, action) => {
       frame = state.frames[action.id] || {}
       frame.array = action.array
       state.frames[action.id] = frame
-
-      console.log('ARRAY', frame)
-
       return {...state}
     case FRAMES_UPDATE_FRAME_IMAGE:
       frame = state.frames[action.id] || {}
       frame.image = action.image
       state.frames[action.id] = frame
-
-      console.log('IMAGE', frame)
       return {...state}
     default:
       return state

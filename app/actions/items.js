@@ -5,6 +5,8 @@ import * as FITS from '../utils/item_creator'
 import * as Frame from './frames'
 
 export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL';
+export const ITEMS_UPDATE_ITEM_SCALE = 'ITEMS_UPDATE_ITEM_SCALE';
+export const ITEMS_UPDATE_ITEM_LEVEL = 'ITEMS_UPDATE_ITEM_LEVEL';
 
 const isFileExist = (file, items) => {
   const { name, path } = file
@@ -35,9 +37,7 @@ export const getItems = files =>
       items = items.map(item => {
         const itemWithInfo = itemsWithInfo.filter(i => i && i.id === item.id)[0]
         if (itemWithInfo) {
-          console.log(itemWithInfo)
           const { id, frame, image } = itemWithInfo
-          console.log({ id, frame, image })
           dispatch(Frame.updateFrameArray(id, frame))
           dispatch(Frame.updateFrameImage(id, image))
 
@@ -50,3 +50,12 @@ export const getItems = files =>
       setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 1000)
     })
   }
+
+export const updateItemScale = (id, scale) => {
+  return { type: ITEMS_UPDATE_ITEM_SCALE, id, scale }
+}
+
+export const updateItemLevel = (id, min, max) => {
+  console.log((id, min, max))
+  return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max }
+}

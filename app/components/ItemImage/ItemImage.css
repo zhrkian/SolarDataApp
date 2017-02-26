@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.zoomContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+}
+
+
+.drawingContainer {
+    display: flex;
+    position: relative;
+}
+
+
+.controlsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+}
+
+
+.cross {
+    cursor:none;
+    border: 1px solid #ffffff;
+    position:absolute;
+    z-index: 1;
+}
+
+.radius {
+    cursor:none;
+    border: 1px solid #ffffff;
+    position:absolute;
+    z-index: 1;
+}
+
+.draw {
+    cursor:none;
+    border: 1px solid #ffffff;
+    position:absolute;
+    z-index: 3;
+}

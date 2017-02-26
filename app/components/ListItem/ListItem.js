@@ -35,7 +35,6 @@ const ListItem = props => {
             <ActionDelete />
           </div>
           <div className={s.footer}>
-            {'FOOTER'}
           </div>
         </Link>
         )

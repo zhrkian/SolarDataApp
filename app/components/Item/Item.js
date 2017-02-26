@@ -1,16 +1,14 @@
 import React from 'react'
+import ItemImage from '../ItemImage/ItemImage'
 import * as IMG from '../../utils/item_creator'
 
 const Item = props => {
   const { item, frame } = props
-  const { array } = frame
-
-  console.log(item, frame)
-  const image = IMG.getFrameImage(array, item.width, item.height)
+  const { array, image } = frame
 
   return (
     <div>
-      <img src={image} />
+      {<ItemImage {...props} />}
     </div>
   )
 }

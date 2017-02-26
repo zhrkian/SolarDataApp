@@ -24,8 +24,10 @@ const item = {
     },
     "width": 205,
     "height": 225,
-    "min": 0.7237103581428528,
-    "max": 1.4474207162857056,
+    "min": -0.0712,
+    "max": 1.4474,
+    "frame_min_value": 0.7237103581428528,
+    "frame_max_value": 1.4474207162857056,
     "id": "gz0y4ku1bl29pb8551ovzehfr"
   },
   "frame": {
