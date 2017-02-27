@@ -11,9 +11,10 @@
 }
 
 .backLink {
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     padding: 20px;
     color: white;
+    z-index: 1000;
 }
