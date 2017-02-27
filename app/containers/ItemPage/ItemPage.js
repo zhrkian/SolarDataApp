@@ -8,6 +8,7 @@ import MainLayout from '../../components/Layouts/MainLayout'
 import Item from '../../components/Item/Item'
 
 import * as ItemsAction from '../../actions/items'
+import * as FramesAction from '../../actions/frames'
 
 class ItemPage extends Component {
   constructor(props) {
@@ -30,6 +31,15 @@ class ItemPage extends Component {
   onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
 
+  onFrameImageUpdate = (id, src) => {
+    const { frames } = this.props
+    const frame = frames[id]
+
+    if (frame && frame.image !== src) {
+      this.props.dispatch(FramesAction.updateFrameImage(id, src))
+    }
+  }
+
   render() {
     if (!this.props.params) {
       const { router } = this.context
@@ -51,6 +61,7 @@ class ItemPage extends Component {
               onScaleUpdate={this.onScaleUpdate}
               onImageLevelChange={this.onImageLevelChange}
               onImageRadiusChange={this.onImageRadiusChange}
+              onFrameImageUpdate={this.onFrameImageUpdate}
         />
         <Link className={s.backLink} to={`/items`}>
           {'< BACK'}

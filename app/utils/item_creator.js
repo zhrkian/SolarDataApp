@@ -1,5 +1,6 @@
 //http-server -p 3030 --cors
 //In fits folder
+import { RedTemperature } from './pattern'
 
 const chunkArray =  (array,  n) => {
   if ( !array.length ) return []
@@ -26,7 +27,6 @@ export const getFITSFrame = (FITS_DATA) => {
   const flipedFrame = flipHorizontaly(frame, width)
 
   return flipedFrame
-  //console.log(getFrameImage(frame, data.width, data.height))
 }
 
 const setDatePixelColor = (pixel, min, max, minColor, maxColor) => {
@@ -38,37 +38,20 @@ const setDatePixelColor = (pixel, min, max, minColor, maxColor) => {
 export const getFrameImageBuffer = (width, height, min, max, lvl, frame) => {
   const bufferLength = width * height * 4
   let buffer = new Uint8ClampedArray(bufferLength)
-
-  //rgb(0, 0, 0) 0%,
-  //  rgb(149, 255, 255) 25%,
-  //  rgb(255, 197, 255) 75%,
-  //  rgb(255, 255, 255) 100%
-  //r - 1.65426434·10-3 x2 - 7.870015171·10-2 x - 3.97903932·10-13
-  //g - -2.338148632·10-3 x2 + 8.413259405·10-1 x - 9.663381206·10-13
-  //
-  //1 28.05 56.1 84.15 112.2 140.25 168.3 196.35 224.4 255
-  //1 81 177 212 230 242 250 255 255 255
-  //1 18 47 74 103 136 165 195 232 255
-  //1 23 52 62 63 64 71 98 183 255
-  //
-
-
-
   let framePos = 0
   for(let y = 0; y < height; y++) {
     for(let x = 0; x < width; x++) {
       let pos = (y * width + x) * 4
       let pixel = setDatePixelColor(frame[framePos], min, max, lvl, 255)
 
-      //let r = -0.024 * pixel * pixel  + 4.4164 * pixel - 17.1448
-      //
-      //let g = 0.0025 *  Math.pow(pixel, 2) + 0.7515 * pixel - 3.8236
-      //
-      //let b = 0.0001 * Math.pow(pixel, 3) - 0.0202 * Math.pow(pixel, 2) + 2.2389 * pixel - 22.9435
+      pixel = parseInt(pixel)
 
-      buffer[pos    ] = pixel
-      buffer[pos + 1] = pixel
-      buffer[pos + 2] = pixel
+      if (pixel < 0) pixel = 0
+      if (pixel > 255) pixel = 255
+
+      buffer[pos    ] = RedTemperature[pixel].r
+      buffer[pos + 1] = RedTemperature[pixel].g
+      buffer[pos + 2] = RedTemperature[pixel].b
       buffer[pos + 3] = 255
 
       framePos += 1
@@ -80,7 +63,6 @@ export const getFrameImageBuffer = (width, height, min, max, lvl, frame) => {
 
 const modifyImageCenter = header => {
   header.cards.CRPIX2.value = header.cards.NAXIS2.value - header.cards.CRPIX2.value
-  console.log(header.cards.CRPIX2.value)
   return header
 }
 

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import s from './ItemImage.css'
 import FlatButton from 'material-ui/FlatButton'
+import Chip from 'material-ui/Chip'
+
+import { Grid } from '../Layouts/Grid'
 
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
@@ -64,7 +67,7 @@ class ItemImage extends Component {
     context.moveTo(markers[0].x, markers[0].y)
     markers.forEach(marker => context.lineTo(marker.x, marker.y))
     context.lineTo(markers[0].x, markers[0].y)
-    context.strokeStyle = color || 'red'
+    context.strokeStyle = color || 'blue'
     context.stroke()
     context.closePath()
     this.setState({ contourCreated: true })
@@ -77,7 +80,7 @@ class ItemImage extends Component {
     context.lineTo(x + size, y + size)
     context.moveTo(x - size, y + size)
     context.lineTo(x + size, y - size)
-    context.strokeStyle = color || 'red'
+    context.strokeStyle = color || 'blue'
     context.stroke()
     context.closePath()
   }
@@ -143,6 +146,8 @@ class ItemImage extends Component {
     ctx.putImageData(imageData, 0, 0)
 
     const mainCTX = this.CanvasImage.getContext('2d')
+    this.Canvas.width = scaledWidth
+    this.Canvas.height = scaledHeight
     this.CanvasImage.width = scaledWidth
     this.CanvasImage.height = scaledHeight
     this.CanvasCross.width = scaledWidth
@@ -153,6 +158,9 @@ class ItemImage extends Component {
     this.CanvasDrawRadius.height = scaledHeight
 
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
+
+    const { item, onFrameImageUpdate } = this.props
+    return onFrameImageUpdate(item.id, canvas.toDataURL())
   }
 
   onRemoveLastMarker = () => {
@@ -188,23 +196,20 @@ class ItemImage extends Component {
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
-          <canvas ref={(c) => { this.CanvasImage = c; }}></canvas>
+          <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+          <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image}></canvas>
           <canvas ref={(c) => { this.CanvasCross = c; }} className={s.cross}></canvas>
           <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius}></canvas>
           <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw}></canvas>
         </div>
-
-
-        <div className={s.buttonsContainer}>
+        <Grid>
           <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
           <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
           <FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 5}/>
           <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.drawContour.bind(this, currentMarkers)} primary disabled={currentMarkers.length < 5}/>
-        </div>
-        <div className={s.controlsContainer}>
-          <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
-          <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
-        </div>
+        </Grid>
+        <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+        <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
       </div>
     )
   }

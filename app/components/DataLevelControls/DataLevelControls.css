@@ -4,3 +4,11 @@
     position: relative;
     padding: 15px;
 }
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}

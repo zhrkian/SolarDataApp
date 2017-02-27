@@ -6,11 +6,7 @@ const Item = props => {
   const { item, frame } = props
   const { array, image } = frame
 
-  return (
-    <div>
-      {<ItemImage {...props} />}
-    </div>
-  )
+  return <ItemImage {...props} />
 }
 
 export default Item

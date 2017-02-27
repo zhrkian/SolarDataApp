@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 import FlatButton from 'material-ui/FlatButton'
+import { Grid } from '../Layouts/Grid'
 
 import s from './ImageRadiusControls.css'
 
@@ -51,39 +52,45 @@ class ImageRadiusControls extends Component {
 
     return (
       <div className={s.container}>
-        { radius_value ? <span>{`The radius value is: ${radius_value.toFixed(3)} `}</span> : null }
-        <Slider
-          min={0}
-          max={maxRadiusValue}
-          step={0.005}
-          defaultValue={radius || CRVAL1.value}
-          value={radius_value}
-          onDragStop={this.onDragStop}
-          onChange={this.handleRadiusValue}
-        />
-
-        { x_center ? <span>{`The center X value is: ${x_center.toFixed(3)} `}</span> : null }
-        <Slider
-          min={0}
-          max={width}
-          step={0.005}
-          defaultValue={xCenter || CRPIX1.value}
-          value={x_center}
-          onDragStop={this.onDragStop}
-          onChange={this.handleXCenterValue}
-        />
-
-        { y_center ? <span>{`The center Y value is: ${y_center.toFixed(3)} `}</span> : null }
-        <Slider
-          min={0}
-          max={height}
-          step={0.005}
-          defaultValue={yCenter || CRPIX2.value}
-          value={y_center}
-          onDragStop={this.onDragStop}
-          onChange={this.handleYCenterValue}
-        />
-
+        <div className={s.heading}>Radius correction</div>
+        <Grid>
+          <div style={{width: '250px', padding: 10}}>
+            { radius_value ? <span>{`The radius value is: ${radius_value.toFixed(3)} `}</span> : null }
+            <Slider
+              min={0}
+              max={maxRadiusValue}
+              step={0.005}
+              defaultValue={radius || CRVAL1.value}
+              value={radius_value}
+              onDragStop={this.onDragStop}
+              onChange={this.handleRadiusValue}
+            />
+          </div>
+          <div style={{width: '250px', padding: 10}}>
+            { x_center ? <span>{`The center X value is: ${x_center.toFixed(3)} `}</span> : null }
+            <Slider
+              min={0}
+              max={width}
+              step={0.005}
+              defaultValue={xCenter || CRPIX1.value}
+              value={x_center}
+              onDragStop={this.onDragStop}
+              onChange={this.handleXCenterValue}
+            />
+          </div>
+          <div style={{width: '250px', padding: 10}}>
+            { y_center ? <span>{`The center Y value is: ${y_center.toFixed(3)} `}</span> : null }
+            <Slider
+              min={0}
+              max={height}
+              step={0.005}
+              defaultValue={yCenter || CRPIX2.value}
+              value={y_center}
+              onDragStop={this.onDragStop}
+              onChange={this.handleYCenterValue}
+            />
+          </div>
+        </Grid>
         <FlatButton style={{color: 'white'}} label="Reset to defaults" onClick={this.onResetToDefaults} primary />
 
       </div>
