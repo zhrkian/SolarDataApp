@@ -10,6 +10,9 @@ import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
 
 import * as FITSLib from '../../utils/item_creator'
 
+import * as Draw from '../../utils/draw'
+import * as Coordinates from '../../utils/coordinates'
+
 
 class ItemImage extends Component {
   state = { imageBuffer: null, currentMarkers: [], scale: 1 }
@@ -18,24 +21,37 @@ class ItemImage extends Component {
     this.buildCanvasImage()
     this.CanvasDraw.addEventListener('mousedown', this.mouseClick)
     this.CanvasDraw.addEventListener('mousemove', this.renderMouseCursor)
-    this.drawRadius()
+    this.renderSolarRadius()
   }
 
   componentWillReceiveProps(props) {
     if (this.props !== props) {
-      console.log(this.props.item.frame_min_value.toString(), props.item.frame_min_value.toString())
       this.buildCanvasImage()
-      this.drawRadius()
+      this.renderSolarRadius()
 
       const { currentMarkers, contourCreated } = this.state
       this.renderMarkers(currentMarkers)
 
-      if (contourCreated) this.drawContour(currentMarkers)
+
+
+      if (contourCreated) {
+        const { width, height, scale } = props.item
+
+        for (let j = 0; j < scale * height; j++) {
+          for (let i = 0; i < scale * width; i++) {
+            if (Coordinates.inPoly(i, j, currentMarkers)) {
+              Draw.drawMarker(this.CanvasDraw, i, j, 1, 'white')
+            }
+          }
+        }
+
+        Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
+
+      }
     }
   }
 
-  drawRadius = () => {
-    //Draw Solar center
+  getSolarRadiusData = () => {
     const { header, scale, radius, xCenter, yCenter } = this.props.item
     const { CRPIX1, CRPIX2, CRVAL1, CRVAL2 } = header
 
@@ -47,52 +63,28 @@ class ItemImage extends Component {
       radiusValue = (CRVAL1.value + CRVAL2.value) / 2 || 100
     }
 
-
-    this.drawMarker(this.CanvasDrawRadius, scale * xCenterValue, scale * yCenterValue, 1, 'red')
-    this.drawCircle(this.CanvasDrawRadius, scale * xCenterValue, scale * yCenterValue, scale * radiusValue, 'red')
+    return { radiusValue: scale * radiusValue, xCenterValue: scale * xCenterValue, yCenterValue: scale * yCenterValue }
   }
 
-  drawCircle = (canvas, cx, cy, r, color) => {
-    const context = canvas.getContext('2d')
-    context.beginPath();
-    context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-    context.strokeStyle = color || 'blue';
-    context.lineWidth = 1;
-    context.stroke();
-  }
-
-  drawContour = (markers, color) => {
-    const context = this.CanvasDraw.getContext('2d')
-    context.beginPath()
-    context.moveTo(markers[0].x, markers[0].y)
-    markers.forEach(marker => context.lineTo(marker.x, marker.y))
-    context.lineTo(markers[0].x, markers[0].y)
-    context.strokeStyle = color || 'blue'
-    context.stroke()
-    context.closePath()
-    this.setState({ contourCreated: true })
-  }
-
-  drawMarker = (canvas, x, y, size = 3, color) => {
-    const context = canvas.getContext('2d')
-    context.beginPath()
-    context.moveTo(x - size, y - size)
-    context.lineTo(x + size, y + size)
-    context.moveTo(x - size, y + size)
-    context.lineTo(x + size, y - size)
-    context.strokeStyle = color || 'blue'
-    context.stroke()
-    context.closePath()
+  renderSolarRadius = () => {
+    const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
+    Draw.drawMarker(this.CanvasDrawRadius, xCenterValue, yCenterValue, 1, 'red')
+    Draw.drawCircle(this.CanvasDrawRadius,  xCenterValue, yCenterValue, radiusValue, 'red')
   }
 
   mouseClick = e => {
-    let { currentMarkers } = this.state
+    const { currentMarkers } = this.state
+    const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
     const marker = this.mouseCoordinates(e)
 
-    if (currentMarkers.indexOf(marker) < 0) {
-      currentMarkers.push(marker)
-      this.renderMarkers(currentMarkers)
-      this.setState({ currentMarkers })
+    const isIsCircle = Coordinates.isIsCircle(marker.x, marker.y, radiusValue, xCenterValue, yCenterValue)
+
+    if (currentMarkers.indexOf(marker) < 0 && isIsCircle) {
+      const markers = [...currentMarkers, marker]
+      this.renderMarkers(markers)
+      this.setState({ currentMarkers: markers })
+
+      console.log(JSON.stringify(markers))
     }
   }
 
@@ -100,13 +92,13 @@ class ItemImage extends Component {
     const { width, height } = this.CanvasDraw
     const context = this.CanvasDraw.getContext('2d')
     context.clearRect(0, 0, width, height)
-    markers.forEach(marker => this.drawMarker(this.CanvasDraw, marker.x, marker.y))
+    markers.forEach(marker => Draw.drawMarker(this.CanvasDraw, marker.x, marker.y))
   }
 
   renderMouseCursor = e => {
     let { x, y } = this.mouseCoordinates(e)
-    const { width, height } = this.CanvasCross
-    const context = this.CanvasCross.getContext('2d')
+    const { width, height } = this.CanvasCrossHair
+    const context = this.CanvasCrossHair.getContext('2d')
     context.clearRect(0, 0, width, height)
     context.beginPath()
     context.moveTo(0, y)
@@ -119,7 +111,7 @@ class ItemImage extends Component {
   }
 
   mouseCoordinates = e => {
-    const canvasRect = this.CanvasCross.getBoundingClientRect()
+    const canvasRect = this.CanvasCrossHair.getBoundingClientRect()
     const coordinates = { x: (e.clientX - canvasRect.left), y: (e.clientY - canvasRect.top) }
     return coordinates
   }
@@ -130,6 +122,19 @@ class ItemImage extends Component {
     const { width, height, frame_min_value, frame_max_value, lvl } = item
     const imageBuffer = FITSLib.getFrameImageBuffer(width, height, frame_min_value, frame_max_value, lvl, frame.array)
     this.updateCanvas(imageBuffer,  width, height, scale)
+  }
+
+  updateCanvasSize = (width, height) => {
+    this.Canvas.width = width
+    this.Canvas.height = height
+    this.CanvasImage.width = width
+    this.CanvasImage.height = height
+    this.CanvasCrossHair.width = width
+    this.CanvasCrossHair.height = height
+    this.CanvasDraw.width = width
+    this.CanvasDraw.height = height
+    this.CanvasDrawRadius.width = width
+    this.CanvasDrawRadius.height = height
   }
 
   updateCanvas = (buffer, width, height, scale = 1) => {
@@ -146,17 +151,8 @@ class ItemImage extends Component {
     ctx.putImageData(imageData, 0, 0)
 
     const mainCTX = this.CanvasImage.getContext('2d')
-    this.Canvas.width = scaledWidth
-    this.Canvas.height = scaledHeight
-    this.CanvasImage.width = scaledWidth
-    this.CanvasImage.height = scaledHeight
-    this.CanvasCross.width = scaledWidth
-    this.CanvasCross.height = scaledHeight
-    this.CanvasDraw.width = scaledWidth
-    this.CanvasDraw.height = scaledHeight
-    this.CanvasDrawRadius.width = scaledWidth
-    this.CanvasDrawRadius.height = scaledHeight
 
+    this.updateCanvasSize(scaledWidth, scaledHeight)
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
 
     const { item, onFrameImageUpdate } = this.props
@@ -182,31 +178,40 @@ class ItemImage extends Component {
       totalX += point.x
       totalY += point.y
     })
-    this.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
+    Draw.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
   }
 
   onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
 
   onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
+  onDrawContour = () => Draw.drawContour(this.CanvasDraw, this.state.currentMarkers, 'red', () => this.setState({ contourCreated: true }))
+
   render() {
     const { currentMarkers } = this.state
     const { item } = this.props
+
+
+
+
+
+
+
 
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
           <canvas ref={(c) => { this.Canvas = c; }}></canvas>
           <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image}></canvas>
-          <canvas ref={(c) => { this.CanvasCross = c; }} className={s.cross}></canvas>
           <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius}></canvas>
           <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw}></canvas>
+          <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair}></canvas>
         </div>
         <Grid>
           <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
           <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
           <FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 5}/>
-          <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.drawContour.bind(this, currentMarkers)} primary disabled={currentMarkers.length < 5}/>
+          <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 5}/>
         </Grid>
         <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
         <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>

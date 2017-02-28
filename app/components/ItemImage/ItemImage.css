@@ -38,23 +38,23 @@
 .image {
     cursor:none;
     position:absolute;
-    z-index: 5;
-}
-
-.cross {
-    cursor:none;
-    position:absolute;
-    z-index: 6;
+    z-index: 1;
 }
 
 .radius {
     cursor:none;
     position:absolute;
-    z-index: 7;
+    z-index: 2;
 }
 
 .draw {
     cursor:none;
     position:absolute;
-    z-index: 8;
+    z-index: 3;
+}
+
+.crossHair {
+    cursor:none;
+    position:absolute;
+    z-index: 4;
 }
