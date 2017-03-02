@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton'
 import Chip from 'material-ui/Chip'
 
 import { Grid } from '../Layouts/Grid'
+import ContourResultModal from '../ContourResultModal/ContourResultModal'
 
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
@@ -15,7 +16,7 @@ import * as Coordinates from '../../utils/coordinates'
 
 
 class ItemImage extends Component {
-  state = { imageBuffer: null, currentMarkers: [], scale: 1 }
+  state = { imageBuffer: null, currentMarkers: [], scale: 1, contourModal: false }
 
   componentDidMount() {
     this.buildCanvasImage()
@@ -33,53 +34,8 @@ class ItemImage extends Component {
 
       this.renderMarkers(currentMarkers)
 
-
-
       if (contourCreated) {
         Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
-
-        //const { width, height, scale } = props.item
-        //const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
-        //const scaledWidth = scale * width
-        //const scaledHeight = scale * height
-        //
-        //let totalImageContourPixels = 0
-        //let totalContourSphereSquare = 0.0
-        //
-        //for (let j = 0; j < scaledHeight; j++) {
-        //
-        //
-        //
-        //  for (let i = 0; i < scaledWidth; i++) {
-        //    const isExtremePixel = j === 0 || j === scaledHeight - 1 || i === 0 && i === scaledWidth - 1
-        //
-        //    if (!isExtremePixel) {
-        //      const isInContour = Coordinates.inPoly(i, j, currentMarkers)
-        //
-        //      if (isInContour) {
-        //        const yRadius = Math.sqrt(radiusValue * radiusValue  - (j - yCenterValue) * (j - yCenterValue))
-        //
-        //        let xP = i - xCenterValue
-        //        let x_minus_05 = xP - 0.5
-        //        let x_plus_05 = xP + 0.5
-        //        if (x_plus_05 > yRadius) x_plus_05 = yRadius
-        //
-        //        const theta1 = Math.acos(x_minus_05 / yRadius)
-        //        const theta2 = Math.acos(x_plus_05 / yRadius)
-        //        const pixelSquare = radiusValue * (theta1 - theta2)
-        //
-        //        totalContourSphereSquare += pixelSquare < 0 ? (-1) * pixelSquare : pixelSquare
-        //
-        //        totalImageContourPixels += 1
-        //      }
-        //    }
-        //  }
-        //
-        //
-        //}
-        //console.log(totalImageContourPixels, totalContourSphereSquare)
-
-
       }
     }
   }
@@ -218,12 +174,6 @@ class ItemImage extends Component {
 
   onDrawContour = () => {
     const { currentMarkers } = this.state
-
-    //const context = this.CanvasDraw.getContext('2d')
-    //const contourRect = Coordinates.getContourRect(currentMarkers)
-    //context.rect(contourRect.x0, contourRect.y0, contourRect.x1 - contourRect.x0, contourRect.y1 - contourRect.y0)
-    //context.stroke()
-
     Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
   }
 
@@ -231,8 +181,10 @@ class ItemImage extends Component {
     const { currentMarkers } = this.state
     const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
     const contourInfo = Coordinates.getContourSqareInfo(currentMarkers, radiusValue, xCenterValue, yCenterValue)
-    console.log(contourInfo)
+    this.setState({ contourInfo })
   }
+
+  onCloseContourResultModal = () => this.setState({ contourInfo: null })
 
   render() {
     const { currentMarkers, contourCreated } = this.state
@@ -256,6 +208,8 @@ class ItemImage extends Component {
         </Grid>
         <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
         <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
+
+        <ContourResultModal contourInfo={this.state.contourInfo} onClose={this.onCloseContourResultModal} />
       </div>
     )
   }

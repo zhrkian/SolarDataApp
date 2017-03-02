@@ -61,6 +61,9 @@ export const getContourSqareInfo = (contour, radiusValue, xCenterValue, yCenterV
     }
   }
 
+  totalContourSphericalSquare = isNaN(totalContourSphericalSquare) || !totalContourSphericalSquare ? 0 : totalContourSphericalSquare
+  totalContourSquarePixels = isNaN(totalContourSquarePixels) || !totalContourSquarePixels ? 0 : totalContourSquarePixels
+
   const totalSquarePixels = Math.PI * radiusValue * radiusValue
   const totalVisibleSphericalSquare = 2 * Math.PI * radiusValue * radiusValue
 
