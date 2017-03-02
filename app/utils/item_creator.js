@@ -152,9 +152,6 @@ export const getFITSItem = (file, cb) => {
 
     const modifiedHeader = modifyHeader(header)
 
-    console.log(modifiedHeader)
-
-
     item.header = modifiedHeader
     item.lvl = 100
     item.scale = data.height > 500 ? 1 : 2

@@ -91,7 +91,7 @@ class ImageRadiusControls extends Component {
             />
           </div>
         </Grid>
-        <FlatButton style={{color: 'white'}} label="Reset to defaults" onClick={this.onResetToDefaults} primary />
+        <FlatButton style={{color: 'white'}} label="Reset radius data to defaults" onClick={this.onResetToDefaults} primary />
 
       </div>
     )

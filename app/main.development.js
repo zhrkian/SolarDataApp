@@ -77,9 +77,9 @@ app.on('ready', async () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'Solar Data Application',
       submenu: [{
-        label: 'About ElectronReact',
+        label: 'About',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
@@ -89,7 +89,7 @@ app.on('ready', async () => {
       }, {
         type: 'separator'
       }, {
-        label: 'Hide ElectronReact',
+        label: 'Hide',
         accelerator: 'Command+H',
         selector: 'hide:'
       }, {
@@ -214,10 +214,12 @@ app.on('ready', async () => {
   } else {
     template = [{
       label: '&File',
-      submenu: [{
-        label: '&Open',
-        accelerator: 'Ctrl+O'
-      }, {
+      submenu: [
+      //  {
+      //  label: '&Open',
+      //  accelerator: 'Ctrl+O'
+      //},
+        {
         label: '&Close',
         accelerator: 'Ctrl+W',
         click() {
