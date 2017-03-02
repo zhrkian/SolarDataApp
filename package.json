@@ -182,7 +182,7 @@
     "source-map-support": "^0.4.10"
   },
   "devEngines": {
-    "node": ">=6.x",
-    "npm": ">=3.x"
+    "node": "6.1.0",
+    "npm": "3.8.6"
   }
 }
