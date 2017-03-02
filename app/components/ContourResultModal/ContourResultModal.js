@@ -6,7 +6,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 /**
  * Dialog content can be scrollable.
  */
-export default class ContourResultModal extends React.Component {
+class ContourResultModal extends React.Component {
   render() {
     const actions = [
       <FlatButton
@@ -59,6 +59,8 @@ export default class ContourResultModal extends React.Component {
           }
         </Dialog>
       </div>
-    );
+    )
   }
 }
+
+export default ContourResultModal
