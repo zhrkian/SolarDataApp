@@ -35,6 +35,14 @@ const ListItem = props => {
             <ActionDelete />
           </div>
           <div className={s.footer}>
+            {
+              header ? (
+                <div className={s.footerContent}>
+                  <span>{header['DATE-OBS'].value}</span>
+                  <span>{header['TIME-OBS'].value}</span>
+                </div>
+              ) : null
+            }
           </div>
         </Link>
         )
