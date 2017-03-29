@@ -31,7 +31,7 @@ export const getContourRect = contour => {
   return { x0, y0, x1, y1 }
 }
 
-export const getContourSqareInfo = (contour, radiusValue, xCenterValue, yCenterValue) => {
+export const getContourSquareInfo = (contour, radiusValue, xCenterValue, yCenterValue) => {
   let totalContourSquarePixels = 0
   let totalContourSphericalSquare = 0.0
 

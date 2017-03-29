@@ -2,24 +2,27 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MainLayout from '../../components/Layouts/MainLayout'
-import Items from '../../components/Items/Items'
+import List from '../../components/List/List'
 
 import * as ItemsAction from '../../actions/items'
 
 class ItemsPage extends Component {
-  componentWillMount() {
 
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
   }
 
   onOpenFiles = files => this.props.dispatch(ItemsAction.getItems(files))
 
+  onView = id => this.context.router.push(`/items/${id}`)
+
   render() {
     const { items } = this.props.items
-    const { frames } = this.props.frames
+
     return (
       <MainLayout>
-        <Items items={items}
-               frames={frames}
+        <List items={items}
+               onView={this.onView}
                onOpenFiles={this.onOpenFiles} />
       </MainLayout>
     );
@@ -28,8 +31,7 @@ class ItemsPage extends Component {
 
 function mapStateToProps(state) {
   return {
-    items: state.items,
-    frames: state.frames,
+    items: state.items
   }
 }
 

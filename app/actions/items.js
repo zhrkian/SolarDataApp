@@ -27,8 +27,11 @@ export const getItems = files =>
 
     let promises = files.map(file => {
       if (isFileExist(file, items)) return
+
       const id = Utils.generatePortId(items)
+
       items = [{ id, item_thinking: true },...items]
+
       return getFileInfoPromise(id, file)
     })
 
@@ -38,17 +41,43 @@ export const getItems = files =>
       items = items.map(item => {
         const itemWithInfo = itemsWithInfo.filter(i => i && i.id === item.id)[0]
         if (itemWithInfo) {
-          const { id, frame, image } = itemWithInfo
+          const { id, frame } = itemWithInfo
           dispatch(Frame.updateFrameArray(id, frame))
-          dispatch(Frame.updateFrameImage(id, image))
 
           delete itemWithInfo.frame
-          delete itemWithInfo.image
+
           return itemWithInfo
         }
         return item
       })
-      setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 1000)
+      setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 10)
+    })
+  }
+
+
+export const itemThinking = (item, items, thinking) => {
+  return items.map(i => {
+    if (item.id === i.id) i.item_thinking = thinking
+    return i
+  })
+}
+
+export const updateItem = item =>
+  (dispatch, getState) => {
+    let { items } = getState().items
+
+    items = itemThinking(item, items, true)
+
+    dispatch({ type: ITEMS_UPDATE_ALL, items })
+
+    FITS.getFITSItem({ path: item.url }, updatedItem => {
+      const { frame } = updatedItem
+
+      dispatch(Frame.updateFrameArray(item.id, frame))
+
+      items = itemThinking(item, items, false)
+
+      setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 100)
     })
   }
 
