@@ -5,7 +5,7 @@ import Chip from 'material-ui/Chip'
 
 import { Grid } from '../Layouts/Grid'
 import ContourResultModal from '../ContourResultModal/ContourResultModal'
-
+import SaveImage from '../SaveImage/SaveImage'
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
 
@@ -101,7 +101,6 @@ class ItemImage extends Component {
     const { x, y } = toImageCoords(item, marker)
     const { currentMarkers } = this.state
     const isIsCircle = Coordinates.isIsCircle(x,y, radius, crpix_x, crpix_y)
-
     if (currentMarkers.indexOf(marker) < 0 && isIsCircle) {
       const markers = [...currentMarkers, marker]
       renderMarkers(this.CanvasDraw, markers)
@@ -123,30 +122,6 @@ class ItemImage extends Component {
   //    }
   //  }
   //}
-  //
-
-  //getSolarRadiusData = () => {
-  //  const { header, scale, radius, xCenter, yCenter } = this.props.item
-  //  const { CRPIX1, CRPIX2, CRVAL1, CRVAL2 } = header
-  //
-  //  let radiusValue = radius
-  //  let xCenterValue = xCenter || CRPIX1.value
-  //  let yCenterValue = yCenter || CRPIX2.value
-  //
-  //  if (!radiusValue) {
-  //    radiusValue = (CRVAL1.value + CRVAL2.value) / 2 || 100
-  //  }
-  //
-  //  return { radiusValue: scale * radiusValue, xCenterValue: scale * xCenterValue, yCenterValue: scale * yCenterValue }
-  //}
-  //
-
-  //renderSolarRadius = () => {
-  //  const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
-  //  Draw.drawMarker(this.CanvasDrawRadius, xCenterValue, yCenterValue, 1, 'red')
-  //  Draw.drawCircle(this.CanvasDrawRadius,  xCenterValue, yCenterValue, radiusValue, 'red')
-  //}
-  //
 
   buildCanvasImage = () => {
     const { item, frame } = this.props
@@ -167,6 +142,7 @@ class ItemImage extends Component {
     this.CanvasDraw.height = height
     this.CanvasDrawRadius.width = width
     this.CanvasDrawRadius.height = height
+    //this.DrawingContainer.setAttribute('style', `width: ${width}px; height: ${height}px;`)
   }
 
   updateCanvas = (buffer, width, height, zoom = 1) => {
@@ -212,17 +188,17 @@ class ItemImage extends Component {
     Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
   }
 
-  //
-  //gravity = () => {
-  //  const { currentMarkers } = this.state
-  //  let totalMass = currentMarkers.length, totalY = 0, totalX = 0
-  //  currentMarkers.forEach(point => {
-  //    totalX += point.x
-  //    totalY += point.y
-  //  })
-  //  Draw.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
-  //}
-  //
+
+  gravity = () => {
+    const { currentMarkers } = this.state
+    let totalMass = currentMarkers.length, totalY = 0, totalX = 0
+    currentMarkers.forEach(point => {
+      totalX += point.x
+      totalY += point.y
+    })
+    Draw.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
+  }
+
   //onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
   //
   //onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
@@ -231,24 +207,9 @@ class ItemImage extends Component {
   onContourSquareInfo = () => {
     const { item } = this.props
     const { currentMarkers } = this.state
-
     const imageMarkers = toImageCoords(item, currentMarkers)
-
-
-
-    Draw.drawContour(this.CanvasDraw, toImageCoords(item, currentMarkers), 'red', () => this.setState({ contourCreated: true }))
-
-    Draw.drawCircle(this.CanvasDraw, item.crpix_x, item.crpix_y, item.radius, 'red')
-
     const contourInfo = Coordinates.getContourSquareInfo(imageMarkers, item.radius, item.crpix_x, item.crpix_y)
-
-    console.log(contourInfo)
-
     this.setState({ contourInfo })
-
-    //const { radiusValue, xCenterValue, yCenterValue } = this.getSolarRadiusData()
-    //const contourInfo = Coordinates.getContourSqareInfo(currentMarkers, radiusValue, xCenterValue, yCenterValue)
-    //this.setState({ contourInfo })
   }
 
   onCloseContourResultModal = () => this.setState({ contourInfo: null })
@@ -257,14 +218,18 @@ class ItemImage extends Component {
     const { currentMarkers, contourCreated } = this.state
     const { item } = this.props
 
+    const width = item.width * item.zoom
+    const height = item.height * item.zoom
+
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
+          <SaveImage images={['Image', 'Radius', 'Contour']} width={width} height={height} />
           <canvas ref={(c) => { this.Canvas = c; }}></canvas>
-          <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image}></canvas>
-          <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius}></canvas>
-          <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw}></canvas>
-          <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair}></canvas>
+          <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+          <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
+          <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
+          <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
         </div>
         <Grid>
           <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>

@@ -165,6 +165,7 @@
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
+    "FileSaver": "^0.10.0",
     "electron-debug": "^1.1.0",
     "font-awesome": "^4.7.0",
     "histogramjs": "0.0.1",
