@@ -216,9 +216,8 @@ class ItemImage extends Component {
   }
 
   onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
-  //
-  //onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
-  //
+
+  onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
   onContourSquareInfo = () => {
     const { item } = this.props
@@ -276,7 +275,7 @@ class ItemImage extends Component {
         </Grid>
 
         <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
-        {/*<ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>*/}
+        <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
 
         <ContourResultModal active={contourInfoModal}
                             contourInfo={contourInfo}

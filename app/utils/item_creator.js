@@ -180,8 +180,11 @@ export const getFITSItem = (file, cb) => {
 
     const crpix_x = getImageCenterX(header)
     const crpix_y = getImageCenterY(header)
-
     const radius = getImageRadius(header)
+
+    const default_crpix_x = getImageCenterX(header)
+    const default_crpix_y = getImageCenterY(header)
+    const default_radius = getImageRadius(header)
 
     const date = getImageDate(header)
     const time = getImageTime(header)
@@ -191,6 +194,6 @@ export const getFITSItem = (file, cb) => {
 
     const zoom = ZOOM / height
 
-    cb({ frame, url, width, height, frame_min, frame_max, image_min, image_max, crpix_x, crpix_y, radius, date, time, telescope, wavelength, zoom })
+    cb({ frame, url, width, height, frame_min, frame_max, image_min, image_max, default_crpix_x, default_crpix_y, crpix_x, crpix_y, default_radius, radius, date, time, telescope, wavelength, zoom })
   })
 }

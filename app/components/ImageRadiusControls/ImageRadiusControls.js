@@ -8,12 +8,12 @@ import s from './ImageRadiusControls.css'
 class ImageRadiusControls extends Component {
   constructor(props) {
     super(props)
-    const { CRVAL1, CRPIX1, CRPIX2, radius, xCenter, yCenter } = props.header
+    const { radius, crpix_x, crpix_y } = props
 
     this.state = {
-      radius_value: radius || CRVAL1.value,
-      x_center: xCenter || CRPIX1.value,
-      y_center: yCenter || CRPIX2.value,
+      radius_value: radius,
+      x_center: crpix_x,
+      y_center: crpix_y,
     }
   }
 
@@ -35,17 +35,16 @@ class ImageRadiusControls extends Component {
   }
 
   onResetToDefaults = () => {
-    const { CRVAL1, CRPIX1, CRPIX2 } = this.props.header
-    const radius_value = CRVAL1.value
-    const x_center = CRPIX1.value
-    const y_center = CRPIX2.value
+    const { default_radius, default_crpix_x, default_crpix_y } = this.props
+    const radius_value = default_radius
+    const x_center = default_crpix_x
+    const y_center = default_crpix_y
     this.setState({ radius_value, x_center, y_center })
     return this.props.onImageRadiusChange(radius_value, x_center, y_center)
   }
 
   render() {
-    const { height, width, header, radius, xCenter, yCenter } = this.props
-    const { CRVAL1, CRPIX1, CRPIX2 } = header
+    const { height, width, radius, crpix_x, crpix_y } = this.props
     const { radius_value, x_center, y_center } = this.state
 
     const maxRadiusValue = Math.sqrt(height * height / 4 + width * width / 4)
@@ -60,7 +59,7 @@ class ImageRadiusControls extends Component {
               min={0}
               max={maxRadiusValue}
               step={0.005}
-              defaultValue={radius || CRVAL1.value}
+              defaultValue={radius}
               value={radius_value}
               onDragStop={this.onDragStop}
               onChange={this.handleRadiusValue}
@@ -72,7 +71,7 @@ class ImageRadiusControls extends Component {
               min={0}
               max={width}
               step={0.005}
-              defaultValue={xCenter || CRPIX1.value}
+              defaultValue={crpix_x}
               value={x_center}
               onDragStop={this.onDragStop}
               onChange={this.handleXCenterValue}
@@ -84,7 +83,7 @@ class ImageRadiusControls extends Component {
               min={0}
               max={height}
               step={0.005}
-              defaultValue={yCenter || CRPIX2.value}
+              defaultValue={crpix_y}
               value={y_center}
               onDragStop={this.onDragStop}
               onChange={this.handleYCenterValue}

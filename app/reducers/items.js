@@ -31,8 +31,8 @@ const updateItemRadius = (items, id, radius, xCenter, yCenter) =>
   items.map(item => {
     if (item.id === id) {
       item.radius = radius
-      item.xCenter = xCenter
-      item.yCenter = yCenter
+      item.crpix_x = xCenter
+      item.crpix_y = yCenter
     }
     return item
   })
