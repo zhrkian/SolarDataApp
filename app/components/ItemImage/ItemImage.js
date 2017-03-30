@@ -8,12 +8,14 @@ import ContourResultModal from '../ContourResultModal/ContourResultModal'
 import SaveImage from '../SaveImage/SaveImage'
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
+import ContourList from '../ContourList/ContourList'
 
 import * as FITSLib from '../../utils/item_creator'
 
 import * as Draw from '../../utils/draw'
 import * as Coordinates from '../../utils/coordinates'
 
+const colors = ['#7FFF00', '#00FA9A', '#3CB371', '#008000', '#556B2F', '#66CDAA', '#008B8B']
 
 const getMouseCoordinates = (canvas, event) => {
   const canvasRect = canvas.getBoundingClientRect()
@@ -108,20 +110,21 @@ class ItemImage extends Component {
     }
   }
 
-  //componentWillReceiveProps(props) {
-  //  if (this.props !== props) {
-  //    this.buildCanvasImage()
-  //    this.renderSolarRadius()
-  //
-  //    const { currentMarkers, contourCreated } = this.state
-  //
-  //    this.renderMarkers(currentMarkers)
-  //
-  //    if (contourCreated) {
-  //      Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
-  //    }
-  //  }
-  //}
+  componentWillReceiveProps(props) {
+    if (this.props !== props) {
+      const { item } = props
+      this.buildCanvasImage()
+      renderSolarRadius(this.CanvasDrawRadius, item)
+
+      const { currentMarkers, contourCreated } = this.state
+
+      renderMarkers(this.CanvasDraw, currentMarkers)
+
+      if (contourCreated) {
+        Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
+      }
+    }
+  }
 
   buildCanvasImage = () => {
     const { item, frame } = this.props
@@ -136,6 +139,8 @@ class ItemImage extends Component {
     this.Canvas.height = height
     this.CanvasImage.width = width
     this.CanvasImage.height = height
+    this.CanvasSavedContours.width = width
+    this.CanvasSavedContours.height = height
     this.CanvasCrossHair.width = width
     this.CanvasCrossHair.height = height
     this.CanvasDraw.width = width
@@ -188,6 +193,17 @@ class ItemImage extends Component {
     Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
   }
 
+  onSaveContour = contourName => {
+    const { contourInfo, currentMarkers } = this.state
+    const { item, onSaveContour } = this.props
+    const contour = {
+      title: contourName,
+      contour: toImageCoords(item, currentMarkers),
+      contourInfo
+    }
+    onSaveContour(item.id, contour)
+    this.onCloseContourResultModal()
+  }
 
   gravity = () => {
     const { currentMarkers } = this.state
@@ -199,7 +215,7 @@ class ItemImage extends Component {
     Draw.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
   }
 
-  //onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
+  onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
   //
   //onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
   //
@@ -209,28 +225,48 @@ class ItemImage extends Component {
     const { currentMarkers } = this.state
     const imageMarkers = toImageCoords(item, currentMarkers)
     const contourInfo = Coordinates.getContourSquareInfo(imageMarkers, item.radius, item.crpix_x, item.crpix_y)
-    this.setState({ contourInfo })
+    this.setState({ contourInfo, contourInfoModal: true })
   }
 
-  onCloseContourResultModal = () => this.setState({ contourInfo: null })
+  onCloseContourResultModal = () => this.setState({ contourInfoModal: false })
+
+  onSavedContoursSelect = titles => {
+    let colorIndex = 0
+    const { item } = this.props
+    const { contours } = item
+    const selectedContours = contours.filter(contour => titles.indexOf(contour.title) > -1)
+    Draw.clearCanvas(this.CanvasSavedContours)
+    selectedContours.forEach(c => {
+      const contour = toViewCoords(item, c.contour)
+      if (!colors[colorIndex]) colorIndex = 0
+      Draw.drawContour(this.CanvasSavedContours, contour, colors[colorIndex], () => {})
+      colorIndex += 1
+    })
+  }
 
   render() {
-    const { currentMarkers, contourCreated } = this.state
+    const { currentMarkers, contourCreated, contourInfo, contourInfoModal } = this.state
     const { item } = this.props
-
+    const { contours } = item
     const width = item.width * item.zoom
     const height = item.height * item.zoom
 
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
-          <SaveImage images={['Image', 'Radius', 'Contour']} width={width} height={height} />
+          <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
           <canvas ref={(c) => { this.Canvas = c; }}></canvas>
           <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+          <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
           <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
           <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
           <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
         </div>
+
+        <div className={s.contourList}>
+          { contours && contours.length ? <ContourList contours={contours} onChange={this.onSavedContoursSelect} /> : null }
+        </div>
+
         <Grid>
           <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
           <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
@@ -238,10 +274,14 @@ class ItemImage extends Component {
           <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
           <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
         </Grid>
-        {/*<DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
-        <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>*/}
 
-        <ContourResultModal contourInfo={this.state.contourInfo} onClose={this.onCloseContourResultModal} />
+        <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+        {/*<ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>*/}
+
+        <ContourResultModal active={contourInfoModal}
+                            contourInfo={contourInfo}
+                            onSave={this.onSaveContour}
+                            onClose={this.onCloseContourResultModal} />
       </div>
     )
   }

@@ -63,9 +63,11 @@ class ItemPage extends Component {
   }
 
   //onScaleUpdate = (id, scale) => this.props.dispatch(ItemsAction.updateItemScale(id, scale))
-  //onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
+
+  onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
+
   //onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
-  //
+
   onFrameImageUpdate = (id, src) => {
     return
 
@@ -77,11 +79,15 @@ class ItemPage extends Component {
     }
   }
 
+  onSaveContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour))
+
   render() {
 
     const { item, frame } = this.initImageData()
     const { array, image } = frame || {}
     const loading = !item || !array || !image
+
+    console.log(item)
 
     return (
       <MainLayout>
@@ -92,6 +98,7 @@ class ItemPage extends Component {
                                         onImageLevelChange={this.onImageLevelChange}
                                         onImageRadiusChange={this.onImageRadiusChange}
                                         onFrameImageUpdate={this.onFrameImageUpdate}
+                                        onSaveContour={this.onSaveContour}
           />
         }
 

@@ -172,8 +172,11 @@ export const getFITSItem = (file, cb) => {
     const width = data.width
     const height = data.height
 
-    const image_min = getImageMin(frame, header)
-    const image_max = getImageMax(frame, header)
+    const frame_min = getImageMin(frame, header)
+    const frame_max = getImageMax(frame, header)
+
+    const image_min = (frame_min + frame_max) / 2
+    const image_max = frame_max
 
     const crpix_x = getImageCenterX(header)
     const crpix_y = getImageCenterY(header)
@@ -188,6 +191,6 @@ export const getFITSItem = (file, cb) => {
 
     const zoom = ZOOM / height
 
-    cb({ frame, url, width, height, image_min, image_max, crpix_x, crpix_y, radius, date, time, telescope, wavelength, zoom })
+    cb({ frame, url, width, height, frame_min, frame_max, image_min, image_max, crpix_x, crpix_y, radius, date, time, telescope, wavelength, zoom })
   })
 }

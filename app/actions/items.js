@@ -86,10 +86,43 @@ export const updateItemScale = (id, scale) => {
 }
 
 export const updateItemLevel = (id, min, max) => {
-  console.log((id, min, max))
   return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max }
 }
 
 export const updateItemRadius = (id, radius, xCenter, yCenter) => {
   return { type: ITEMS_UPDATE_ITEM_RADIUS, id, radius, xCenter, yCenter }
 }
+
+
+const updateContour = (item, contour) => {
+  let contours = item.contours || []
+  let isExist = false
+
+  contours = contours.map(c => {
+    if (c.title === contour.title) {
+      c = contour
+      isExist = true
+    }
+    return c
+  })
+
+  if (!isExist) contours.push(contour)
+
+  item.contours = contours
+
+  return item
+}
+
+export const updateItemContour = (id, contour) =>
+  (dispatch, getState) => {
+    let { items } = getState().items
+
+    items = items.map(item => {
+      if (id === item.id) {
+        item = updateContour(item, contour)
+      }
+      return item
+    })
+
+    return dispatch({ type: ITEMS_UPDATE_ALL, items })
+  }

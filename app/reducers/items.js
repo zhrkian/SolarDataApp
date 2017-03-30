@@ -21,8 +21,8 @@ const updateItemScale = (items, id, scale) =>
 const updateItemLevel = (items, id, min, max) =>
   items.map(item => {
     if (item.id === id) {
-      item.frame_min_value = min
-      item.frame_max_value = max
+      item.image_min = min
+      item.image_max = max
     }
     return item
   })

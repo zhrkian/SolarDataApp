@@ -7,8 +7,8 @@ class DataLevelControls extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      min_value: props.frame_min_value,
-      max_value: props.frame_max_value
+      min_value: props.image_min,
+      max_value: props.image_max
     }
   }
 
@@ -27,7 +27,7 @@ class DataLevelControls extends Component {
   }
 
   render() {
-    const { frame_min_value, frame_max_value, min, max } = this.props
+    const { image_min, image_max, frame_min, frame_max } = this.props
     const { min_value, max_value } = this.state
     return (
       <div className={s.container}>
@@ -36,10 +36,10 @@ class DataLevelControls extends Component {
           <div style={{width: '250px', padding: 10}}>
             { min_value ? <span>{'The min data value is: '}{min_value.toFixed(3)}</span> : null }
             <Slider
-              min={min < 0 ? 0 : min}
+              min={frame_min < 0 ? 0 : frame_min}
               max={max_value}
               step={0.005}
-              defaultValue={frame_min_value}
+              defaultValue={image_min}
               value={min_value}
               onDragStop={this.onDragStop}
               onChange={this.handleMinLevel}
@@ -49,9 +49,9 @@ class DataLevelControls extends Component {
             { max_value ? <span>{'The max data value is: '}{max_value.toFixed(3)}</span> : null }
             <Slider
               min={min_value}
-              max={max}
+              max={frame_max}
               step={0.005}
-              defaultValue={frame_max_value}
+              defaultValue={image_max}
               value={max_value}
               onDragStop={this.onDragStop}
               onChange={this.handleMaxLevel}
