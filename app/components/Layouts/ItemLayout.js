@@ -10,8 +10,8 @@ const ListLayout = props =>
       <span className={s.backMessage}>FILE LIST</span>
     </div>
     <div className={s.content}>
-      <div className={s.header}>
-        <span>{props.heading}</span>
+      <div className={s.heading}>
+        <span className={s.headingMessage}>{props.heading}</span>
       </div>
       {props.children}
     </div>

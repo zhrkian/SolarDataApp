@@ -4,6 +4,7 @@
     flex-direction: row;
     color: #ffffff;
     background-color: #000000;
+    height: 100%;
 }
 
 .back {
@@ -58,7 +59,7 @@
     position: relative;
 }
 
-.header {
+.heading {
     font-family: Roboto;
     font-size: 48px;
     font-weight: 300;
@@ -69,4 +70,9 @@
     /*text-align: center;*/
     color: #ffffff;
     padding-bottom: 50px;
+}
+
+.headingMessage {
+    top: 10px;
+    position: relative;
 }
