@@ -4,10 +4,11 @@ import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import FontIcon from 'material-ui/FontIcon'
-import MainLayout from '../../components/Layouts/MainLayout'
+import ItemLayout from '../../components/Layouts/ItemLayout'
 import Item from '../../components/Item/Item'
 import Spinner from '../../components/Spinner/Spinner'
 
+import * as Utils from '../../utils'
 import * as ItemsAction from '../../actions/items'
 import * as FramesAction from '../../actions/frames'
 
@@ -62,8 +63,6 @@ class ItemPage extends Component {
     return { item, frame }
   }
 
-  //onScaleUpdate = (id, scale) => this.props.dispatch(ItemsAction.updateItemScale(id, scale))
-
   onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
 
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
@@ -86,25 +85,31 @@ class ItemPage extends Component {
     const { array, image } = frame || {}
     const loading = !item || !array || !image
 
+    if (loading) return <ItemLayout><Spinner /></ItemLayout>
     return (
-      <MainLayout>
-        {
-          loading ? <Spinner /> : <Item item={item}
-                                        frame={frame}
-                                        onScaleUpdate={this.onScaleUpdate}
-                                        onImageLevelChange={this.onImageLevelChange}
-                                        onImageRadiusChange={this.onImageRadiusChange}
-                                        onFrameImageUpdate={this.onFrameImageUpdate}
-                                        onSaveContour={this.onSaveContour}
-          />
-        }
+      <ItemLayout heading={Utils.getFilename(item.url)}>
 
-
-        <Link className={s.backLink} to={`/items`}>
-          {'< BACK'}
-        </Link>
-      </MainLayout>
+      </ItemLayout>
     )
+    //return (
+    //  <MainLayout>
+    //    {
+    //      loading ? <Spinner /> : <Item item={item}
+    //                                    frame={frame}
+    //                                    onScaleUpdate={this.onScaleUpdate}
+    //                                    onImageLevelChange={this.onImageLevelChange}
+    //                                    onImageRadiusChange={this.onImageRadiusChange}
+    //                                    onFrameImageUpdate={this.onFrameImageUpdate}
+    //                                    onSaveContour={this.onSaveContour}
+    //      />
+    //    }
+    //
+    //
+    //    <Link className={s.backLink} to={`/items`}>
+    //      {'< BACK'}
+    //    </Link>
+    //  </MainLayout>
+    //)
   }
 }
 
