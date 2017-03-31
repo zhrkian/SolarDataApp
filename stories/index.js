@@ -26,6 +26,9 @@ import ListLayout from '../app/components/Layouts/ListLayout'
 import List from '../app/components/List/List'
 
 
+import ItemLayout from '../app/components/Layouts/ItemLayout'
+
+
 const _item = {
   path: 'http://127.0.0.1:3030/D0612115.fts'
 }
@@ -70,6 +73,14 @@ storiesOf('Common', module)
         <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
         <List items={[]} onView={console.log}/>
       </ListLayout>
+    </MUI>
+  ))
+
+  .add('Item Layout', () => (
+    <MUI>
+      <ItemLayout heading={'D0612115'}>
+
+      </ItemLayout>
     </MUI>
   ));
 
