@@ -81,21 +81,33 @@ export const getFrameImage = item => {
   return canvas.toDataURL()
 }
 
-export const getImageMin = (frame, header) => {
+const arrayMin = array => {
+  let min = 0
+  array.forEach(value => min = min > value ? value : min)
+  return min
+}
+
+const getImageMin = (frame, header) => {
   const MIN =  header.cards['IMGMIN01'] || header.cards['DATAMIN'] || {}
 
   const { value } = MIN
 
-  if (!value && frame) return Math.min.apply(null, frame)
+  if (!value && frame) return arrayMin(frame) //Math.min.apply(null, frame)
 
   return value
+}
+
+const arrayMax = array => {
+  let max = 0
+  array.forEach(value => max = max < value ? value : max)
+  return max
 }
 
 const getImageMax = (frame, header) => {
   const MAX = header.cards['IMGMAX01'] || header.cards['DATAMAX'] || {}
   const { value } = MAX
 
-  if (!value && frame) return Math.max.apply(null, frame)
+  if (!value && frame) return arrayMax(frame) //Math.max.apply(null, frame)
 
   return value
 }
