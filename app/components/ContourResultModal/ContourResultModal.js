@@ -26,8 +26,9 @@ class ContourResultModal extends React.Component {
 
   render() {
     const { contourName, error } = this.state
-    const { active, contourInfo, onClose } = this.props
-    const { totalContourSquarePixels, totalSquarePixels, totalContourSphericalSquare, totalVisibleSphericalSquare } = contourInfo || {}
+    const { active, contourSquareInfo, contourIntensityInfo, onClose } = this.props
+    const { totalContourSquarePixels, totalSquarePixels, totalContourSphericalSquare, totalVisibleSphericalSquare } = contourSquareInfo || {}
+    const { aveIntensity } = contourIntensityInfo || {}
 
 
     const actions = [
@@ -61,7 +62,7 @@ class ContourResultModal extends React.Component {
                        errorText={error}
                        onChange={this.onContourNameChange}/>
             {
-              contourInfo ? (
+              contourSquareInfo ? (
                 <Table selectable={false}>
                   <TableHeader displaySelectAll={false}
                                adjustForCheckbox={false}
@@ -87,6 +88,8 @@ class ContourResultModal extends React.Component {
                 </Table>
               ) : null
             }
+
+            <p>{ `Contour average intensity: ${aveIntensity}` }</p>
           </div>
         </Dialog>
       </div>

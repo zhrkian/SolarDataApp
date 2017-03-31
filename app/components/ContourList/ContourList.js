@@ -37,13 +37,15 @@ class ContourList extends Component {
 
   render() {
     const { values } = this.state
+    const { color, multiple, hintText } = this.props
+
     return (
-      <SelectField labelStyle={{color: 'white'}}
-                   listStyle={{color: 'white'}}
-                   hintStyle={{color: 'white'}}
-                   floatingLabelStyle={{color: 'white'}}
-                   multiple={true}
-                   hintText="Select a contour"
+      <SelectField labelStyle={{color: color || 'white'}}
+                   listStyle={{color: color || 'white'}}
+                   hintStyle={{color: color || 'white'}}
+                   floatingLabelStyle={{color: color || 'white'}}
+                   multiple={multiple}
+                   hintText={hintText || 'Select a contour'}
                    value={values}
                    onChange={this.handleChange}>
         {this.menuItems(values)}

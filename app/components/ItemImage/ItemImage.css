@@ -20,6 +20,10 @@
     justify-content: center;
     margin-bottom: 15px;
 }
+.drawingSubContainer {
+    display: flex;
+    position: relative;
+}
 
 .contourList {
     display: flex;

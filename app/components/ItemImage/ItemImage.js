@@ -5,6 +5,7 @@ import Chip from 'material-ui/Chip'
 
 import { Grid } from '../Layouts/Grid'
 import ContourResultModal from '../ContourResultModal/ContourResultModal'
+import ContourCalculatorModal from '../ContourCalculatorModal/ContourCalculatorModal'
 import SaveImage from '../SaveImage/SaveImage'
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
@@ -15,7 +16,7 @@ import * as FITSLib from '../../utils/item_creator'
 import * as Draw from '../../utils/draw'
 import * as Coordinates from '../../utils/coordinates'
 
-const colors = ['#7FFF00', '#00FA9A', '#3CB371', '#008000', '#556B2F', '#66CDAA', '#008B8B']
+const colors = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
 
 const getMouseCoordinates = (canvas, event) => {
   const canvasRect = canvas.getBoundingClientRect()
@@ -26,34 +27,6 @@ const getMouseCoordinates = (canvas, event) => {
 const onMouseClick = (canvas, callback, event) => {
   const coordinates = getMouseCoordinates(canvas, event)
   return callback ? callback(coordinates) : null
-}
-
-const toImageCoords = (item, coords) => {
-  const { height, zoom } = item
-  const fromView = c => {
-    const y = height - c.y / zoom
-    return { x: c.x / zoom, y: y }
-  }
-  if (Array.isArray(coords)) {
-    let result = []
-    coords.forEach(co => result.push(fromView(co)))
-    return result
-  }
-  return fromView(coords)
-}
-
-const toViewCoords = (item, coords) => {
-  const { height, zoom } = item
-  const fromImage = c => {
-    const y = (height - c.y) * zoom
-    return { x: c.x * zoom, y: y }
-  }
-  if (Array.isArray(coords)) {
-    let result = []
-    coords.forEach(co => result.push(fromImage(co)))
-    return result
-  }
-  return fromImage(coords)
 }
 
 const renderMouseCursor = (canvas, event) => {
@@ -73,7 +46,7 @@ const renderMouseCursor = (canvas, event) => {
 
 const renderSolarRadius = (canvas, item) => {
   const { zoom, radius, crpix_x, crpix_y } = item
-  const { x, y } = toViewCoords(item, { x: crpix_x, y: crpix_y })
+  const { x, y } = Coordinates.toViewCoords(item, { x: crpix_x, y: crpix_y })
 
   Draw.drawMarker(canvas, x, y, 1, 'red')
   Draw.drawCircle(canvas, x, y, radius * zoom, 'red')
@@ -87,7 +60,7 @@ const renderMarkers = (canvas, markers) => {
 }
 
 class ItemImage extends Component {
-  state = { imageBuffer: null, currentMarkers: [], scale: 1, contourModal: false }
+  state = { imageBuffer: null, currentMarkers: [], selectedContours: [], scale: 1, contourModal: false }
 
   componentDidMount() {
     const { item } = this.props
@@ -100,7 +73,7 @@ class ItemImage extends Component {
   onMouseClick = marker => {
     const { item } = this.props
     const { radius, crpix_x, crpix_y } = item
-    const { x, y } = toImageCoords(item, marker)
+    const { x, y } = Coordinates.toImageCoords(item, marker)
     const { currentMarkers } = this.state
     const isIsCircle = Coordinates.isIsCircle(x,y, radius, crpix_x, crpix_y)
     if (currentMarkers.indexOf(marker) < 0 && isIsCircle) {
@@ -116,9 +89,13 @@ class ItemImage extends Component {
       this.buildCanvasImage()
       renderSolarRadius(this.CanvasDrawRadius, item)
 
-      const { currentMarkers, contourCreated } = this.state
+      const { currentMarkers, contourCreated, selectedContours } = this.state
 
       renderMarkers(this.CanvasDraw, currentMarkers)
+
+      if (selectedContours && selectedContours.length) {
+        this.onSavedContoursSelect(selectedContours)
+      }
 
       if (contourCreated) {
         Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
@@ -198,7 +175,7 @@ class ItemImage extends Component {
     const { item, onSaveContour } = this.props
     const contour = {
       title: contourName,
-      contour: toImageCoords(item, currentMarkers),
+      contour: Coordinates.toImageCoords(item, currentMarkers),
       contourInfo
     }
     onSaveContour(item.id, contour)
@@ -220,14 +197,22 @@ class ItemImage extends Component {
   onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
   onContourSquareInfo = () => {
-    const { item } = this.props
+    const { item, frame } = this.props
     const { currentMarkers } = this.state
-    const imageMarkers = toImageCoords(item, currentMarkers)
-    const contourInfo = Coordinates.getContourSquareInfo(imageMarkers, item.radius, item.crpix_x, item.crpix_y)
-    this.setState({ contourInfo, contourInfoModal: true })
+    const imageMarkers = Coordinates.toImageCoords(item, currentMarkers)
+    const contourSquareInfo = Coordinates.getContourSquareInfo(imageMarkers, [], item.radius, item.crpix_x, item.crpix_y)
+    const contourIntensityInfo = Coordinates.getContourIntensityInfo(imageMarkers, [], frame.array, item.width)
+
+    this.setState({ contourSquareInfo, contourIntensityInfo, contourInfoModal: true })
+  }
+
+  onContourCalculator = () => {
+    this.setState({ contourCalculatorModal: true })
   }
 
   onCloseContourResultModal = () => this.setState({ contourInfoModal: false })
+
+  onCloseContourCalculatorModal = () => this.setState({ contourCalculatorModal: false })
 
   onSavedContoursSelect = titles => {
     let colorIndex = 0
@@ -236,16 +221,17 @@ class ItemImage extends Component {
     const selectedContours = contours.filter(contour => titles.indexOf(contour.title) > -1)
     Draw.clearCanvas(this.CanvasSavedContours)
     selectedContours.forEach(c => {
-      const contour = toViewCoords(item, c.contour)
+      const contour = Coordinates.toViewCoords(item, c.contour)
       if (!colors[colorIndex]) colorIndex = 0
       Draw.drawContour(this.CanvasSavedContours, contour, colors[colorIndex], () => {})
       colorIndex += 1
     })
+    this.setState({ selectedContours: titles })
   }
 
   render() {
-    const { currentMarkers, contourCreated, contourInfo, contourInfoModal } = this.state
-    const { item } = this.props
+    const { currentMarkers, contourCreated, contourSquareInfo, contourIntensityInfo, contourInfoModal, contourCalculatorModal } = this.state
+    const { item, frame } = this.props
     const { contours } = item
     const width = item.width * item.zoom
     const height = item.height * item.zoom
@@ -253,17 +239,19 @@ class ItemImage extends Component {
     return (
       <div className={s.container}>
         <div className={s.drawingContainer}>
-          <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
-          <canvas ref={(c) => { this.Canvas = c; }}></canvas>
-          <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
-          <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
-          <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
-          <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
-          <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+          <div className={s.drawingSubContainer}>
+            <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
+            <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+            <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+            <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
+            <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
+            <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
+            <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+          </div>
         </div>
 
         <div className={s.contourList}>
-          { contours && contours.length ? <ContourList contours={contours} onChange={this.onSavedContoursSelect} /> : null }
+          { contours && contours.length ? <ContourList contours={contours} multiple={true} onChange={this.onSavedContoursSelect} /> : null }
         </div>
 
         <Grid>
@@ -272,15 +260,23 @@ class ItemImage extends Component {
           {/*<FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
           <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
           <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
+          <FlatButton style={{color: 'white'}} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
         </Grid>
 
         <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
         <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
 
         <ContourResultModal active={contourInfoModal}
-                            contourInfo={contourInfo}
+                            contourSquareInfo={contourSquareInfo}
+                            contourIntensityInfo={contourIntensityInfo}
                             onSave={this.onSaveContour}
                             onClose={this.onCloseContourResultModal} />
+
+        <ContourCalculatorModal active={contourCalculatorModal}
+                                item={item}
+                                frame={frame.array}
+                                onChange={this.onSavedContoursSelect}
+                                onClose={this.onCloseContourCalculatorModal} />
       </div>
     )
   }
