@@ -51,45 +51,42 @@ class ImageRadiusControls extends Component {
 
     return (
       <div className={s.container}>
-        <div className={s.heading}>Radius correction</div>
-        <Grid>
-          <div style={{width: '250px', padding: 10}}>
-            { radius_value ? <span>{`The radius value is: ${radius_value.toFixed(3)} `}</span> : null }
-            <Slider
-              min={0}
-              max={maxRadiusValue}
-              step={0.005}
-              defaultValue={radius}
-              value={radius_value}
-              onDragStop={this.onDragStop}
-              onChange={this.handleRadiusValue}
-            />
-          </div>
-          <div style={{width: '250px', padding: 10}}>
-            { x_center ? <span>{`The center X value is: ${x_center.toFixed(3)} `}</span> : null }
-            <Slider
-              min={0}
-              max={width}
-              step={0.005}
-              defaultValue={crpix_x}
-              value={x_center}
-              onDragStop={this.onDragStop}
-              onChange={this.handleXCenterValue}
-            />
-          </div>
-          <div style={{width: '250px', padding: 10}}>
-            { y_center ? <span>{`The center Y value is: ${y_center.toFixed(3)} `}</span> : null }
-            <Slider
-              min={0}
-              max={height}
-              step={0.005}
-              defaultValue={crpix_y}
-              value={y_center}
-              onDragStop={this.onDragStop}
-              onChange={this.handleYCenterValue}
-            />
-          </div>
-        </Grid>
+        <div>
+          { radius_value ? <span>{`Radius: ${radius_value.toFixed(3)} `}</span> : null }
+          <Slider
+            min={0}
+            max={maxRadiusValue}
+            step={0.005}
+            defaultValue={radius}
+            value={radius_value}
+            onDragStop={this.onDragStop}
+            onChange={this.handleRadiusValue}
+          />
+        </div>
+        <div>
+          { x_center ? <span>{`Center X: ${x_center.toFixed(3)} `}</span> : null }
+          <Slider
+            min={0}
+            max={width}
+            step={0.005}
+            defaultValue={crpix_x}
+            value={x_center}
+            onDragStop={this.onDragStop}
+            onChange={this.handleXCenterValue}
+          />
+        </div>
+        <div>
+          { y_center ? <span>{`Center Y: ${y_center.toFixed(3)} `}</span> : null }
+          <Slider
+            min={0}
+            max={height}
+            step={0.005}
+            defaultValue={crpix_y}
+            value={y_center}
+            onDragStop={this.onDragStop}
+            onChange={this.handleYCenterValue}
+          />
+        </div>
         <FlatButton style={{color: 'white'}} label="Reset radius data to defaults" onClick={this.onResetToDefaults} primary />
 
       </div>

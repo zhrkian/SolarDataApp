@@ -27,6 +27,11 @@ import List from '../app/components/List/List'
 
 
 import ItemLayout from '../app/components/Layouts/ItemLayout'
+import Back from '../app/components/Back/Back'
+import ItemImageHolder from '../app/components/ItemImageHolder/ItemImageHolder'
+import ItemControls from '../app/components/ItemControls/ItemControls'
+
+import Block from '../app/components/Block/Block'
 
 
 const _item = {
@@ -58,28 +63,36 @@ const items = [
 ]
 
 
-storiesOf('Common', module)
-  .add('List Layout', () => (
-    <MUI>
-      <ListLayout>
-        <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
-        <List items={items} onView={console.log}/>
-      </ListLayout>
-    </MUI>
-  ))
-  .add('List Layout empty list', () => (
-    <MUI>
-      <ListLayout>
-        <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
-        <List items={[]} onView={console.log}/>
-      </ListLayout>
-    </MUI>
-  ))
+//storiesOf('List', module)
+//  .add('List Layout', () => (
+//    <MUI>
+//      <ListLayout>
+//        <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
+//        <List items={items} onView={console.log}/>
+//      </ListLayout>
+//    </MUI>
+//  ))
+//  .add('List Layout empty list', () => (
+//    <MUI>
+//      <ListLayout>
+//        <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
+//        <List items={[]} onView={console.log}/>
+//      </ListLayout>
+//    </MUI>
+//  ));
 
+storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
-      <ItemLayout heading={'D0612115'}>
-
+      <ItemLayout>
+        <Back />
+        <ItemImageHolder heading={'D0612115'}/>
+        <ItemControls>
+          <Block title="Block1" />
+          <Block title="Block2" />
+          <Block title="Block3" />
+          <Block title="Block4" />
+        </ItemControls>
       </ItemLayout>
     </MUI>
   ));

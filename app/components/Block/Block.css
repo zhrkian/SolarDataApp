@@ -1,0 +1,25 @@
+.block {
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+}
+
+.blockTitleHolder {
+    border: solid 2px #ff4081;
+    border-width: 0 0 0 3px;
+}
+
+.blockTitleMessage {
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: 100;
+    padding-left: 10px;
+    color: #ffffff;
+}
+
+.blockContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 10px;
+}

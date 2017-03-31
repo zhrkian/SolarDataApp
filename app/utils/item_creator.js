@@ -2,7 +2,7 @@
 //In fits folder
 import { RedTemperature } from './pattern'
 
-const ZOOM = 500
+const ZOOM = 650
 
 const chunkArray =  (array,  n) => {
   if ( !array.length ) return []

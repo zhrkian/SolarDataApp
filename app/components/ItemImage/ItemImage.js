@@ -3,13 +3,21 @@ import s from './ItemImage.css'
 import FlatButton from 'material-ui/FlatButton'
 import Chip from 'material-ui/Chip'
 
-import { Grid } from '../Layouts/Grid'
+import ItemLayout from '../Layouts/ItemLayout'
+import ItemImageHolder from '../ItemImageHolder/ItemImageHolder'
+import ItemControls from '../ItemControls/ItemControls'
+import Back from '../Back/Back'
+import Block from '../Block/Block'
+
+
 import ContourResultModal from '../ContourResultModal/ContourResultModal'
 import ContourCalculatorModal from '../ContourCalculatorModal/ContourCalculatorModal'
 import SaveImage from '../SaveImage/SaveImage'
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
 import ContourList from '../ContourList/ContourList'
+
+
 
 import * as FITSLib from '../../utils/item_creator'
 
@@ -237,48 +245,83 @@ class ItemImage extends Component {
     const height = item.height * item.zoom
 
     return (
-      <div className={s.container}>
-        <div className={s.drawingContainer}>
-          <div className={s.drawingSubContainer}>
-            <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
-            <canvas ref={(c) => { this.Canvas = c; }}></canvas>
-            <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
-            <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
-            <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
-            <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
-            <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+      <ItemLayout>
+        <Back />
+        <ItemImageHolder heading={'D0612115'}>
+          <div className={s.drawingContainer}>
+            <div className={s.drawingSubContainer}>
+              <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
+              <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+              <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+              <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
+              <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
+              <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
+              <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+            </div>
           </div>
-        </div>
-
-        <div className={s.contourList}>
-          { contours && contours.length ? <ContourList contours={contours} multiple={true} onChange={this.onSavedContoursSelect} /> : null }
-        </div>
-
-        <Grid>
-          <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
-          <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
-          {/*<FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
-          <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
-          <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
-          <FlatButton style={{color: 'white'}} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
-        </Grid>
-
-        <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
-        <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
-
-        <ContourResultModal active={contourInfoModal}
-                            contourSquareInfo={contourSquareInfo}
-                            contourIntensityInfo={contourIntensityInfo}
-                            onSave={this.onSaveContour}
-                            onClose={this.onCloseContourResultModal} />
-
-        <ContourCalculatorModal active={contourCalculatorModal}
-                                item={item}
-                                frame={frame.array}
-                                onChange={this.onSavedContoursSelect}
-                                onClose={this.onCloseContourCalculatorModal} />
-      </div>
+        </ItemImageHolder>
+        <ItemControls>
+          <Block title="TOOLS">
+            <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
+            <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
+            {/*<FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
+            <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
+            <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
+            <FlatButton style={{color: 'white'}} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
+          </Block>
+          <Block title="THRESHOLD">
+            <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+          </Block>
+          <Block title="RADIUS CORRECTION">
+            <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
+          </Block>
+        </ItemControls>
+      </ItemLayout>
     )
+
+    //return (
+    //  <div className={s.container}>
+    //    <div className={s.drawingContainer}>
+    //      <div className={s.drawingSubContainer}>
+    //        <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
+    //        <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+    //        <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+    //        <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
+    //        <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
+    //        <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
+    //        <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+    //      </div>
+    //    </div>
+    //
+    //    <div className={s.contourList}>
+    //      { contours && contours.length ? <ContourList contours={contours} multiple={true} onChange={this.onSavedContoursSelect} /> : null }
+    //    </div>
+    //
+    //    <Grid>
+    //      <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
+    //      <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
+    //      {/*<FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
+    //      <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
+    //      <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
+    //      <FlatButton style={{color: 'white'}} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
+    //    </Grid>
+    //
+    //    <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
+    //    <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
+    //
+    //    <ContourResultModal active={contourInfoModal}
+    //                        contourSquareInfo={contourSquareInfo}
+    //                        contourIntensityInfo={contourIntensityInfo}
+    //                        onSave={this.onSaveContour}
+    //                        onClose={this.onCloseContourResultModal} />
+    //
+    //    <ContourCalculatorModal active={contourCalculatorModal}
+    //                            item={item}
+    //                            frame={frame.array}
+    //                            onChange={this.onSavedContoursSelect}
+    //                            onClose={this.onCloseContourCalculatorModal} />
+    //  </div>
+    //)
   }
 }
 

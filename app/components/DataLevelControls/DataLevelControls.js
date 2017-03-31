@@ -31,33 +31,27 @@ class DataLevelControls extends Component {
     const { min_value, max_value } = this.state
     return (
       <div className={s.container}>
-        <div className={s.heading}>Data level</div>
-        <Grid>
-          <div style={{width: '250px', padding: 10}}>
-            { min_value ? <span>{'The min data value is: '}{min_value.toFixed(3)}</span> : null }
-            <Slider
-              min={frame_min < 0 ? 0 : frame_min}
-              max={max_value}
-              step={0.005}
-              defaultValue={image_min}
-              value={min_value}
-              onDragStop={this.onDragStop}
-              onChange={this.handleMinLevel}
-            />
-          </div>
-          <div style={{width: '250px', padding: 10}}>
-            { max_value ? <span>{'The max data value is: '}{max_value.toFixed(3)}</span> : null }
-            <Slider
-              min={min_value}
-              max={frame_max}
-              step={0.005}
-              defaultValue={image_max}
-              value={max_value}
-              onDragStop={this.onDragStop}
-              onChange={this.handleMaxLevel}
-            />
-          </div>
-        </Grid>
+        { min_value ? <span>{'Min: '}{min_value.toFixed(3)}</span> : null }
+        <Slider
+          min={frame_min < 0 ? 0 : frame_min}
+          max={max_value}
+          step={0.005}
+          defaultValue={image_min}
+          value={min_value}
+          onDragStop={this.onDragStop}
+          onChange={this.handleMinLevel}
+        />
+
+        { max_value ? <span>{'Max: '}{max_value.toFixed(3)}</span> : null }
+        <Slider
+          min={min_value}
+          max={frame_max}
+          step={0.005}
+          defaultValue={image_max}
+          value={max_value}
+          onDragStop={this.onDragStop}
+          onChange={this.handleMaxLevel}
+        />
       </div>
     )
   }
