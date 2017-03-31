@@ -5,8 +5,11 @@ import RaisedButton from 'material-ui/RaisedButton'
 import * as itemCreator from '../../utils/item_creator'
 
 const styles = {
-  button: {
-    margin: 12,
+  add: {
+    marginRight: 15
+  },
+  clear: {
+    backgroundColor: '#313131'
   },
   exampleImageInput: {
     cursor: 'pointer',
@@ -30,7 +33,7 @@ export default class OpenFITS extends Component {
         <RaisedButton
           label="Choose FITS"
           labelPosition="before"
-          style={styles.button}
+          style={styles.add}
           containerElement="label"
         >
           <input type="file" accept=".fits, .fit, .fts, .FTS" style={styles.exampleImageInput} ref={(ref) => this.fileUpload = ref} onChange={this.onChange} multiple />
@@ -38,9 +41,10 @@ export default class OpenFITS extends Component {
         <RaisedButton
           label="Cleat FITS List"
           labelPosition="before"
-          secondary={true}
-          style={styles.button}
+          style={styles.clear}
           containerElement="label"
+          backgroundColor="#313131"
+          labelColor="#ffffff"
           onClick={this.props.onClearAll}
         />
       </div>
