@@ -73,9 +73,11 @@ class ItemList extends Component {
           fixedHeader={true}
           fixedFooter={true}
           selectable={false}
-          multiSelectable={false}>
-          <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} >
-            <TableRow>
+          multiSelectable={false}
+          style={{backgroundColor: 'transparent'}}
+        >
+          <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} style={{borderBottom: 'none'}}>
+            <TableRow style={{borderBottom: 'solid 1px rgba(255, 255, 255, 0.1)'}}>
               <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
               <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
               <TableHeaderColumn tooltip="The Status">Status</TableHeaderColumn>
@@ -89,7 +91,7 @@ class ItemList extends Component {
                   <TableRowColumn>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
                   <TableRowColumn>{item.date ? `Date: ${item.date}` : ''}</TableRowColumn>
                   <TableRowColumn>status</TableRowColumn>
-                  <TableRowColumn><Menu /></TableRowColumn>
+                  <TableRowColumn style={{textAlign: 'right'}}><Menu /></TableRowColumn>
                 </TableRow>
               ))
             }
