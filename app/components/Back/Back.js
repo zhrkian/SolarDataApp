@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router'
 import s from './Back.css'
 
 const Back = props =>
-  <a href={'#0'} className={s.back}>
+  <Link className={s.back} to={`/items`}>
     <div className={s.backIconHolder}>
       <i className={s.backIcon}></i>
     </div>
     <span className={s.backMessage}>FILE LIST</span>
-  </a>
+  </Link>
 
 export default Back

@@ -17,12 +17,22 @@ import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
 import ContourList from '../ContourList/ContourList'
 
-
-
 import * as FITSLib from '../../utils/item_creator'
-
 import * as Draw from '../../utils/draw'
 import * as Coordinates from '../../utils/coordinates'
+import * as Utils from '../../utils'
+
+const styles = {
+  button: {
+    backgroundColor: '#313131',
+    marginBottom: 2
+  },
+  buttonLabel: {
+    color: '#FFFFFF',
+    fontFamily: 'Roboto',
+    fontSize: 14,
+  }
+}
 
 const colors = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
 
@@ -247,7 +257,7 @@ class ItemImage extends Component {
     return (
       <ItemLayout>
         <Back />
-        <ItemImageHolder heading={'D0612115'}>
+        <ItemImageHolder heading={Utils.getFilename(item.url)}>
           <div className={s.drawingContainer}>
             <div className={s.drawingSubContainer}>
               <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
@@ -262,12 +272,12 @@ class ItemImage extends Component {
         </ItemImageHolder>
         <ItemControls>
           <Block title="TOOLS">
-            <FlatButton style={{color: 'white'}} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
-            <FlatButton style={{color: 'white'}} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
-            {/*<FlatButton style={{color: 'white'}} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
-            <FlatButton style={{color: 'white'}} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
-            <FlatButton style={{color: 'white'}} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
-            <FlatButton style={{color: 'white'}} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
+            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
           </Block>
           <Block title="THRESHOLD">
             <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
@@ -275,7 +285,26 @@ class ItemImage extends Component {
           <Block title="RADIUS CORRECTION">
             <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
           </Block>
+          {
+            contours && contours.length ? (
+              <Block title="SAVED CONTOURS">
+                <ContourList contours={contours} multiple={true} onChange={this.onSavedContoursSelect} />
+              </Block>
+            ) : null
+          }
+
         </ItemControls>
+        <ContourResultModal active={contourInfoModal}
+                            contourSquareInfo={contourSquareInfo}
+                            contourIntensityInfo={contourIntensityInfo}
+                            onSave={this.onSaveContour}
+                            onClose={this.onCloseContourResultModal} />
+
+        <ContourCalculatorModal active={contourCalculatorModal}
+                                item={item}
+                                frame={frame.array}
+                                onChange={this.onSavedContoursSelect}
+                                onClose={this.onCloseContourCalculatorModal} />
       </ItemLayout>
     )
 

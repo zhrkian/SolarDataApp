@@ -3,6 +3,17 @@ import Slider from 'material-ui/Slider'
 import { Grid } from '../Layouts/Grid'
 import s from './DataLevelControls.css'
 
+const styles = {
+  group: {
+    marginBottom: -30,
+    fontFamily: 'Roboto',
+    fontSize: 14
+  },
+  slider: {
+    marginTop: -15
+  }
+}
+
 class DataLevelControls extends Component {
   constructor(props) {
     super(props)
@@ -29,29 +40,39 @@ class DataLevelControls extends Component {
   render() {
     const { image_min, image_max, frame_min, frame_max } = this.props
     const { min_value, max_value } = this.state
+
+    if (min_value === undefined || max_value === undefined) return null
+
     return (
       <div className={s.container}>
-        { min_value ? <span>{'Min: '}{min_value.toFixed(3)}</span> : null }
-        <Slider
-          min={frame_min < 0 ? 0 : frame_min}
-          max={max_value}
-          step={0.005}
-          defaultValue={image_min}
-          value={min_value}
-          onDragStop={this.onDragStop}
-          onChange={this.handleMinLevel}
-        />
+        <div style={styles.group}>
+          <span>{'Min: '}{min_value.toFixed(3)}</span>
+          <Slider
+            style={styles.slider}
+            min={frame_min < 0 ? 0 : frame_min}
+            max={max_value}
+            step={0.005}
+            defaultValue={image_min}
+            value={min_value}
+            onDragStop={this.onDragStop}
+            onChange={this.handleMinLevel}
+          />
+        </div>
 
-        { max_value ? <span>{'Max: '}{max_value.toFixed(3)}</span> : null }
-        <Slider
-          min={min_value}
-          max={frame_max}
-          step={0.005}
-          defaultValue={image_max}
-          value={max_value}
-          onDragStop={this.onDragStop}
-          onChange={this.handleMaxLevel}
-        />
+        <div style={styles.group}>
+          <span>{'Max: '}{max_value.toFixed(3)}</span>
+          <Slider
+            style={styles.slider}
+            min={min_value}
+            max={frame_max}
+            step={0.005}
+            defaultValue={image_max}
+            value={max_value}
+            onDragStop={this.onDragStop}
+            onChange={this.handleMaxLevel}
+          />
+        </div>
+
       </div>
     )
   }

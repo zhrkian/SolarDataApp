@@ -5,6 +5,25 @@ import { Grid } from '../Layouts/Grid'
 
 import s from './ImageRadiusControls.css'
 
+const styles = {
+  group: {
+    marginBottom: -30,
+    fontFamily: 'Roboto',
+    fontSize: 14
+  },
+  slider: {
+    marginTop: -15
+  },
+  button: {
+    backgroundColor: '#313131'
+  },
+  buttonLabel: {
+    color: '#FFFFFF',
+    fontFamily: 'Roboto',
+    fontSize: 14,
+  }
+}
+
 class ImageRadiusControls extends Component {
   constructor(props) {
     super(props)
@@ -49,11 +68,14 @@ class ImageRadiusControls extends Component {
 
     const maxRadiusValue = Math.sqrt(height * height / 4 + width * width / 4)
 
+    if (radius_value === undefined || x_center === undefined || y_center === undefined) return null
+
     return (
       <div className={s.container}>
-        <div>
-          { radius_value ? <span>{`Radius: ${radius_value.toFixed(3)} `}</span> : null }
+        <div style={styles.group}>
+          <span>{`Radius: ${radius_value.toFixed(3)} `}</span>
           <Slider
+            style={styles.slider}
             min={0}
             max={maxRadiusValue}
             step={0.005}
@@ -63,9 +85,10 @@ class ImageRadiusControls extends Component {
             onChange={this.handleRadiusValue}
           />
         </div>
-        <div>
-          { x_center ? <span>{`Center X: ${x_center.toFixed(3)} `}</span> : null }
+        <div style={styles.group}>
+          <span>{`Center X: ${x_center.toFixed(3)} `}</span>
           <Slider
+            style={styles.slider}
             min={0}
             max={width}
             step={0.005}
@@ -75,9 +98,10 @@ class ImageRadiusControls extends Component {
             onChange={this.handleXCenterValue}
           />
         </div>
-        <div>
-          { y_center ? <span>{`Center Y: ${y_center.toFixed(3)} `}</span> : null }
+        <div style={styles.group}>
+          <span>{`Center Y: ${y_center.toFixed(3)} `}</span>
           <Slider
+            style={styles.slider}
             min={0}
             max={height}
             step={0.005}
@@ -87,7 +111,7 @@ class ImageRadiusControls extends Component {
             onChange={this.handleYCenterValue}
           />
         </div>
-        <FlatButton style={{color: 'white'}} label="Reset radius data to defaults" onClick={this.onResetToDefaults} primary />
+        <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Reset radius to defaults" onClick={this.onResetToDefaults} primary />
 
       </div>
     )

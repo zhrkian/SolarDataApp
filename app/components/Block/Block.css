@@ -20,6 +20,6 @@
 .blockContent {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-top: 10px;
+    position: relative;
+    padding: 15px;
 }
