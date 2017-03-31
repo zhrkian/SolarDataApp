@@ -72,6 +72,8 @@ class ItemList extends Component {
   render() {
     const { items } = this.props
 
+    if (!items || !items.length) return <div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
+
     return (
       <div className={s.container}>
         <Table height={600} fixedHeader={true} fixedFooter={true} selectable={false} multiSelectable={false} style={{backgroundColor: 'transparent'}}

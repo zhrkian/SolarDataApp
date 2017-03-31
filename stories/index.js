@@ -63,6 +63,14 @@ storiesOf('Common', module)
         <List items={items} onView={console.log}/>
       </ListLayout>
     </MUI>
+  ))
+  .add('List Layout empty list', () => (
+    <MUI>
+      <ListLayout>
+        <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
+        <List items={[]} onView={console.log}/>
+      </ListLayout>
+    </MUI>
   ));
 
 //storiesOf('Components', module)
