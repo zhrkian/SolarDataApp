@@ -3,7 +3,7 @@ import { storiesOf, action, linkTo } from '@kadira/storybook';
 import MUI from './MUI'
 
 require('../app/utils/fits')
-
+require('../fonts/fonts.css')
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
@@ -22,7 +22,7 @@ import ItemImage from '../app/components/ItemImage/ItemImage'
 //import item from './item'
 //console.log(item)
 
-import ListLayout from '../app/common/Layouts/ListLayout'
+import ListLayout from '../app/components/Layouts/ListLayout'
 import List from '../app/components/List/List'
 
 
@@ -33,19 +33,24 @@ const _item = {
 const items = [
   {
     id: 0,
-    url: 'http://127.0.0.1:3030/D0612115.fts'
+    url: 'http://127.0.0.1:3030/D0612115.fts',
+    date: 'date',
+    item_thinking: true
   },
   {
     id: 1,
-    url: 'http://127.0.0.1:3030/D0612115.fts'
+    url: 'http://127.0.0.1:3030/D0612115.fts',
+    date: 'date'
   },
   {
     id: 2,
-    url: 'http://127.0.0.1:3030/D0612115.fts'
+    url: 'http://127.0.0.1:3030/D0612115.fts',
+    date: 'date'
   },
   {
     id: 3,
-    url: 'http://127.0.0.1:3030/D0612115.fts'
+    url: 'http://127.0.0.1:3030/D0612115.fts',
+    date: 'date'
   }
 ]
 
@@ -55,7 +60,7 @@ storiesOf('Common', module)
     <MUI>
       <ListLayout>
         <OpenFITS onOpenFiles={() => {}} clearAll={() => {}} />
-        <List items={items} />
+        <List items={items} onView={console.log}/>
       </ListLayout>
     </MUI>
   ));

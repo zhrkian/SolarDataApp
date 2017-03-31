@@ -63,77 +63,41 @@ const tableData = [
 ];
 
 class ItemList extends Component {
+  onRowClick = (row, cell) => {
+    const { items, onView } = this.props
+    if (cell === 4) return
+    return items[row].item_thinking ? null : onView(items[row].id)
+  }
+
   render() {
-    const { onView, items } = this.props
+    const { items } = this.props
 
     return (
       <div className={s.container}>
-        <Table
-          height={600}
-          fixedHeader={true}
-          fixedFooter={true}
-          selectable={false}
-          multiSelectable={false}
-          style={{backgroundColor: 'transparent'}}
+        <Table height={600} fixedHeader={true} fixedFooter={true} selectable={false} multiSelectable={false} style={{backgroundColor: 'transparent'}}
+          onCellClick={this.onRowClick}
         >
           <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} style={{borderBottom: 'none'}}>
             <TableRow style={{borderBottom: 'solid 1px rgba(255, 255, 255, 0.1)'}}>
-              <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Status">Status</TableHeaderColumn>
-              <TableHeaderColumn></TableHeaderColumn>
+              <TableHeaderColumn className={s.tableHeaderCell} tooltip="File name">File</TableHeaderColumn>
+              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Date">Date</TableHeaderColumn>
+              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Activity">Activity</TableHeaderColumn>
+              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Menu"></TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody className={s.tableBody} displayRowCheckbox={false} deselectOnClickaway={false} showRowHover={false} stripedRows={false}>
             {
               items.map( item => (
                 <TableRow className={s.tableBodyRow} key={item.id}>
-                  <TableRowColumn>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
-                  <TableRowColumn>{item.date ? `Date: ${item.date}` : ''}</TableRowColumn>
-                  <TableRowColumn>status</TableRowColumn>
-                  <TableRowColumn style={{textAlign: 'right'}}><Menu /></TableRowColumn>
+                  <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
+                  <TableRowColumn className={s.tableBodyCell}>{item.date ? `${item.date}` : ''}</TableRowColumn>
+                  <TableRowColumn className={s.tableBodyCell}>status</TableRowColumn>
+                  <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu />}</TableRowColumn>
                 </TableRow>
               ))
             }
           </TableBody>
         </Table>
-        <div className={s.list}>
-
-
-
-
-
-
-
-          {/*<List>
-            {
-              items.map(item => (
-                <div key={item.id}>
-                  <ListItem
-                    style={{color: 'white', width: '100%'}}
-                    rightIconButton={
-                      <IconMenu iconButtonElement={iconButtonElement}>
-                        <MenuItem onClick={onView.bind(this, item.id)}>View Image</MenuItem>
-                        <MenuItem>Image Info</MenuItem>
-                        <MenuItem>Delete</MenuItem>
-                      </IconMenu>
-                    }
-                    primaryText={item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}
-                    secondaryText={
-                    <p style={{color: grey400}}>
-                      <span>{item.date ? `Date: ${item.date}` : ''}</span>
-                      <br />
-                      <span>{item.wavelength ? `Wavelength: ${item.wavelength}` : ''}&nbsp;{item.telescope ? `Telescope: ${item.telescope}` : ''}</span>
-                    </p>
-                  }
-                    secondaryTextLines={2}
-                  />
-                  <Divider />
-                </div>
-              ))
-            }
-          </List>*/}
-        </div>
       </div>
     );
   }

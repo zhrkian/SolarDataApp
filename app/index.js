@@ -11,6 +11,7 @@ import configureStore from './store/configureStore'
 import './app.global.css'
 
 require('./utils/fits')
+require('../fonts/fonts.css')
 
 const store = configureStore([ 'frames', 'routing' ])
 const history = syncHistoryWithStore(hashHistory, store)
