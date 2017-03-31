@@ -3,7 +3,7 @@ import { storiesOf, action, linkTo } from '@kadira/storybook';
 import MUI from './MUI'
 
 require('../app/utils/fits')
-require('../fonts/fonts.css')
+require('../app/app.global.css')
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
