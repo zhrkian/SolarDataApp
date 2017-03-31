@@ -9,7 +9,7 @@ const router = routerMiddleware(hashHistory)
 
 const enhancer = applyMiddleware(thunk, router)
 
-localStorage.clear()
+//localStorage.clear()
 
 const getLocalStorageStore = () => {
   const store = localStorage.getItem('SolarAppStorage')

@@ -88,7 +88,14 @@ class ItemPage extends Component {
     if (loading) return <ItemLayout><Spinner /></ItemLayout>
     return (
       <ItemLayout heading={Utils.getFilename(item.url)}>
-
+        <Item item={item}
+              frame={frame}
+              onScaleUpdate={this.onScaleUpdate}
+              onImageLevelChange={this.onImageLevelChange}
+              onImageRadiusChange={this.onImageRadiusChange}
+              onFrameImageUpdate={this.onFrameImageUpdate}
+              onSaveContour={this.onSaveContour}
+        />
       </ItemLayout>
     )
     //return (
