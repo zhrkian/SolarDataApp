@@ -37,7 +37,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     font-family: Roboto, sans-serif;
     font-size: 9px;
     font-weight: normal;
