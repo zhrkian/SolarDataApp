@@ -13,7 +13,8 @@
     height: 51px;
     width: 27px;
     overflow: hidden;
-    padding-top: 15px;
+    padding-top: 40px;
+    left: -5px;
 }
 
 .backIcon {
@@ -26,7 +27,7 @@
     width: 51px;
     padding: 3px;
     left: 15px;
-    top: 5px;
+    top: 34px;
 }
 
 .backMessage {
