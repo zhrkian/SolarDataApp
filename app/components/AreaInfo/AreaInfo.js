@@ -9,7 +9,9 @@ const AreaInfo = props => {
   return (
     <div className={s.container}>
       <div className={s.icon}>
-        <Icons.Area />
+        <div className={s.iconHolder}>
+          <Icons.Area />
+        </div>
         <span className={s.iconMessage}>AREA INFO</span>
       </div>
       <div className={s.table}>
