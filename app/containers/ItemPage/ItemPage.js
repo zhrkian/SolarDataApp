@@ -63,6 +63,12 @@ class ItemPage extends Component {
     return { item, frame }
   }
 
+  onAddNewContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour, true))
+
+  onUpdateContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour))
+
+  onSelectContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour, true))
+
   onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
 
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
@@ -86,11 +92,27 @@ class ItemPage extends Component {
     const loading = !item || !array || !image
 
     if (loading) return <ItemLayout><Spinner /></ItemLayout>
+
+    const { contours, activeContour } = item
+    let contour = contours.filter(c => c.title === activeContour)[0]
+
+    if (!contour && contours.length) {
+      this.onSelectContour(item.id, contour[0])
+    }
+
+
     return (
       <ItemLayout heading={Utils.getFilename(item.url)}>
         <Item item={item}
               frame={frame}
-              onScaleUpdate={this.onScaleUpdate}
+
+              contours={contours}
+              contour={contour}
+
+              onAddNewContour={this.onAddNewContour}
+              onUpdateContour={this.onUpdateContour}
+              onSelectContour={this.onSelectContour}
+
               onImageLevelChange={this.onImageLevelChange}
               onImageRadiusChange={this.onImageRadiusChange}
               onFrameImageUpdate={this.onFrameImageUpdate}

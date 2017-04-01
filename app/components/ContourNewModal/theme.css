@@ -1,0 +1,23 @@
+.body {
+    overflow: hidden!important;
+    display: flex!important;
+    flex-direction: column!important;
+    padding: 6em 8em!important;
+    width: 30%!important;
+    margin: 0 auto!important;
+    font-size: inherit!important;
+    color: inherit!important;
+}
+.body p {
+    font-size: inherit;
+    color: inherit;
+}
+
+.overlay {
+    background: rgba(255, 255, 255, 1)!important;
+}
+
+.title {
+    font-size: 2em!important;
+    font-weight: 300!important;
+}

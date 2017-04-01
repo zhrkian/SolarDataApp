@@ -30,11 +30,15 @@ import ItemLayout from '../app/components/Layouts/ItemLayout'
 import Back from '../app/components/Back/Back'
 import ItemImageHolder from '../app/components/ItemImageHolder/ItemImageHolder'
 import ItemControls from '../app/components/ItemControls/ItemControls'
+import ItemControlsDock from '../app/components/ItemControls/ItemControlsDock'
+
+import ContourList from '../app/components/ContourList/ContourList'
 
 import Block from '../app/components/Block/Block'
 
 import * as Icons from '../app/components/Icons/Icons'
 import IconButton from '../app/components/IconButton/IconButton'
+import ContourNewModal from '../app/components/ContourNewModal/ContourNewModal'
 
 import SaveFile from '../app/components/SaveFile/SaveFile'
 const _item = {
@@ -87,25 +91,49 @@ storiesOf('Save File', module)
 //    </MUI>
 //  ));
 
+const contours = [
+  {
+    title: 'Cont 1'
+  },
+  {
+    title: 'Cont 2'
+  },
+  {
+    title: 'Cont 3'
+  },
+  {
+    title: 'Cont 4'
+  },
+  {
+    title: 'Cont 5'
+  },
+  {
+    title: 'Cont 6'
+  },
+  {
+    title: 'Cont 7'
+  }
+]
+
 storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
       <ItemLayout>
         <Back />
         <ItemImageHolder heading={'D0612115'}/>
-        <ItemControls>
-          <Block title="Block1">
-            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="New"  label="New contour" disabled={true} onClick={() => {}} />
-              <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
-              <IconButton icon="Area"       label="Area info" onClick={() => {}} />
-              <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
-              <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
-              <IconButton icon="Image"     label="Save image" onClick={() => {}} />
-            </div>
+        <ItemControls dock={[
+            <IconButton icon="New"  label="New contour" disabled={true} onClick={() => {}} />,
+            <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>,
+            <IconButton icon="Area"       label="Area info" onClick={() => {}} />,
+            <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />,
+            <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />,
+            <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />,
+            <IconButton icon="Image"     label="Save image" onClick={() => {}} />,
+        ]}>
+          <Block title="Contours">
+            <ContourList contours={contours} active={contours[1]} onSelect={console.log} />
           </Block>
-          <Block title="Block1">
+          <Block title="Block2">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
               <IconButton icon="New"  label="New contour" onClick={() => {}} />
               <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
@@ -115,7 +143,7 @@ storiesOf('Item', module)
               <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
             </div>
           </Block>
-          <Block title="Block1">
+          <Block title="Block3">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
               <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
               <IconButton icon="Area"       label="Area info" onClick={() => {}} />
@@ -124,7 +152,7 @@ storiesOf('Item', module)
               <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
             </div>
           </Block>
-          <Block title="Block1">
+          <Block title="Block4">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
               <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
               <IconButton icon="Area"       label="Area info" onClick={() => {}} />
@@ -161,6 +189,7 @@ storiesOf('Item', module)
             </div>
           </Block>
         </ItemControls>
+        <ContourNewModal active={true} />
       </ItemLayout>
     </MUI>
   ));

@@ -11,11 +11,15 @@ import Back from '../Back/Back'
 import Block from '../Block/Block'
 
 
+import ContourNewModal from '../ContourNewModal/ContourNewModal'
 import ContourResultModal from '../ContourResultModal/ContourResultModal'
 import ContourCalculatorModal from '../ContourCalculatorModal/ContourCalculatorModal'
+
+
 import SaveImage from '../SaveImage/SaveImage'
 import DataLevelControls from '../DataLevelControls/DataLevelControls'
 import ImageRadiusControls from '../ImageRadiusControls/ImageRadiusControls'
+import ContourSelect from '../ContourSelect/ContourSelect'
 import ContourList from '../ContourList/ContourList'
 
 import * as FITSLib from '../../utils/item_creator'
@@ -39,7 +43,7 @@ const colors = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
 
 const getMouseCoordinates = (canvas, event) => {
   const canvasRect = canvas.getBoundingClientRect()
-  const coordinates = { x: (event.clientX - canvasRect.left), y: (event.clientY - canvasRect.top) }
+  const coordinates = event.update ? event : { x: (event.clientX - canvasRect.left), y: (event.clientY - canvasRect.top) }
   return coordinates
 }
 
@@ -79,46 +83,44 @@ const renderMarkers = (canvas, markers) => {
 }
 
 class ItemImage extends Component {
-  state = { imageBuffer: null, currentMarkers: [], selectedContours: [], scale: 1, contourModal: false }
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentContour: null,
+      imageBuffer: null,
+      currentMarkers: [],
+      selectedContours: [],
+      scale: 1,
+      contourModal: false
+    }
+  }
 
   componentDidMount() {
-    const { item } = this.props
+    const { item, contour } = this.props
     this.buildCanvasImage()
     this.CanvasCrossHair.addEventListener('mousedown', onMouseClick.bind(this, this.CanvasCrossHair, this.onMouseClick))
     this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair))
     renderSolarRadius(this.CanvasDrawRadius, item)
+    this.initCurrentContour(item, contour)
   }
 
-  onMouseClick = marker => {
-    const { item } = this.props
-    const { radius, crpix_x, crpix_y } = item
-    const { x, y } = Coordinates.toImageCoords(item, marker)
-    const { currentMarkers } = this.state
-    const isIsCircle = Coordinates.isIsCircle(x,y, radius, crpix_x, crpix_y)
-    if (currentMarkers.indexOf(marker) < 0 && isIsCircle) {
-      const markers = [...currentMarkers, marker]
-      renderMarkers(this.CanvasDraw, markers)
-      this.setState({ currentMarkers: markers })
+  componentWillUpdate(props) {
+    if (this.props !== props) {
+      const { item, contour } = props
+      this.buildCanvasImage()
+      renderSolarRadius(this.CanvasDrawRadius, item)
+      this.initCurrentContour(item, contour)
     }
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props !== props) {
-      const { item } = props
-      this.buildCanvasImage()
-      renderSolarRadius(this.CanvasDrawRadius, item)
-
-      const { currentMarkers, contourCreated, selectedContours } = this.state
-
-      renderMarkers(this.CanvasDraw, currentMarkers)
-
-      if (selectedContours && selectedContours.length) {
-        this.onSavedContoursSelect(selectedContours)
-      }
-
-      if (contourCreated) {
-        Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
-      }
+  initCurrentContour = (item, contour) => {
+    const { markers } = contour || {}
+    if (markers && markers.length) {
+      const viewMarkers = Coordinates.toViewCoords(item, markers)
+      const lastMarker = viewMarkers[viewMarkers.length - 1]
+      renderMarkers(this.CanvasDraw, viewMarkers)
+      if (contour.contourCreated) Draw.drawContour(this.CanvasDraw, viewMarkers, 'red')
+      renderMouseCursor(this.CanvasCrossHair, {...lastMarker, update: true})
     }
   }
 
@@ -131,6 +133,7 @@ class ItemImage extends Component {
   }
 
   updateCanvasSize = (width, height) => {
+    if (this.Canvas.width === width && this.Canvas.height === height) return
     this.Canvas.width = width
     this.Canvas.height = height
     this.CanvasImage.width = width
@@ -172,43 +175,33 @@ class ItemImage extends Component {
     return onFrameImageUpdate(item.id, canvas.toDataURL())
   }
 
+  onMouseClick = marker => {
+    const { item, onUpdateContour, contour } = this.props
+    const { radius, crpix_x, crpix_y } = item
+    const { x, y } = Coordinates.toImageCoords(item, marker)
+    const isIsCircle = Coordinates.isIsCircle(x, y, radius, crpix_x, crpix_y)
+    if (isIsCircle && contour) {
+      let markers = contour.markers || []
+      markers.push(Coordinates.toImageCoords(item, marker))
+      return onUpdateContour(item.id, {...contour, markers, contourCreated: false })
+    }
+  }
+
   onRemoveLastMarker = () => {
-    const { currentMarkers } = this.state
-    currentMarkers.pop()
-    renderMarkers(this.CanvasDraw, currentMarkers)
-    this.setState({ currentMarkers, contourCreated: false })
+    const { item, onUpdateContour, contour } = this.props
+    let { markers } = contour
+    markers.pop()
+    return onUpdateContour(item.id, {...contour, markers, contourCreated: false })
   }
 
   onRemoveAllMarker = () => {
-    renderMarkers(this.CanvasDraw, [])
-    this.setState({ currentMarkers: [], contourCreated: false })
+    const { item, onUpdateContour, contour } = this.props
+    return onUpdateContour(item.id, {...contour, markers: [], contourCreated: false })
   }
 
   onDrawContour = () => {
-    const { currentMarkers } = this.state
-    Draw.drawContour(this.CanvasDraw, currentMarkers, 'red', () => this.setState({ contourCreated: true }))
-  }
-
-  onSaveContour = contourName => {
-    const { contourInfo, currentMarkers } = this.state
-    const { item, onSaveContour } = this.props
-    const contour = {
-      title: contourName,
-      contour: Coordinates.toImageCoords(item, currentMarkers),
-      contourInfo
-    }
-    onSaveContour(item.id, contour)
-    this.onCloseContourResultModal()
-  }
-
-  gravity = () => {
-    const { currentMarkers } = this.state
-    let totalMass = currentMarkers.length, totalY = 0, totalX = 0
-    currentMarkers.forEach(point => {
-      totalX += point.x
-      totalY += point.y
-    })
-    Draw.drawMarker(this.CanvasDraw, totalX / totalMass, totalY / totalMass, 5, 'green')
+    const { item, onUpdateContour, contour } = this.props
+    return onUpdateContour(item.id, {...contour, contourCreated: true })
   }
 
   onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
@@ -233,32 +226,40 @@ class ItemImage extends Component {
 
   onCloseContourCalculatorModal = () => this.setState({ contourCalculatorModal: false })
 
-  onSavedContoursSelect = titles => {
-    let colorIndex = 0
-    const { item } = this.props
-    const { contours } = item
-    const selectedContours = contours.filter(contour => titles.indexOf(contour.title) > -1)
-    Draw.clearCanvas(this.CanvasSavedContours)
-    selectedContours.forEach(c => {
-      const contour = Coordinates.toViewCoords(item, c.contour)
-      if (!colors[colorIndex]) colorIndex = 0
-      Draw.drawContour(this.CanvasSavedContours, contour, colors[colorIndex], () => {})
-      colorIndex += 1
-    })
-    this.setState({ selectedContours: titles })
-  }
+  onOpenContourNewModal = () => this.setState({ contourNewModal: true })
+  onCloseContourNewModal = () => this.setState({ contourNewModal: false })
+
+  //onSavedContoursSelect = titles => {
+  //  let colorIndex = 0
+  //  const { item } = this.props
+  //  const { contours } = item
+  //  const selectedContours = contours.filter(contour => titles.indexOf(contour.title) > -1)
+  //  Draw.clearCanvas(this.CanvasSavedContours)
+  //  selectedContours.forEach(c => {
+  //    const contour = Coordinates.toViewCoords(item, c.contour)
+  //    if (!colors[colorIndex]) colorIndex = 0
+  //    Draw.drawContour(this.CanvasSavedContours, contour, colors[colorIndex], () => {})
+  //    colorIndex += 1
+  //  })
+  //  this.setState({ selectedContours: titles })
+  //}
 
   render() {
-    const { currentMarkers, contourCreated, contourSquareInfo, contourIntensityInfo, contourInfoModal, contourCalculatorModal } = this.state
-    const { item, frame } = this.props
-    const { contours } = item
+    const { currentContour, contourInfoModal, contourCalculatorModal, contourNewModal } = this.state
+    const { item, frame, contours, contour } = this.props
+    const { onAddNewContour, onSelectContour } = this.props
+    const markers = contour ? contour.markers : []
+
     const width = item.width * item.zoom
     const height = item.height * item.zoom
+
+    let heading = `${Utils.getFilename(item.url)}`
+    if (contour) heading = `${heading} / ${contour.title}`
 
     return (
       <ItemLayout>
         <Back />
-        <ItemImageHolder heading={Utils.getFilename(item.url)}>
+        <ItemImageHolder heading={heading}>
           <div className={s.drawingContainer}>
             <div className={s.drawingSubContainer}>
               <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
@@ -271,16 +272,26 @@ class ItemImage extends Component {
             </div>
           </div>
         </ItemImageHolder>
-        <ItemControls>
-          <Block title="TOOLS">
-            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="Remove"     label="Remove all markers" onClick={this.onRemoveAllMarker} disabled={!currentMarkers.length}/>
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={this.onRemoveLastMarker} disabled={!currentMarkers.length}/>
-              <IconButton icon="Contour"    label="Draw contour" onClick={this.onDrawContour} disabled={currentMarkers.length < 3}/>
-              <IconButton icon="Area"       label="Area info" onClick={this.onContourSquareInfo} disabled={!contourCreated}/>
-              <IconButton icon="Calc"       label="Contour calc" onClick={this.onContourCalculator} disabled={!contours || !contours.length}/>
-            </div>
-          </Block>
+
+        {/* SIDEBAR */}
+        <ItemControls dock={[
+              <IconButton key={1} icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
+              <IconButton key={2} icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
+              <IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,
+              <IconButton key={4} icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
+              <IconButton key={5} icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
+              <IconButton key={6} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
+              <IconButton key={7} icon="Image"      label="Save image"          onClick={() => {}} />
+            ]}>
+
+          {
+            contours && contours.length ? (
+              <Block title="CONTOURS">
+                <ContourList contours={contours} active={contour} onSelect={contour => onSelectContour(item.id, contour)} />
+              </Block>
+            ) : null
+          }
+
           <Block title="THRESHOLD">
             <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>
           </Block>
@@ -288,6 +299,9 @@ class ItemImage extends Component {
             <ImageRadiusControls {...item} onImageRadiusChange={this.onImageRadiusChange}/>
           </Block>
         </ItemControls>
+
+
+        {/* MODALS
         <ContourResultModal active={contourInfoModal}
                             contourSquareInfo={contourSquareInfo}
                             contourIntensityInfo={contourIntensityInfo}
@@ -298,7 +312,11 @@ class ItemImage extends Component {
                                 item={item}
                                 frame={frame.array}
                                 onChange={this.onSavedContoursSelect}
-                                onClose={this.onCloseContourCalculatorModal} />
+                                onClose={this.onCloseContourCalculatorModal} />*/}
+
+        <ContourNewModal active={contourNewModal}
+                         onAdd={name => onAddNewContour(item.id, { title: name, markers: [] }) & this.onCloseContourNewModal()}
+                         onClose={this.onCloseContourNewModal}/>
       </ItemLayout>
     )
   }

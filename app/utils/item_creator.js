@@ -206,6 +206,8 @@ export const getFITSItem = (file, cb) => {
 
     const zoom = ZOOM / height
 
-    cb({ frame, url, width, height, frame_min, frame_max, image_min, image_max, default_crpix_x, default_crpix_y, crpix_x, crpix_y, default_radius, radius, date, time, telescope, wavelength, zoom })
+    cb({ frame, url, width, height, frame_min, frame_max,
+      image_min, image_max, default_crpix_x, default_crpix_y, crpix_x, crpix_y,
+      default_radius, radius, date, time, telescope, wavelength, zoom, contours: [] })
   })
 }

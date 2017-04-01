@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 
-import ContourList from '../ContourList/ContourList'
+import ContourSelect from '../ContourSelect/ContourSelect'
 
 import * as Coordinates from '../../utils/coordinates'
 
@@ -90,9 +90,9 @@ class ContourCalculatorModal extends React.Component {
         >
           <div className={s.container}>
             <div className={s.selectBox}>
-              <ContourList contours={contours} hintText='Base contour' color={'black'} onChange={this.onBaseChange} />
+              <ContourSelect contours={contours} hintText='Base contour' color={'black'} onChange={this.onBaseChange} />
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <ContourList contours={contours} hintText='Exclude contours' color={'black'} multiple={true} onChange={this.onExcludeChange} />
+              <ContourSelect contours={contours} hintText='Exclude contours' color={'black'} multiple={true} onChange={this.onExcludeChange} />
             </div>
 
             {
