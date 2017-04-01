@@ -42,6 +42,6 @@ export const Area = () =>
 
 export const Calc = () =>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" width="46" height="46">
-    <path fill="#50E3C2" fill-rule="evenodd" d="M24 22V7h-2v15H7v2h15v15h2V24h15v-2H24zM5 8c0-1.7 1.3-3 3-3h30c1.7 0 3 1.3 3 3v30c0 1.7-1.3 3-3 3H8c-1.7 0-3-1.3-3-3V8zm3-1h30c.5 0 1 .5 1 1v30c0 .5-.5 1-1 1H8c-.5 0-1-.5-1-1V8c0-.5.5-1 1-1z"/>
-    <path fill="#50E3C2" fill-rule="evenodd" d="M14 14h-3v1h3v3h1v-3h3v-1h-3v-3h-1v3zm.5 16.8L11.7 28l-.7.7 2.8 2.8-2.8 3 .7.6 2.8-2.6 3 3 .6-.8-2.6-3 3-2.7-.8-.8-3 3zM28 14h7v1h-7v-1zm0 16h7v1h-7v-1zm0 2h7v1h-7v-1z"/>
+  <path fill="#50E3C2" fillRule="evenodd" d="M24 22V7h-2v15H7v2h15v15h2V24h15v-2H24zM5 8c0-1.7 1.3-3 3-3h30c1.7 0 3 1.3 3 3v30c0 1.7-1.3 3-3 3H8c-1.7 0-3-1.3-3-3V8zm3-1h30c.5 0 1 .5 1 1v30c0 .5-.5 1-1 1H8c-.5 0-1-.5-1-1V8c0-.5.5-1 1-1z"/>
+  <path fill="#50E3C2" fillRule="evenodd" d="M14 14h-3v1h3v3h1v-3h3v-1h-3v-3h-1v3zm.5 16.8L11.7 28l-.7.7 2.8 2.8-2.8 3 .7.6 2.8-2.6 3 3 .6-.8-2.6-3 3-2.7-.8-.8-3 3zM28 14h7v1h-7v-1zm0 16h7v1h-7v-1zm0 2h7v1h-7v-1z"/>
   </svg>
