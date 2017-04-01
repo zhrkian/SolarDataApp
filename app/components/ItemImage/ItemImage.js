@@ -274,18 +274,12 @@ class ItemImage extends Component {
         <ItemControls>
           <Block title="TOOLS">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="Contour"    label="Draw contour" />
-              <IconButton icon="Area"       label="Area info" />
-              <IconButton icon="Calc"       label="Contour calc" />
-              <IconButton icon="Remove"     label="Remove all markers" />
-              <IconButton icon="RemoveOne"  label="Remove last marker" />
+              <IconButton icon="Remove"     label="Remove all markers" onClick={this.onRemoveAllMarker} disabled={!currentMarkers.length}/>
+              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={this.onRemoveLastMarker} disabled={!currentMarkers.length}/>
+              <IconButton icon="Contour"    label="Draw contour" onClick={this.onDrawContour} disabled={currentMarkers.length < 3}/>
+              <IconButton icon="Area"       label="Area info" onClick={this.onContourSquareInfo} disabled={!contourCreated}/>
+              <IconButton icon="Calc"       label="Contour calc" onClick={this.onContourCalculator} disabled={!contours || !contours.length}/>
             </div>
-            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>*/}
-            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
-            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>*/}
           </Block>
           <Block title="THRESHOLD">
             <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>

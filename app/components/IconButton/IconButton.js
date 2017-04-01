@@ -3,14 +3,24 @@ import React from 'react'
 import * as Icons from '../Icons/Icons'
 
 const IconButton = props => {
-  const Icon = Icons[props.icon]
+  const { icon, label, disabled, onClick } = props
+  const Icon = Icons[icon]
+  const styles = disabled ? {filter: 'grayscale(100%)', cursor: 'not-allowed'} : {}
+  const click = e => {
+    e.preventDefault()
+    return disabled ? null : onClick()
+  }
+
   return (
-    <div className={s.container}>
+    <a className={s.container}
+       href={'#0'}
+       style={styles}
+       onClick={click}>
       <div className={s.icon}>
         <Icon />
       </div>
-      <div className={s.label}>{props.label}</div>
-    </div>
+      <div className={s.label}>{label}</div>
+    </a>
   )
 }
 

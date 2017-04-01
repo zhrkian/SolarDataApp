@@ -1,5 +1,22 @@
+::-webkit-scrollbar
+{
+    width: 3px;  /* for vertical scrollbars */
+    height: 3px; /* for horizontal scrollbars */
+    background: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar * {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb
+{
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
 .controls {
     width: 435px;
     background-color: #181818;
     margin-left: auto;
+    overflow-y: scroll;
 }
