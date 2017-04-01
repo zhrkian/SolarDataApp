@@ -1,14 +1,22 @@
 .container {
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 79px;
-    height: 79px;
-    margin: 4px;
-    border-radius: 2px;
-    background-color: #313131;
+    position: relative!important;
+    align-items: center!important;
+    min-width: 79px!important;
+    height: 79px!important;
+    margin: 4px!important;
+    border: none!important;
+    padding: 0!important;
+    border-radius: 2px!important;
+    background-color: #313131!important;
+}
+.container > div {
+    position: relative!important;
+    width: 79px!important;
+    height: 79px!important;
+    display: flex!important;
+    flex-direction: column!important;
+    justify-content: center!important;
+    align-items: center!important;
 }
 
 .disabled {
@@ -24,7 +32,8 @@
 }
 
 .label {
-    flex: 0 0 2.8em;
+    box-sizing: border-box;
+    flex: 0 0 2em;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -39,4 +48,12 @@
     text-align: center;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.68);
+}
+
+.text {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
