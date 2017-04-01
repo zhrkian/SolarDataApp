@@ -39,6 +39,7 @@ import Block from '../app/components/Block/Block'
 import * as Icons from '../app/components/Icons/Icons'
 import IconButton from '../app/components/IconButton/IconButton'
 import ContourNewModal from '../app/components/ContourNewModal/ContourNewModal'
+import AreaInfo from '../app/components/AreaInfo/AreaInfo'
 
 import SaveFile from '../app/components/SaveFile/SaveFile'
 const _item = {
@@ -129,7 +130,9 @@ storiesOf('Item', module)
     <MUI>
       <ItemLayout>
         <Back />
-        <ItemImageHolder heading={'D0612115'}/>
+        <ItemImageHolder heading={'D0612115'}>
+          <AreaInfo />
+        </ItemImageHolder>
         <ItemControls dock={[
             <IconButton icon="New"  label="New contour" disabled={true} onClick={() => {}} />,
             <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>,

@@ -29,39 +29,6 @@ const Menu = props =>
     <MenuItem>Delete</MenuItem>
   </IconMenu>
 
-const tableData = [
-  {
-    name: 'John Smith',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Randal White',
-    status: 'Unemployed',
-  },
-  {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-    selected: true,
-  },
-  {
-    name: 'Steve Brown',
-    status: 'Employed',
-  },
-  {
-    name: 'Joyce Whitten',
-    status: 'Employed',
-  },
-  {
-    name: 'Samuel Roberts',
-    status: 'Employed',
-  },
-  {
-    name: 'Adam Moore',
-    status: 'Employed',
-  },
-];
-
 class ItemList extends Component {
   onRowClick = (row, cell) => {
     const { items, onView } = this.props

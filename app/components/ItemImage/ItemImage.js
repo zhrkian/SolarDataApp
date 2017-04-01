@@ -3,6 +3,7 @@ import s from './ItemImage.css'
 import FlatButton from 'material-ui/FlatButton'
 import Chip from 'material-ui/Chip'
 
+import AreaInfo from '../AreaInfo/AreaInfo'
 import ItemLayout from '../Layouts/ItemLayout'
 import ItemImageHolder from '../ItemImageHolder/ItemImageHolder'
 import ItemControls from '../ItemControls/ItemControls'
@@ -251,6 +252,9 @@ class ItemImage extends Component {
             <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
             <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
             <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
+          </div>
+          <div>
+            <AreaInfo />
           </div>
         </ItemImageHolder>
 
