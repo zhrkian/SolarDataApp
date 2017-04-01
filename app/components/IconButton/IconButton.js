@@ -13,12 +13,16 @@ const IconButton = props => {
   }
 
   return (
-    <IButton className={s.container} tooltip={props.label.length > 12 ? props.label : null }>
+    <IButton className={s.container}
+             style={styles}
+             onClick={click}
+             disabled={disabled}
+             tooltip={label.length > 12 ? label : nul
       <div className={s.icon}>
         <Icon />
       </div>
       <div className={s.label}>
-        <div className={s.text}>{props.label}</div>
+        <div className={s.text}>{label}</div>
       </div>
     </IButton>
   )
