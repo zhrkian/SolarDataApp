@@ -146,7 +146,6 @@ class ItemImage extends Component {
     this.CanvasDraw.height = height
     this.CanvasDrawRadius.width = width
     this.CanvasDrawRadius.height = height
-    //this.DrawingContainer.setAttribute('style', `width: ${width}px; height: ${height}px;`)
   }
 
   updateCanvas = (buffer, width, height, zoom = 1) => {
@@ -228,21 +227,6 @@ class ItemImage extends Component {
 
   onOpenContourNewModal = () => this.setState({ contourNewModal: true })
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
-
-  //onSavedContoursSelect = titles => {
-  //  let colorIndex = 0
-  //  const { item } = this.props
-  //  const { contours } = item
-  //  const selectedContours = contours.filter(contour => titles.indexOf(contour.title) > -1)
-  //  Draw.clearCanvas(this.CanvasSavedContours)
-  //  selectedContours.forEach(c => {
-  //    const contour = Coordinates.toViewCoords(item, c.contour)
-  //    if (!colors[colorIndex]) colorIndex = 0
-  //    Draw.drawContour(this.CanvasSavedContours, contour, colors[colorIndex], () => {})
-  //    colorIndex += 1
-  //  })
-  //  this.setState({ selectedContours: titles })
-  //}
 
   render() {
     const { currentContour, contourInfoModal, contourCalculatorModal, contourNewModal } = this.state
