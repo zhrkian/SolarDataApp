@@ -1,5 +1,6 @@
 import s from './SaveImage.css'
 import React, { Component } from 'react'
+import * as Icons from '../Icons/Icons'
 
 class SaveImage extends Component {
   onClick = () => {
@@ -20,11 +21,17 @@ class SaveImage extends Component {
   }
 
   render() {
+    const { label } = this.props
     return (
       <a ref={link => { this.Link = link; }}
-         className={s.saveButton}
+         className={s.container}
          onClick={this.onClick} href="">
-        Save Image
+        <div className={s.icon}>
+          <Icons.Image />
+        </div>
+        <div className={s.label}>
+          <div className={s.text}>{label}</div>
+        </div>
       </a>
     )
   }

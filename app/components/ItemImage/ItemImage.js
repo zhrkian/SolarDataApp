@@ -245,15 +245,12 @@ class ItemImage extends Component {
         <Back />
         <ItemImageHolder heading={heading}>
           <div className={s.drawingContainer}>
-            <div className={s.drawingSubContainer}>
-              <SaveImage images={['Image', 'SavedContours', 'Radius', 'Contour']} width={width} height={height} />
-              <canvas ref={(c) => { this.Canvas = c; }}></canvas>
-              <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
-              <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
-              <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
-              <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
-              <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
-            </div>
+            <canvas ref={(c) => { this.Canvas = c; }}></canvas>
+            <canvas ref={(c) => { this.CanvasImage = c; }} className={s.image} name="Image"></canvas>
+            <canvas ref={(c) => { this.CanvasSavedContours = c; }} className={s.savedContours} name="SavedContours"></canvas>
+            <canvas ref={(c) => { this.CanvasDrawRadius = c; }} className={s.radius} name="Radius"></canvas>
+            <canvas ref={(c) => { this.CanvasDraw = c; }} className={s.draw} name="Contour"></canvas>
+            <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
           </div>
         </ItemImageHolder>
 
@@ -265,7 +262,7 @@ class ItemImage extends Component {
               <IconButton key={4} icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
               <IconButton key={5} icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
               <IconButton key={6} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
-              <IconButton key={7} icon="Image"      label="Save image"          onClick={() => {}} />
+              <IconButton key={7} icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
           {

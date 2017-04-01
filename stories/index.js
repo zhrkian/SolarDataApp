@@ -115,6 +115,15 @@ const contours = [
   }
 ]
 
+const click = () => {
+  const link = document.createElement('a')
+
+  link.addEventListener('click', () => console.log('HYL'))
+
+  const event = new Event("click");
+  link.dispatchEvent(event);
+}
+
 storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
@@ -128,7 +137,7 @@ storiesOf('Item', module)
             <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />,
             <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />,
             <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />,
-            <IconButton icon="Image"     label="Save image" onClick={() => {}} />,
+            <IconButton icon="Image"     label="Save image" onClick={click} />,
         ]}>
           <Block title="Contours">
             <ContourList contours={contours} active={contours[1]} onSelect={console.log} />
@@ -158,38 +167,11 @@ storiesOf('Item', module)
               <IconButton icon="Area"       label="Area info" onClick={() => {}} />
               <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
               <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
-            </div>
-          </Block>
-          <Block title="Block1">
-            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
-              <IconButton icon="Area"       label="Area info" onClick={() => {}} />
-              <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
-              <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
-            </div>
-          </Block>
-          <Block title="Block1">
-            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
-              <IconButton icon="Area"       label="Area info" onClick={() => {}} />
-              <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
-              <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
-            </div>
-          </Block>
-          <Block title="Block1">
-            <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
-              <IconButton icon="Area"       label="Area info" onClick={() => {}} />
-              <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
-              <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
+              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={click} />
             </div>
           </Block>
         </ItemControls>
-        <ContourNewModal active={true} />
+        <ContourNewModal active={false} />
       </ItemLayout>
     </MUI>
   ));
@@ -209,7 +191,6 @@ storiesOf('Icons', module)
             </div>
           </Block>
         </div>
-
       </ItemLayout>
     </MUI>
   ))
