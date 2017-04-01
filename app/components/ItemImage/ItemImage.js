@@ -6,6 +6,7 @@ import Chip from 'material-ui/Chip'
 import ItemLayout from '../Layouts/ItemLayout'
 import ItemImageHolder from '../ItemImageHolder/ItemImageHolder'
 import ItemControls from '../ItemControls/ItemControls'
+import IconButton from '../IconButton/IconButton'
 import Back from '../Back/Back'
 import Block from '../Block/Block'
 
@@ -272,12 +273,19 @@ class ItemImage extends Component {
         </ItemImageHolder>
         <ItemControls>
           <Block title="TOOLS">
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>
+            <div style={{display: 'flex', flexWrap: 'wrap'}}>
+              <IconButton icon="Contour"    label="Draw contour" />
+              <IconButton icon="Area"       label="Area info" />
+              <IconButton icon="Calc"       label="Contour calc" />
+              <IconButton icon="Remove"     label="Remove all markers" />
+              <IconButton icon="RemoveOne"  label="Remove last marker" />
+            </div>
+            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove Last marker" onClick={this.onRemoveLastMarker} primary disabled={!currentMarkers.length}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Remove All markers" onClick={this.onRemoveAllMarker} primary disabled={!currentMarkers.length}/>*/}
             {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Gravity" onClick={this.gravity} primary disabled={currentMarkers.length < 3}/>*/}
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
+            {/*<FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Draw contour" onClick={this.onDrawContour} primary disabled={currentMarkers.length < 3}/>
             <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Get contour sqare info" onClick={this.onContourSquareInfo} primary disabled={!contourCreated}/>
-            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>
+            <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Contour calculator" onClick={this.onContourCalculator} primary disabled={!contours || !contours.length}/>*/}
           </Block>
           <Block title="THRESHOLD">
             <DataLevelControls {...item} onImageLevelChange={this.onImageLevelChange}/>

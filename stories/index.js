@@ -104,11 +104,18 @@ storiesOf('Icons', module)
   .add('Icons', () => (
     <MUI>
       <ItemLayout>
-        <IconButton icon="Contour"    label="Draw contour" />
-        <IconButton icon="Area"       label="Area info" />
-        <IconButton icon="Calc"       label="Contour calc" />
-        <IconButton icon="Remove"     label="Remove all markers" />
-        <IconButton icon="RemoveOne"  label="Remove last marker" />
+        <div style={{width: 435}}>
+          <Block title="Block1">
+            <div style={{display: 'flex', flexWrap: 'wrap'}}>
+              <IconButton icon="Contour"    label="Draw contour" />
+              <IconButton icon="Area"       label="Area info" />
+              <IconButton icon="Calc"       label="Contour calc" />
+              <IconButton icon="Remove"     label="Remove all markers" />
+              <IconButton icon="RemoveOne"  label="Remove last marker" />
+            </div>
+          </Block>
+        </div>
+
       </ItemLayout>
     </MUI>
   ))
