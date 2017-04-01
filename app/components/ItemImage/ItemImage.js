@@ -208,15 +208,15 @@ class ItemImage extends Component {
 
   onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
-  onContourSquareInfo = () => {
-    const { item, frame } = this.props
-    const { currentMarkers } = this.state
-    const imageMarkers = Coordinates.toImageCoords(item, currentMarkers)
-    const contourSquareInfo = Coordinates.getContourSquareInfo(imageMarkers, [], item.radius, item.crpix_x, item.crpix_y)
-    const contourIntensityInfo = Coordinates.getContourIntensityInfo(imageMarkers, [], frame.array, item.width)
-
-    this.setState({ contourSquareInfo, contourIntensityInfo, contourInfoModal: true })
-  }
+  //onContourSquareInfo = () => {
+  //  const { item, frame } = this.props
+  //  const { currentMarkers } = this.state
+  //  const imageMarkers = Coordinates.toImageCoords(item, currentMarkers)
+  //  const contourSquareInfo = Coordinates.getContourAreaInfo(imageMarkers, [], item.radius, item.crpix_x, item.crpix_y)
+  //  const contourIntensityInfo = Coordinates.getContourIntensityInfo(imageMarkers, [], frame.array, item.width)
+  //
+  //  this.setState({ contourSquareInfo, contourIntensityInfo, contourInfoModal: true })
+  //}
 
   onContourCalculator = () => {
     this.setState({ contourCalculatorModal: true })
@@ -230,7 +230,7 @@ class ItemImage extends Component {
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
 
   render() {
-    const { currentContour, contourInfoModal, contourCalculatorModal, contourNewModal } = this.state
+    const { contourCalculatorModal, contourNewModal } = this.state
     const { item, frame, contours, contour } = this.props
     const { onAddNewContour, onSelectContour } = this.props
     const markers = contour ? contour.markers : []
@@ -254,18 +254,20 @@ class ItemImage extends Component {
             <canvas ref={(c) => { this.CanvasCrossHair = c; }} className={s.crossHair} name="CrossHair"></canvas>
           </div>
           <div>
-            <AreaInfo />
+            {
+              markers.length > 2 ? <AreaInfo item={item} frame={frame} markers={markers} /> : null
+            }
           </div>
         </ItemImageHolder>
 
         {/* SIDEBAR */}
+        {/*<IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,*/}
         <ItemControls dock={[
               <IconButton key={1} icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
-              <IconButton key={2} icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
-              <IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,
-              <IconButton key={4} icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
               <IconButton key={5} icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
               <IconButton key={6} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
+              <IconButton key={2} icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
+              <IconButton key={4} icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
               <IconButton key={7} icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
