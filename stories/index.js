@@ -96,15 +96,18 @@ storiesOf('Item', module)
         <ItemControls>
           <Block title="Block1">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
+              <IconButton icon="New"  label="New contour" disabled={true} onClick={() => {}} />
               <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
               <IconButton icon="Area"       label="Area info" onClick={() => {}} />
               <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
               <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
               <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
+              <IconButton icon="Image"     label="Save image" onClick={() => {}} />
             </div>
           </Block>
           <Block title="Block1">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
+              <IconButton icon="New"  label="New contour" onClick={() => {}} />
               <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
               <IconButton icon="Area"       label="Area info" onClick={() => {}} />
               <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
