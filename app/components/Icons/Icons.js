@@ -57,3 +57,15 @@ export const New = () =>
     <path fill="#FFFFFF" fillRule="evenodd" d="M36.7 24.5v12.2H9.3V10.3h13.4V8H7v31h32V24.5"/>
     <path fill="#FFFFFF" fillRule="evenodd" d="M30.8 20.5H33V16h4.7v-2.4H33V9h-2v4.6h-4.5V16H31"/>
   </svg>
+
+export const Delete = () =>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 54 64" width={54} height={64} aria-labelledby="delete">
+    <title id="delete">Delete</title>
+    <path fill="none" stroke="#FFFFFF" strokeWidth="3" d="M47 12l-1.83 44c-.1 2.2-1.97 4-4.17 4H9c-2.2 0-4.07-1.8-4.17-4L3 12M25.5 18v34M14 18l1 34M36 18l-1 34M0 5.5h50M15 5l1.07-2.68C16.57 1.04 18.13 0 19.5 0h11c1.38 0 2.9 1.04 3.43 2.32L35 5"/>
+  </svg>
+
+export const Edit = () =>
+  <svg viewBox="0 0 40 40" width={40} height={40}>
+    <path fillRule="evenodd" d="M30.93 1.75c-.27.03-.53.15-.72.35L11.96 20.17c-.17.16-.28.37-.33.6L10 28.4c-.08.4.04.8.33 1.1.3.3.73.4 1.13.33l7.7-1.6c.25-.06.46-.18.62-.35L38.02 9.8c.47-.46.47-1.2 0-1.68l-6.1-6.02c-.25-.27-.62-.4-1-.35zm.14 2.9l4.36 4.32L18.9 25.33l-4.37-4.3 16.54-16.4zM13.52 23.42l2.92 2.88-3.7.8.78-3.67z"/>
+    <path fill="#FFFFFF" fillRule="evenodd" d="M3.08 6C2.46 6.07 2 6.58 2 7.2v29.6c0 .66.54 1.2 1.2 1.2h29.6c.66 0 1.2-.54 1.2-1.2V19.2c0-.43-.22-.83-.6-1.05-.37-.22-.83-.22-1.2 0-.38.22-.6.62-.6 1.05v16.4H4.4V8.4h16.4c.43 0 .84-.22 1.05-.6.22-.37.22-.83 0-1.2-.2-.38-.62-.6-1.05-.6H3.08z"/>
+  </svg>
