@@ -98,25 +98,6 @@ class ItemPage extends Component {
         />
       </ItemLayout>
     )
-    //return (
-    //  <MainLayout>
-    //    {
-    //      loading ? <Spinner /> : <Item item={item}
-    //                                    frame={frame}
-    //                                    onScaleUpdate={this.onScaleUpdate}
-    //                                    onImageLevelChange={this.onImageLevelChange}
-    //                                    onImageRadiusChange={this.onImageRadiusChange}
-    //                                    onFrameImageUpdate={this.onFrameImageUpdate}
-    //                                    onSaveContour={this.onSaveContour}
-    //      />
-    //    }
-    //
-    //
-    //    <Link className={s.backLink} to={`/items`}>
-    //      {'< BACK'}
-    //    </Link>
-    //  </MainLayout>
-    //)
   }
 }
 

@@ -1,0 +1,26 @@
+.button {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 79.1px;
+    height: 79px;
+    margin: 4px;
+    border-radius: 2px;
+    background-color: #313131;
+}
+
+.label {
+    width: 79px;
+    font-family: Roboto;
+    font-size: 10px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.68);
+}

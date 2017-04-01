@@ -33,6 +33,9 @@ import ItemControls from '../app/components/ItemControls/ItemControls'
 
 import Block from '../app/components/Block/Block'
 
+import * as Icons from '../app/components/Icons/Icons'
+import IconButton from '../app/components/IconButton/IconButton'
+
 
 const _item = {
   path: 'http://127.0.0.1:3030/D0612115.fts'
@@ -81,18 +84,38 @@ const items = [
 //    </MUI>
 //  ));
 
-storiesOf('Item', module)
-  .add('Item Layout', () => (
+//storiesOf('Item', module)
+//  .add('Item Layout', () => (
+//    <MUI>
+//      <ItemLayout>
+//        <Back />
+//        <ItemImageHolder heading={'D0612115'}/>
+//        <ItemControls>
+//          <Block title="Block1" />
+//          <Block title="Block2" />
+//          <Block title="Block3" />
+//          <Block title="Block4" />
+//        </ItemControls>
+//      </ItemLayout>
+//    </MUI>
+//  ));
+
+storiesOf('Icons', module)
+  .add('Icons', () => (
     <MUI>
       <ItemLayout>
-        <Back />
-        <ItemImageHolder heading={'D0612115'}/>
-        <ItemControls>
-          <Block title="Block1" />
-          <Block title="Block2" />
-          <Block title="Block3" />
-          <Block title="Block4" />
-        </ItemControls>
+        <IconButton icon="Contour"    label="Draw contour" />
+        <IconButton icon="Area"       label="Area info" />
+        <IconButton icon="Calc"       label="Contour calc" />
+        <IconButton icon="Remove"     label="Remove all markers" />
+        <IconButton icon="RemoveOne"  label="Remove last marker" />
+      </ItemLayout>
+    </MUI>
+  ))
+  .add('Icon Calc', () => (
+    <MUI>
+      <ItemLayout>
+        <IconButton icon="Calc"       label="Contour calc" />
       </ItemLayout>
     </MUI>
   ));
