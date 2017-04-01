@@ -17,7 +17,7 @@ const IconButton = props => {
              style={styles}
              onClick={click}
              disabled={disabled}
-             tooltip={label.length > 12 ? label : nul
+             tooltip={label.length > 12 ? label : null}>
       <div className={s.icon}>
         <Icon />
       </div>
