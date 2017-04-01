@@ -36,7 +36,7 @@ import Block from '../app/components/Block/Block'
 import * as Icons from '../app/components/Icons/Icons'
 import IconButton from '../app/components/IconButton/IconButton'
 
-
+import SaveFile from '../app/components/SaveFile/SaveFile'
 const _item = {
   path: 'http://127.0.0.1:3030/D0612115.fts'
 }
@@ -65,7 +65,10 @@ const items = [
   }
 ]
 
-
+storiesOf('Save File', module)
+  .add('Item Layout', () => (
+    <SaveFile />
+  ));
 //storiesOf('List', module)
 //  .add('List Layout', () => (
 //    <MUI>
