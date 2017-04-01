@@ -6,7 +6,7 @@ import * as Icons from '../Icons/Icons'
 const IconButton = props => {
   const { icon, label, disabled, onClick } = props
   const Icon = Icons[icon]
-  const styles = disabled ? {filter: 'grayscale(100%)', cursor: 'not-allowed'} : {}
+  const styles = disabled ? {opacity: 0.5, cursor: 'not-allowed'} : {}
   const click = e => {
     e.preventDefault()
     return disabled ? null : onClick()
