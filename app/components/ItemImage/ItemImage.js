@@ -230,10 +230,12 @@ class ItemImage extends Component {
   onOpenContourNewModal = () => this.setState({ contourNewModal: true })
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
 
+  onContourEdit = (name, contour) => console.log(name, contour)
+
   render() {
-    const { contourCalculatorModal, contourNewModal } = this.state
+    const { contourCalculatorModal, contourEditModal, contourNewModal } = this.state
     const { item, frame, contours, contour } = this.props
-    const { onAddNewContour, onSelectContour } = this.props
+    const { onAddNewContour, onSelectContour, onEditContour } = this.props
     const markers = contour ? contour.markers : []
 
     const width = item.width * item.zoom
@@ -279,7 +281,10 @@ class ItemImage extends Component {
           {
             contours && contours.length ? (
               <Block title="CONTOURS">
-                <ContourList contours={contours} active={contour} onSelect={contour => onSelectContour(item.id, contour)} />
+                <ContourList contours={contours}
+                             active={contour}
+                             onEdit={(n, c) => onEditContour(item.id, n, c)}
+                             onSelect={contour => onSelectContour(item.id, contour)} />
               </Block>
             ) : null
           }
@@ -309,6 +314,7 @@ class ItemImage extends Component {
         <ContourNewModal active={contourNewModal}
                          onAdd={name => onAddNewContour(item.id, { title: name, markers: [] }) & this.onCloseContourNewModal()}
                          onClose={this.onCloseContourNewModal}/>
+
       </ItemLayout>
     )
   }

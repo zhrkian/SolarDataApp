@@ -14,7 +14,7 @@ const Buttons = props => {
 }
 
 const ContourListItem = props => {
-  const { contour, active, onClick } = props
+  const { contour, active, onClick, onEdit } = props
   const styles = active ? { backgroundColor: '#4a90e2' } : {}
   return (
     <div className={s.container} style={styles}>
@@ -22,7 +22,7 @@ const ContourListItem = props => {
         {contour.title}
       </div>
       <div className={s.controls}>
-        <Buttons icon="Edit" onClick={() => {}} />
+        <Buttons icon="Edit" onClick={onEdit.bind(this, contour)} />
         <Buttons icon="Delete" onClick={() => {}} />
       </div>
     </div>
