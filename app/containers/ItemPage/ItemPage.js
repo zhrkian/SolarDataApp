@@ -21,10 +21,6 @@ class ItemPage extends Component {
     router: React.PropTypes.object.isRequired
   }
 
-  componentWillMount() {}
-
-  componentWillUnmout() {}
-
   getItem = () => {
     const { id } = this.props.params
     const { items } = this.props.items

@@ -39,6 +39,7 @@ import Block from '../app/components/Block/Block'
 import * as Icons from '../app/components/Icons/Icons'
 import IconButton from '../app/components/IconButton/IconButton'
 import ContourNewModal from '../app/components/ContourNewModal/ContourNewModal'
+import ContourCalculatorModal from '../app/components/ContourCalculatorModal/ContourCalculatorModal'
 import AreaInfo from '../app/components/AreaInfo/AreaInfo'
 
 import SaveFile from '../app/components/SaveFile/SaveFile'
@@ -70,10 +71,10 @@ const items = [
   }
 ]
 
-storiesOf('Save File', module)
-  .add('Item Layout', () => (
-    <SaveFile />
-  ));
+//storiesOf('Save File', module)
+//  .add('Item Layout', () => (
+//    <SaveFile />
+//  ));
 //storiesOf('List', module)
 //  .add('List Layout', () => (
 //    <MUI>
@@ -129,6 +130,11 @@ storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
       <ItemLayout>
+        <ContourCalculatorModal active={true}
+                                item={items[0]}
+                                frame={[]}
+                                contour={contours[0]}
+                                contours={contours}/>
         <Back />
         <ItemImageHolder heading={'D0612115'}>
           {/*<AreaInfo />*/}

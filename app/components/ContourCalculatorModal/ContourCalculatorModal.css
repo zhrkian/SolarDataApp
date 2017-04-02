@@ -3,9 +3,74 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
-.selectBox {
+.body {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 15px;
+}
+
+.contours {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.image {
+
+}
+
+.containerTable {
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+
+.iconHolder {
+    opacity: 0.6;
+}
+
+.iconHolder > svg > g > use {
+    stroke: rgba(0, 0, 0, 0.68);
+}
+
+.iconHolder > svg > g > path {
+    stroke: rgba(0, 0, 0, 0.68);
+}
+
+.iconMessage {
+    font-family: Roboto;
+    font-size: 9px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.68);
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
 }

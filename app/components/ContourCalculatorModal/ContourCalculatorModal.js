@@ -5,6 +5,9 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 
+import IconButton from '../IconButton/IconButton'
+import * as Icons from '../Icons/Icons'
+
 import ContourSelect from '../ContourSelect/ContourSelect'
 
 import * as Coordinates from '../../utils/coordinates'
@@ -19,12 +22,24 @@ import * as Coordinates from '../../utils/coordinates'
 
 
 class ContourCalculatorModal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       baseContour: '',
       excludeContours: []
     }
+  }
+
+  componentDidMount() {
+    const size = 250
+    const context = this.CanvasImage.getContext('2d')
+
+    const image = new Image()
+    image.src = `http://placehold.it/${size}x${size}`
+    this.CanvasImage.width = size
+    this.CanvasImage.height = size
+    image.addEventListener('load', () => context.drawImage(image, 0, 0))
+
   }
 
   onBaseChange = title => {
@@ -42,28 +57,23 @@ class ContourCalculatorModal extends React.Component {
   }
 
   onCalculate = () => {
-    const { frame, item } = this.props
-    const { contours, radius, crpix_x, crpix_y, width } = item
-    const { baseContour, excludeContours } = this.state
-
-    const base = contours.filter(c => c.title === baseContour)[0]
-    const exclude = contours.filter(c => excludeContours.indexOf(c.title) > -1) || []
-
-    if (base && exclude && exclude.length) {
-      const contourSquareInfo = Coordinates.getContourSquareInfo(base.contour, exclude.map(c => c.contour), radius, crpix_x, crpix_y)
-      const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.contour, exclude.map(c => c.contour), frame, width)
-
-      this.setState({ contourSquareInfo, contourIntensityInfo })
-    }
+    //const { frame, item } = this.props
+    //const { contours, radius, crpix_x, crpix_y, width } = item
+    //const { baseContour, excludeContours } = this.state
+    //
+    //const base = contours.filter(c => c.title === baseContour)[0]
+    //const exclude = contours.filter(c => excludeContours.indexOf(c.title) > -1) || []
+    //
+    //if (base && exclude && exclude.length) {
+    //  const contourSquareInfo = Coordinates.getContourSquareInfo(base.contour, exclude.map(c => c.contour), radius, crpix_x, crpix_y)
+    //  const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.contour, exclude.map(c => c.contour), frame, width)
+    //
+    //  this.setState({ contourSquareInfo, contourIntensityInfo })
+    //}
   }
 
   render() {
     const { item, active, onClose } = this.props
-    const { contours } = item
-
-    const { contourSquareInfo, contourIntensityInfo } = this.state
-    const { totalContourSquarePixels, totalSquarePixels, totalContourSphericalSquare, totalVisibleSphericalSquare } = contourSquareInfo || {}
-    const { aveIntensity } = contourIntensityInfo || {}
 
     const actions = [
       <FlatButton
@@ -89,13 +99,60 @@ class ContourCalculatorModal extends React.Component {
           autoScrollBodyContent={true}
         >
           <div className={s.container}>
-            <div className={s.selectBox}>
+            <div className={s.body}>
+              <div className={s.contours}>
+                BASE CONTOURS
+              </div>
+              <div className={s.image}>
+                <canvas ref={(c) => { this.CanvasImage = c; }}></canvas>
+              </div>
+              <div className={s.contours}>
+                EXCLUDE CONTOURS
+              </div>
+            </div>
+
+            <div className={s.containerTable}>
+              <div className={s.icon}>
+                <div className={s.iconHolder}>
+                  <Icons.Area />
+                </div>
+                <span className={s.iconMessage}>AREA INFO</span>
+              </div>
+              <div className={s.table}>
+                <Table selectable={false}>
+                  <TableHeader displaySelectAll={false}
+                               adjustForCheckbox={false}
+                               enableSelectAll={false}>
+                    <TableRow>
+                      <TableHeaderColumn>Name</TableHeaderColumn>
+                      <TableHeaderColumn>Contour Sqare</TableHeaderColumn>
+                      <TableHeaderColumn>Total Visible Square</TableHeaderColumn>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody displayRowCheckbox={false}>
+                    <TableRow>
+                      <TableRowColumn>Flat</TableRowColumn>
+                      <TableRowColumn>{'312123'}</TableRowColumn>
+                      <TableRowColumn>{'312123'}</TableRowColumn>
+                    </TableRow>
+                    <TableRow>
+                      <TableRowColumn>Spherical</TableRowColumn>
+                      <TableRowColumn>{'312123'}</TableRowColumn>
+                      <TableRowColumn>{'312123'}</TableRowColumn>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+                <p>{ `Contour average intensity: ${1234}` }</p>
+            </div>
+            </div>
+
+            {/*<div className={s.selectBox}>
               <ContourSelect contours={contours} hintText='Base contour' color={'black'} onChange={this.onBaseChange} />
               &nbsp;&nbsp;&nbsp;&nbsp;
               <ContourSelect contours={contours} hintText='Exclude contours' color={'black'} multiple={true} onChange={this.onExcludeChange} />
-            </div>
+            </div>*/}
 
-            {
+            {/*
               contourSquareInfo ? (
                 <div className={s.container}>
                   <h2>Contour Info</h2>
@@ -127,7 +184,7 @@ class ContourCalculatorModal extends React.Component {
                   <p>{ `Contour average intensity: ${aveIntensity}` }</p>
                 </div>
               ) : null
-            }
+            */}
           </div>
         </Dialog>
       </div>
