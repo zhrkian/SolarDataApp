@@ -7,12 +7,13 @@ import s from './ImageRadiusControls.css'
 
 const styles = {
   group: {
-    marginBottom: -30,
     fontFamily: 'Roboto',
     fontSize: 14
   },
   slider: {
-    marginTop: -15
+    paddingTop: 15,
+    marginTop: 0,
+    marginBottom: 0
   },
   button: {
     backgroundColor: '#313131'
@@ -75,7 +76,7 @@ class ImageRadiusControls extends Component {
         <div style={styles.group}>
           <span>{`Radius: ${radius_value.toFixed(3)} `}</span>
           <Slider
-            style={styles.slider}
+            sliderStyle={styles.slider}
             min={0}
             max={maxRadiusValue}
             step={0.005}
@@ -88,7 +89,7 @@ class ImageRadiusControls extends Component {
         <div style={styles.group}>
           <span>{`Center X: ${x_center.toFixed(3)} `}</span>
           <Slider
-            style={styles.slider}
+            sliderStyle={styles.slider}
             min={0}
             max={width}
             step={0.005}
@@ -101,7 +102,7 @@ class ImageRadiusControls extends Component {
         <div style={styles.group}>
           <span>{`Center Y: ${y_center.toFixed(3)} `}</span>
           <Slider
-            style={styles.slider}
+            sliderStyle={styles.slider}
             min={0}
             max={height}
             step={0.005}
@@ -112,7 +113,6 @@ class ImageRadiusControls extends Component {
           />
         </div>
         <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Reset radius to defaults" onClick={this.onResetToDefaults} primary />
-
       </div>
     )
   }

@@ -5,12 +5,13 @@ import s from './DataLevelControls.css'
 
 const styles = {
   group: {
-    marginBottom: -30,
     fontFamily: 'Roboto',
     fontSize: 14
   },
   slider: {
-    marginTop: -15
+    paddingTop: 15,
+    marginTop: 0,
+    marginBottom: 0
   }
 }
 
@@ -48,7 +49,7 @@ class DataLevelControls extends Component {
         <div style={styles.group}>
           <span>{'Min: '}{min_value.toFixed(3)}</span>
           <Slider
-            style={styles.slider}
+            sliderStyle={styles.slider}
             min={frame_min < 0 ? 0 : frame_min}
             max={max_value}
             step={0.005}
@@ -62,7 +63,7 @@ class DataLevelControls extends Component {
         <div style={styles.group}>
           <span>{'Max: '}{max_value.toFixed(3)}</span>
           <Slider
-            style={styles.slider}
+            sliderStyle={styles.slider}
             min={min_value}
             max={frame_max}
             step={0.005}
