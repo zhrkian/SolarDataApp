@@ -130,11 +130,11 @@ storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
       <ItemLayout>
-        <ContourCalculatorModal active={true}
+        {/*<ContourCalculatorModal active={true}
                                 item={items[0]}
                                 frame={[]}
                                 contour={contours[0]}
-                                contours={contours}/>
+                                contours={contours}/>*/}
         <Back />
         <ItemImageHolder heading={'D0612115'}>
           {/*<AreaInfo />*/}
@@ -150,7 +150,11 @@ storiesOf('Item', module)
               <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={() => {}}/>
         ]}>
           <Block title="Contours">
-            <ContourList contours={contours} active={contours[1]} onSelect={console.log} />
+            <ContourList contours={contours}
+                         active={contours[1]}
+                         onRemove={c => console.log(c)}
+                         onEdit={(n, c) => console.log(n, c)}
+                         onSelect={console.log} />
           </Block>
           <Block title="Block2">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>

@@ -3,6 +3,8 @@ import React from 'react'
 import IButton from 'material-ui/IconButton'
 import * as Icons from '../Icons/Icons'
 
+import IconButtonSmall from '../IconButtonSmall/IconButtonSmall'
+
 const Buttons = props => {
   const { icon, onClick } = props
   const Icon = Icons[icon]
@@ -22,8 +24,8 @@ const ContourListItem = props => {
         {contour.title}
       </div>
       <div className={s.controls}>
-        <Buttons icon="Edit" onClick={onEdit.bind(this, contour)} />
-        <Buttons icon="Delete" onClick={onRemove.bind(this, contour)} />
+        <IconButtonSmall icon="Edit" label="Edit contour name" onClick={onEdit.bind(this, contour)} />
+        <IconButtonSmall icon="Delete" label="Remove contour" onClick={onRemove.bind(this, contour)} />
       </div>
     </div>
   )
