@@ -29,7 +29,9 @@ import * as Coordinates from '../../utils/coordinates'
 import * as Utils from '../../utils'
 
 const COLORS = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
-const ZOOM = 650
+const ZOOM = 1000
+const ZOOM_STEPS = 10
+const ZOOM_SCALE = 4
 
 const getMouseCoordinates = (canvas, event) => {
   const canvasRect = canvas.getBoundingClientRect()
@@ -90,6 +92,7 @@ class ItemImage extends Component {
     this.buildCanvasImage()
     this.CanvasCrossHair.addEventListener('mousedown', onMouseClick.bind(this, this.CanvasCrossHair, this.onMouseClick))
     this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair))
+    this.CanvasCrossHair.addEventListener('mousewheel', e => e.wheelDelta / 60 > 0 ? this.onZoomIn() : this.onZoomOut())
     renderSolarRadius(this.CanvasDrawRadius, item)
     this.initCurrentContour(item, contour)
   }
@@ -197,8 +200,8 @@ class ItemImage extends Component {
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
-    const zoomMin = zoomMax / 2
-    const zoomStep = (zoomMax - zoomMin) / 5
+    const zoomMin = zoomMax / ZOOM_SCALE
+    const zoomStep = (zoomMax - zoomMin) / ZOOM_STEPS
     const nextZoom = zoom + zoomStep
     return zoomMax < nextZoom ? null : onUpdateZoom(item.id, nextZoom)
   }
@@ -207,8 +210,8 @@ class ItemImage extends Component {
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
-    const zoomMin = zoomMax / 2
-    const zoomStep = (zoomMax - zoomMin) / 5
+    const zoomMin = zoomMax / ZOOM_SCALE
+    const zoomStep = (zoomMax - zoomMin) / ZOOM_STEPS
     const nextZoom = zoom - zoomStep
     return zoomMin > nextZoom ? null : onUpdateZoom(item.id, nextZoom)
   }
@@ -257,15 +260,17 @@ class ItemImage extends Component {
         </ItemImageHolder>
 
         {/* SIDEBAR */}
-        {/*<IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,*/}
+        {/*
+          <IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,
+          <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={this.onZoomIn} />,
+          <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={this.onZoomOut} />,
+        */}
         <ItemControls dock={[
               <IconButton key={'New'}       icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
               <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
               <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={true}/>,
-              <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={this.onZoomIn} />,
-              <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={this.onZoomOut} />,
               <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
