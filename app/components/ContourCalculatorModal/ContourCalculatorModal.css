@@ -13,7 +13,7 @@
     padding-top: 15px;
 }
 
-.contours {
+.contourLeft {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -21,6 +21,14 @@
     padding-left: 15px;
     padding-right: 15px;
     width: 150px;
+}
+
+.contourRight {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 150px;
+    max-height: 250px;
+    overflow-y: scroll;
 }
 
 .image {

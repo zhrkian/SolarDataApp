@@ -36,7 +36,7 @@ const ContoursList = (contours, selected, multi, disabled = [], onClick) => {
   return contours.map(contour => {
     return isDisabled(contour.title, disabled) ? null : (
       <Chip key={contour.title}
-            style={{margin: 4}}
+            style={{margin: 4, width: 150}}
             backgroundColor={isActive(contour.title, selected, multi)}
             onTouchTap={() => onClick(contour.title)}>{contour.title}</Chip>
     )
@@ -194,7 +194,7 @@ class ContourCalculatorModal extends React.Component {
         >
           <div className={s.container}>
             <div className={s.body}>
-              <div className={s.contours}>
+              <div className={s.contourLeft}>
                 <ContourSelect contours={contours} defaultValue={baseContour} hintText='Base contour' color={'black'} onChange={this.onBaseChange} />
                 {/* ContoursList(contours, baseContour, false, [], this.onBaseChange) */}
               </div>
@@ -203,7 +203,7 @@ class ContourCalculatorModal extends React.Component {
                 <canvas style={{zIndex: 1}} className={s.draw} ref={(c) => { this.CanvasImage = c; }} width={width} height={height}></canvas>
                 <canvas style={{zIndex: 2}} className={s.draw} ref={(c) => { this.CanvasDraw = c; }} width={width} height={height}></canvas>
               </div>
-              <div className={s.contours}>
+              <div className={s.contourRight}>
                 { ContoursList(contours, excludeContours, true, [baseContour], this.onExcludeChange) }
               </div>
             </div>
