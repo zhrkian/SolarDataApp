@@ -235,7 +235,7 @@ class ItemImage extends Component {
   render() {
     const { contourCalculatorModal, contourEditModal, contourNewModal } = this.state
     const { item, frame, contours, contour } = this.props
-    const { onAddNewContour, onSelectContour, onEditContour } = this.props
+    const { onAddNewContour, onSelectContour, onEditContour, onRemoveContour } = this.props
     const markers = contour ? contour.markers : []
 
     const width = item.width * item.zoom
@@ -283,6 +283,7 @@ class ItemImage extends Component {
               <Block title="CONTOURS">
                 <ContourList contours={contours}
                              active={contour}
+                             onRemove={c => onRemoveContour(item.id, c)}
                              onEdit={(n, c) => onEditContour(item.id, n, c)}
                              onSelect={contour => onSelectContour(item.id, contour)} />
               </Block>

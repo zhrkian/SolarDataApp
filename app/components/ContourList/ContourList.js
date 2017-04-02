@@ -10,7 +10,7 @@ class ContourList extends React.Component {
 
   render() {
     const { contourEditModal, contour } = this.state
-    const { contours, active, onSelect, onEdit } = this.props
+    const { contours, active, onSelect, onEdit, onRemove } = this.props
 
     return (
       <div className={s.list}>
@@ -20,6 +20,7 @@ class ContourList extends React.Component {
                              contour={contour}
                              active={active.title === contour.title}
                              onEdit={this.onOpenContourEditModal}
+                             onRemove={onRemove}
                              onClick={onSelect} />)
         }
 

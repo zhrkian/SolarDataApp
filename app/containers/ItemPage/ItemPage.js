@@ -59,6 +59,8 @@ class ItemPage extends Component {
     return { item, frame }
   }
 
+
+
   onAddNewContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour, true))
 
   onEditContour = (id, name, contour) => this.props.dispatch(ItemsAction.updateItemContourName(id, contour, name))
@@ -66,6 +68,10 @@ class ItemPage extends Component {
   onUpdateContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour))
 
   onSelectContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour, true))
+
+  onRemoveContour = (id, contour) => this.props.dispatch(ItemsAction.removeItemContour(id, contour))
+
+
 
   onUpdateZoom = (id, zoom) => this.props.dispatch(ItemsAction.updateItemZoom(id, zoom))
 
@@ -111,6 +117,7 @@ class ItemPage extends Component {
 
               onAddNewContour={this.onAddNewContour}
               onUpdateContour={this.onUpdateContour}
+              onRemoveContour={this.onRemoveContour}
               onSelectContour={this.onSelectContour}
               onEditContour={this.onEditContour}
 

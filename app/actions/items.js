@@ -134,17 +134,13 @@ export const updateItemContour = (id, contour, active) =>
 
 const updateContourName = (item, contour, name) => {
   let contours = item.contours || []
-  let isExist = false
 
   contours = contours.map(c => {
     if (c.title === contour.title) {
       c = {...contour, title: name}
-      isExist = true
     }
     return c
   })
-
-  if (!isExist) contours.unshift(contour)
 
   item.contours = contours
 
@@ -162,6 +158,37 @@ export const updateItemContourName = (id, contour, name) =>
     items = items.map(item => {
       if (id === item.id) {
         item = updateContourName(item, contour, name)
+      }
+      return item
+    })
+
+    return dispatch({ type: ITEMS_UPDATE_ALL, items })
+  }
+
+
+const removeContour = (item, contour) => {
+  let contours = item.contours || []
+
+  contours = contours.filter(c => c.title !== contour.title)
+
+  item.contours = contours
+
+  if (contours && contours.length) {
+    item.activeContour = contours[0].title
+  } else {
+    item.activeContour = null
+  }
+
+  return item
+}
+
+export const removeItemContour = (id, contour) =>
+  (dispatch, getState) => {
+    let { items } = getState().items
+
+    items = items.map(item => {
+      if (id === item.id) {
+        item = removeContour(item, contour)
       }
       return item
     })
