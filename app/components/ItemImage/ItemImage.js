@@ -263,12 +263,14 @@ class ItemImage extends Component {
         {/* SIDEBAR */}
         {/*<IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,*/}
         <ItemControls dock={[
-              <IconButton key={1} icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
-              <IconButton key={5} icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
-              <IconButton key={6} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
-              <IconButton key={2} icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
-              <IconButton key={4} icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
-              <IconButton key={7} icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
+              <IconButton key={'New'}       icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
+              <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
+              <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
+              <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
+              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
+              <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={() => {}} />,
+              <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={() => {}} />,
+              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
           {

@@ -131,16 +131,17 @@ storiesOf('Item', module)
       <ItemLayout>
         <Back />
         <ItemImageHolder heading={'D0612115'}>
-          <AreaInfo />
+          {/*<AreaInfo />*/}
         </ItemImageHolder>
         <ItemControls dock={[
-            <IconButton icon="New"  label="New contour" disabled={true} onClick={() => {}} />,
-            <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>,
-            <IconButton icon="Area"       label="Area info" onClick={() => {}} />,
-            <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />,
-            <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />,
-            <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />,
-            <IconButton icon="Image"     label="Save image" onClick={click} />,
+              <IconButton key={'New'}       icon="New"        label="New contour"         onClick={() => {}} />,
+              <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={() => {}}/>,
+              <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={() => {}}/>,
+              <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={() => {}}/>,
+              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={() => {}}/>,
+              <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={() => {}} />,
+              <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={() => {}} />,
+              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={() => {}}/>
         ]}>
           <Block title="Contours">
             <ContourList contours={contours} active={contours[1]} onSelect={console.log} />
@@ -153,6 +154,8 @@ storiesOf('Item', module)
               <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
               <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
               <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
+              <IconButton icon="ZoomIn"  label="Remove last marker" onClick={() => {}} />
+              <IconButton icon="ZoomOut"  label="Remove last marker" onClick={() => {}} />
             </div>
           </Block>
           <Block title="Block3">
