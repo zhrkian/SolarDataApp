@@ -25,8 +25,8 @@ const iconButtonElement = (
 const Menu = props =>
   <IconMenu iconButtonElement={iconButtonElement}>
     {/*<MenuItem onClick={props.onView.bind(this, item.id)}>View Image</MenuItem>*/}
-    <MenuItem>Image Info</MenuItem>
-    <MenuItem>Delete</MenuItem>
+    <MenuItem disabled={true}>Image Info</MenuItem>
+    <MenuItem onClick={props.onRemove.bind(this, props.item.id)}>Delete</MenuItem>
   </IconMenu>
 
 class ItemList extends Component {
@@ -37,7 +37,7 @@ class ItemList extends Component {
   }
 
   render() {
-    const { items } = this.props
+    const { items, onRemove } = this.props
 
     if (!items || !items.length) return <div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
 
@@ -61,7 +61,7 @@ class ItemList extends Component {
                   <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
                   <TableRowColumn className={s.tableBodyCell}>{item.date ? `${item.date}` : ''}</TableRowColumn>
                   <TableRowColumn className={s.tableBodyCell}>status</TableRowColumn>
-                  <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu />}</TableRowColumn>
+                  <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu item={item} onRemove={onRemove} />}</TableRowColumn>
                 </TableRow>
               ))
             }

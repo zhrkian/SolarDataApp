@@ -45,7 +45,7 @@ export default class OpenFITS extends Component {
           containerElement="label"
           backgroundColor="#313131"
           labelColor="#ffffff"
-          onClick={this.props.onClearAll}
+          onClick={this.props.onRemoveAll}
         />
       </div>
 

@@ -3,7 +3,9 @@ import {
   ITEMS_UPDATE_ALL,
   ITEMS_UPDATE_ITEM_ZOOM,
   ITEMS_UPDATE_ITEM_LEVEL,
-  ITEMS_UPDATE_ITEM_RADIUS
+  ITEMS_UPDATE_ITEM_RADIUS,
+  ITEMS_REMOVE_ITEM,
+  ITEMS_REMOVE_ALL_ITEMS
 } from '../actions/items'
 
 const initialState = {
@@ -37,6 +39,9 @@ const updateItemRadius = (items, id, radius, xCenter, yCenter) =>
     return item
   })
 
+const removeItem = (items, id) =>
+  items.filter(item => item.id !== id)
+
 const items = (state = initialState, action) => {
   switch (action.type) {
     case ITEMS_UPDATE_ALL:
@@ -47,6 +52,12 @@ const items = (state = initialState, action) => {
       return {...state, items: updateItemLevel(state.items, action.id, action.min, action.max)}
     case ITEMS_UPDATE_ITEM_RADIUS:
       return {...state, items: updateItemRadius(state.items, action.id, action.radius, action.xCenter, action.yCenter)}
+    case ITEMS_REMOVE_ITEM: {
+      return {...state, items: removeItem(state.items, action.id)}
+    }
+    case ITEMS_REMOVE_ALL_ITEMS: {
+      return {...state, items: []}
+    }
     default:
       return state
   }

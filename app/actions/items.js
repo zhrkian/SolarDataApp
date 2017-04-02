@@ -8,6 +8,8 @@ export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL'
 export const ITEMS_UPDATE_ITEM_ZOOM = 'ITEMS_UPDATE_ITEM_ZOOM'
 export const ITEMS_UPDATE_ITEM_LEVEL = 'ITEMS_UPDATE_ITEM_LEVEL'
 export const ITEMS_UPDATE_ITEM_RADIUS = 'ITEMS_UPDATE_ITEM_RADIUS'
+export const ITEMS_REMOVE_ITEM = 'ITEMS_REMOVE_ITEM'
+export const ITEMS_REMOVE_ALL_ITEMS = 'ITEMS_REMOVE_ALL_ITEMS'
 
 const isFileExist = (file, items) => {
   const { name, path } = file
@@ -53,7 +55,6 @@ export const getItems = files =>
       setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 10)
     })
   }
-
 
 export const itemThinking = (item, items, thinking) => {
   return items.map(i => {
@@ -129,3 +130,9 @@ export const updateItemContour = (id, contour, active) =>
 
     return dispatch({ type: ITEMS_UPDATE_ALL, items })
   }
+
+export const removeItem = id =>
+  dispatch => dispatch({ type: ITEMS_REMOVE_ITEM, id })
+
+export const removeAllItems = () =>
+  dispatch => dispatch({ type: ITEMS_REMOVE_ALL_ITEMS })

@@ -17,13 +17,17 @@ class ItemsPage extends Component {
 
   onView = id => this.context.router.push(`/items/${id}`)
 
+  onRemove = id => this.props.dispatch(ItemsAction.removeItem(id))
+
+  onRemoveAll = () => this.props.dispatch(ItemsAction.removeAllItems())
+
   render() {
     const { items } = this.props.items
 
     return (
       <ListLayout>
-        <OpenFITS onOpenFiles={this.onOpenFiles} clearAll={() => {}} />
-        <List items={items} onView={this.onView}/>
+        <OpenFITS onOpenFiles={this.onOpenFiles} onRemoveAll={this.onRemoveAll} />
+        <List items={items} onView={this.onView} onRemove={this.onRemove}/>
       </ListLayout>
     );
   }
