@@ -43,8 +43,13 @@
     color: rgba(255, 255, 255, 0.46);
 }
 
+.tableHeader > tr {
+    height: 26px!important;
+}
+
 .tableHeaderCell {
     font-size: 14px!important;
+    height: 26px!important;
 }
 
 .tableBody {
@@ -61,9 +66,11 @@
     font-stretch: normal!important;
     line-height: normal!important;
     letter-spacing: normal!important;
+    height: 26px!important;
 }
 
 .tableBodyCell {
     cursor: pointer;
     font-size: 16px!important;
+    height: 26px!important;
 }
