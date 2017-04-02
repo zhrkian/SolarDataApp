@@ -28,19 +28,8 @@ import * as Draw from '../../utils/draw'
 import * as Coordinates from '../../utils/coordinates'
 import * as Utils from '../../utils'
 
-const styles = {
-  button: {
-    backgroundColor: '#313131',
-    marginBottom: 2
-  },
-  buttonLabel: {
-    color: '#FFFFFF',
-    fontFamily: 'Roboto',
-    fontSize: 14,
-  }
-}
-
-const colors = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
+const COLORS = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
+const ZOOM = 650
 
 const getMouseCoordinates = (canvas, event) => {
   const canvasRect = canvas.getBoundingClientRect()
@@ -204,26 +193,33 @@ class ItemImage extends Component {
     return onUpdateContour(item.id, {...contour, contourCreated: true })
   }
 
+  onZoomIn = () => {
+    const { item, onUpdateZoom } = this.props
+    const { height, zoom } = item
+    const zoomMax = ZOOM / height
+    const zoomMin = zoomMax / 2
+    const zoomStep = (zoomMax - zoomMin) / 5
+    const nextZoom = zoom + zoomStep
+    return zoomMax < nextZoom ? null : onUpdateZoom(item.id, nextZoom)
+  }
+
+  onZoomOut = () => {
+    const { item, onUpdateZoom } = this.props
+    const { height, zoom } = item
+    const zoomMax = ZOOM / height
+    const zoomMin = zoomMax / 2
+    const zoomStep = (zoomMax - zoomMin) / 5
+    const nextZoom = zoom - zoomStep
+    return zoomMin > nextZoom ? null : onUpdateZoom(item.id, nextZoom)
+  }
+
   onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
 
   onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 
-  //onContourSquareInfo = () => {
-  //  const { item, frame } = this.props
-  //  const { currentMarkers } = this.state
-  //  const imageMarkers = Coordinates.toImageCoords(item, currentMarkers)
-  //  const contourSquareInfo = Coordinates.getContourAreaInfo(imageMarkers, [], item.radius, item.crpix_x, item.crpix_y)
-  //  const contourIntensityInfo = Coordinates.getContourIntensityInfo(imageMarkers, [], frame.array, item.width)
-  //
-  //  this.setState({ contourSquareInfo, contourIntensityInfo, contourInfoModal: true })
-  //}
-
-  onContourCalculator = () => {
+  onOpenContourCalculator = () => {
     this.setState({ contourCalculatorModal: true })
   }
-
-  onCloseContourResultModal = () => this.setState({ contourInfoModal: false })
-
   onCloseContourCalculatorModal = () => this.setState({ contourCalculatorModal: false })
 
   onOpenContourNewModal = () => this.setState({ contourNewModal: true })
@@ -267,9 +263,9 @@ class ItemImage extends Component {
               <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
-              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onContourCalculator} disabled={true}/>,
-              <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={() => {}} />,
-              <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={() => {}} />,
+              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={true}/>,
+              <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={this.onZoomIn} />,
+              <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={this.onZoomOut} />,
               <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
