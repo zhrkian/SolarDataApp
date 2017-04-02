@@ -4,9 +4,15 @@ import MenuItem from 'material-ui/MenuItem'
 import Chip from 'material-ui/Chip'
 
 class ContourList extends Component {
-  state = {
-    values: [],
+  constructor(props) {
+    super(props)
+
+
+    this.state = {
+      values: props.defaultValue || [],
+    }
   }
+
 
   selectionRenderer = (values) => {
     switch (values.length) {
