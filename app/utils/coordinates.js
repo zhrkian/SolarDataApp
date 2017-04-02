@@ -44,9 +44,9 @@ export const isInContours = (x, y, contours = []) => {
   return result
 }
 
-export const getContourSquareInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue) => {
-  let totalContourSquarePixels = 0
-  let totalContourSphericalSquare = 0.0
+export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue) => {
+  let totalContourAreaPixels = 0
+  let totalContourSphericalArea = 0.0
 
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
@@ -66,22 +66,22 @@ export const getContourSquareInfo = (contour, excludeContours, radiusValue, xCen
 
         const theta1 = Math.acos(x_minus_05 / yRadius)
         const theta2 = Math.acos(x_plus_05 / yRadius)
-        const pixelSquare = radiusValue * (theta1 - theta2)
+        const pixelArea = radiusValue * (theta1 - theta2)
 
-        totalContourSphericalSquare += pixelSquare < 0 ? (-1) * pixelSquare : pixelSquare
+        totalContourSphericalArea += pixelArea < 0 ? (-1) * pixelArea : pixelArea
 
-        totalContourSquarePixels += 1
+        totalContourAreaPixels += 1
       }
     }
   }
 
-  totalContourSphericalSquare = isNaN(totalContourSphericalSquare) || !totalContourSphericalSquare ? 0 : totalContourSphericalSquare
-  totalContourSquarePixels = isNaN(totalContourSquarePixels) || !totalContourSquarePixels ? 0 : totalContourSquarePixels
+  totalContourSphericalArea = isNaN(totalContourSphericalArea) || !totalContourSphericalArea ? 0 : totalContourSphericalArea
+  totalContourAreaPixels = isNaN(totalContourAreaPixels) || !totalContourAreaPixels ? 0 : totalContourAreaPixels
 
-  const totalSquarePixels = Math.PI * radiusValue * radiusValue
-  const totalVisibleSphericalSquare = 2 * Math.PI * radiusValue * radiusValue
+  const totalAreaPixels = Math.PI * radiusValue * radiusValue
+  const totalVisibleSphericalArea = 2 * Math.PI * radiusValue * radiusValue
 
-  return { totalContourSquarePixels, totalSquarePixels, totalContourSphericalSquare, totalVisibleSphericalSquare }
+  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
 }
 
 export const getContourIntensityInfo = (contour, excludeContours, frame, width) => {

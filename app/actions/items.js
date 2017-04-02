@@ -4,10 +4,10 @@ import * as FITS from '../utils/item_creator'
 
 import * as Frame from './frames'
 
-export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL';
-export const ITEMS_UPDATE_ITEM_SCALE = 'ITEMS_UPDATE_ITEM_SCALE';
-export const ITEMS_UPDATE_ITEM_LEVEL = 'ITEMS_UPDATE_ITEM_LEVEL';
-export const ITEMS_UPDATE_ITEM_RADIUS = 'ITEMS_UPDATE_ITEM_RADIUS';
+export const ITEMS_UPDATE_ALL = 'ITEMS_UPDATE_ALL'
+export const ITEMS_UPDATE_ITEM_ZOOM = 'ITEMS_UPDATE_ITEM_ZOOM'
+export const ITEMS_UPDATE_ITEM_LEVEL = 'ITEMS_UPDATE_ITEM_LEVEL'
+export const ITEMS_UPDATE_ITEM_RADIUS = 'ITEMS_UPDATE_ITEM_RADIUS'
 
 const isFileExist = (file, items) => {
   const { name, path } = file
@@ -81,6 +81,10 @@ export const updateItem = item =>
     })
   }
 
+export const updateItemZoom = (id, zoom) => {
+  return { type: ITEMS_UPDATE_ITEM_ZOOM, id, zoom }
+}
+
 export const updateItemLevel = (id, min, max) => {
   return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max }
 }
@@ -88,7 +92,6 @@ export const updateItemLevel = (id, min, max) => {
 export const updateItemRadius = (id, radius, xCenter, yCenter) => {
   return { type: ITEMS_UPDATE_ITEM_RADIUS, id, radius, xCenter, yCenter }
 }
-
 
 const updateContour = (item, contour, active) => {
   let contours = item.contours || []

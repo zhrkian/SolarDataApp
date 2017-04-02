@@ -1,7 +1,7 @@
 // @flow
 import {
   ITEMS_UPDATE_ALL,
-  ITEMS_UPDATE_ITEM_SCALE,
+  ITEMS_UPDATE_ITEM_ZOOM,
   ITEMS_UPDATE_ITEM_LEVEL,
   ITEMS_UPDATE_ITEM_RADIUS
 } from '../actions/items'
@@ -10,10 +10,10 @@ const initialState = {
   items: []
 }
 
-const updateItemScale = (items, id, scale) =>
+const updateItemZoom = (items, id, zoom) =>
   items.map(item => {
     if (item.id === id) {
-      item.scale = scale
+      item.zoom = zoom
     }
     return item
   })
@@ -41,8 +41,8 @@ const items = (state = initialState, action) => {
   switch (action.type) {
     case ITEMS_UPDATE_ALL:
       return {...state, items: action.items}
-    case ITEMS_UPDATE_ITEM_SCALE:
-      return {...state, items: updateItemScale(state.items, action.id, action.scale)}
+    case ITEMS_UPDATE_ITEM_ZOOM:
+      return {...state, items: updateItemZoom(state.items, action.id, action.zoom)}
     case ITEMS_UPDATE_ITEM_LEVEL:
       return {...state, items: updateItemLevel(state.items, action.id, action.min, action.max)}
     case ITEMS_UPDATE_ITEM_RADIUS:

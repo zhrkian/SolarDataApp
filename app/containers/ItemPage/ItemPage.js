@@ -69,6 +69,8 @@ class ItemPage extends Component {
 
   onSelectContour = (id, contour) => this.props.dispatch(ItemsAction.updateItemContour(id, contour, true))
 
+  onUpdateZoom = (id, zoom) => this.props.dispatch(ItemsAction.updateItemZoom(id, zoom))
+
   onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
 
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
@@ -113,6 +115,7 @@ class ItemPage extends Component {
               onUpdateContour={this.onUpdateContour}
               onSelectContour={this.onSelectContour}
 
+              onUpdateZoom={this.onUpdateZoom}
               onImageLevelChange={this.onImageLevelChange}
               onImageRadiusChange={this.onImageRadiusChange}
               onFrameImageUpdate={this.onFrameImageUpdate}
