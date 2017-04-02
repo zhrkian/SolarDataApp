@@ -130,11 +130,12 @@ storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
       <ItemLayout>
-        {/*<ContourCalculatorModal active={true}
+        <ContourCalculatorModal active={true}
+                                dev={true}
                                 item={items[0]}
                                 frame={[]}
                                 contour={contours[0]}
-                                contours={contours}/>*/}
+                                contours={contours}/>
         <Back />
         <ItemImageHolder heading={'D0612115'}>
           {/*<AreaInfo />*/}

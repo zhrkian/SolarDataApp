@@ -274,7 +274,7 @@ class ItemImage extends Component {
               <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
-              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={true}/>,
+              <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={!contours || contours.length < 2}/>,
               <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
             ]}>
 
@@ -311,6 +311,18 @@ class ItemImage extends Component {
                                 frame={frame.array}
                                 onChange={this.onSavedContoursSelect}
                                 onClose={this.onCloseContourCalculatorModal} />*/}
+
+        {
+          contourCalculatorModal ? (
+            <ContourCalculatorModal active={contourCalculatorModal}
+                                    item={item}
+                                    frame={frame}
+                                    contour={contour}
+                                    contours={contours}
+                                    onClose={this.onCloseContourCalculatorModal}/>
+          ) : null
+        }
+
 
         <ContourNewModal active={contourNewModal}
                          onAdd={name => onAddNewContour(item.id, { title: name, markers: [] }) & this.onCloseContourNewModal()}
