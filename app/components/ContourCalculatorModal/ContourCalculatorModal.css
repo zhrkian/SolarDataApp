@@ -34,7 +34,7 @@
 
 .containerTable {
     height: 231px;
-    width: 100%;
+    width: 450px;
     display: flex;
     flex-direction: row;
     justify-content: center;
