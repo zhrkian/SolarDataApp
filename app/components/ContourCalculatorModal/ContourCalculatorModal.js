@@ -159,7 +159,6 @@ class ContourCalculatorModal extends React.Component {
       })
     }
 
-    console.log(base, exclude)
     if (base && base.markers) this.onCalculate(base, exclude)
   }
 
@@ -172,16 +171,16 @@ class ContourCalculatorModal extends React.Component {
     const { aveIntensity, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
     const actions = [
       <FlatButton
-        label="Calculate"
-        primary={true}
-        onClick={this.onCalculate}
-      />,
-      <FlatButton
         label="Close"
         primary={true}
         onClick={onClose}
       />,
     ]
+    const tableHeading = (baseContour, excludeContours) => {
+      let heading = `Area info for contour ${baseContour}`
+      if (excludeContours && excludeContours.length) return `${heading} with excluded contours ${excludeContours.join(', ')}`
+      return heading
+    }
 
     return (
       <div>
@@ -208,6 +207,10 @@ class ContourCalculatorModal extends React.Component {
                 { ContoursList(contours, excludeContours, true, [baseContour], this.onExcludeChange) }
               </div>
             </div>
+
+            {
+              info ? <span className={s.tableHeading}>{tableHeading(baseContour, excludeContours)}</span> : null
+            }
 
             <div className={s.containerTable}>
               <div className={s.icon}>
