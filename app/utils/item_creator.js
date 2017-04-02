@@ -74,6 +74,7 @@ export const getFrameImage = item => {
   let idata = ctx.createImageData(width, height)
   idata.data.set(buffer)
 
+  ctx.imageSmoothingEnabled= false
   ctx.putImageData(idata, 0, 0)
 
   //ctx.drawImage(canvas, 0, 0)

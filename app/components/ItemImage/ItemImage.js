@@ -154,6 +154,7 @@ class ItemImage extends Component {
 
     const imageData = ctx.createImageData(width, height)
     imageData.data.set(buffer)
+    ctx.imageSmoothingEnabled= false
     ctx.putImageData(imageData, 0, 0)
 
     this.updateCanvasSize(scaledWidth, scaledHeight)
@@ -161,6 +162,7 @@ class ItemImage extends Component {
     mainCTX.translate(0, scaledHeight)
     mainCTX.scale(1, -1)
 
+    mainCTX.imageSmoothingEnabled= false
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
 
     const { item, onFrameImageUpdate } = this.props
