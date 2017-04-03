@@ -24,6 +24,16 @@ const iconButtonElement = (
   </IconButton>
 )
 
+const getContours = item => {
+  if (!item || !item.contours || !item.contours.length) return 'No contours'
+
+  switch(item.contours.length) {
+    case 1: return `1 contour`
+    default:
+      return `${item.contours.length} contours`
+  }
+}
+
 const Menu = props =>
   <IconMenu iconButtonElement={iconButtonElement}>
     {/*<MenuItem onClick={props.onView.bind(this, item.id)}>View Image</MenuItem>*/}
@@ -62,7 +72,7 @@ class ItemList extends Component {
                 <TableRow className={s.tableBodyRow} key={item.id}>
                   <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
                   <TableRowColumn className={s.tableBodyCell}>{item.date ? `${item.date}` : ''}</TableRowColumn>
-                  <TableRowColumn className={s.tableBodyCell}>status</TableRowColumn>
+                  <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? '' : getContours(item)}</TableRowColumn>
                   <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu item={item} onRemove={onRemove} />}</TableRowColumn>
                 </TableRow>
               ))
