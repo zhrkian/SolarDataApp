@@ -51,7 +51,7 @@ class ItemList extends Component {
   render() {
     const { items, onRemove } = this.props
 
-    if (!items || !items.length) return <div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
+    if (!items || !items.length) return null //<div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
 
     return (
       <div className={s.container}>
