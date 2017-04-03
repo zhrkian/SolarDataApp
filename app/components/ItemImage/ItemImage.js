@@ -230,10 +230,8 @@ class ItemImage extends Component {
   onOpenContourNewModal = () => this.setState({ contourNewModal: true })
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
 
-  onContourEdit = (name, contour) => console.log(name, contour)
-
   render() {
-    const { contourCalculatorModal, contourEditModal, contourNewModal } = this.state
+    const { contourCalculatorModal, contourNewModal } = this.state
     const { item, frame, contours, contour } = this.props
     const { onAddNewContour, onSelectContour, onEditContour, onRemoveContour } = this.props
     const markers = contour ? contour.markers : []
@@ -264,11 +262,6 @@ class ItemImage extends Component {
         </ItemImageHolder>
 
         {/* SIDEBAR */}
-        {/*
-          <IconButton key={3} icon="Area"       label="Area info"           onClick={this.onContourSquareInfo} disabled={true}/>,
-          <IconButton key={'ZoomIn'}    icon="ZoomIn"     label="Zoom In"             onClick={this.onZoomIn} />,
-          <IconButton key={'ZoomOut'}   icon="ZoomOut"    label="Zoom Out"            onClick={this.onZoomOut} />,
-        */}
         <ItemControls dock={[
               <IconButton key={'New'}       icon="New"        label="New contour"         onClick={this.onOpenContourNewModal} />,
               <IconButton key={'Remove'}    icon="Remove"     label="Remove all markers"  onClick={this.onRemoveAllMarker} disabled={!markers.length}/>,
@@ -299,19 +292,7 @@ class ItemImage extends Component {
         </ItemControls>
 
 
-        {/* MODALS
-        <ContourResultModal active={contourInfoModal}
-                            contourSquareInfo={contourSquareInfo}
-                            contourIntensityInfo={contourIntensityInfo}
-                            onSave={this.onSaveContour}
-                            onClose={this.onCloseContourResultModal} />
-
-        <ContourCalculatorModal active={contourCalculatorModal}
-                                item={item}
-                                frame={frame.array}
-                                onChange={this.onSavedContoursSelect}
-                                onClose={this.onCloseContourCalculatorModal} />*/}
-
+        {/* MODALS*/}
         {
           contourCalculatorModal ? (
             <ContourCalculatorModal active={contourCalculatorModal}

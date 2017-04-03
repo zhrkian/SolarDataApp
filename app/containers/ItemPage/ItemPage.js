@@ -80,11 +80,8 @@ class ItemPage extends Component {
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
 
   onFrameImageUpdate = (id, src) => {
-    return
-
-    const { frames } = this.props
+    const { frames } = this.props.frames
     const frame = frames[id]
-
     if (frame && frame.image !== src) {
       this.props.dispatch(FramesAction.updateFrameImage(id, src))
     }
