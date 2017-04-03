@@ -162,7 +162,7 @@ class ItemImage extends Component {
     mainCTX.translate(0, scaledHeight)
     mainCTX.scale(1, -1)
 
-    mainCTX.imageSmoothingEnabled= false
+    //mainCTX.imageSmoothingEnabled= false
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
 
     const { item, onFrameImageUpdate } = this.props

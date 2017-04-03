@@ -14,6 +14,7 @@ import * as Coordinates from '../../utils/coordinates'
 
 import * as Draw from '../../utils/draw'
 
+const MAX_HEIGHT = 350
 
 const ContoursList = (contours, selected, multi, disabled = [], onClick) => {
   const isActive = (title, selected, multi) => {
@@ -57,7 +58,7 @@ class ContourCalculatorModal extends React.Component {
 
   componentDidMount() {
     if (this.props.dev) {
-      const size = 250
+      const size = MAX_HEIGHT
       const context = this.CanvasImage.getContext('2d')
 
       const image = new Image()
@@ -69,7 +70,7 @@ class ContourCalculatorModal extends React.Component {
     const { item, frame } = this.props
     const { width, height } = item
 
-    const zoom = 250 / item.height
+    const zoom = MAX_HEIGHT / item.height
     const scaledWidth = item.width * zoom
     const scaledHeight = item.height * zoom
 
@@ -143,7 +144,7 @@ class ContourCalculatorModal extends React.Component {
   onDrawContours = (baseContour, excludeContours) => {
     const canvas = this.CanvasDraw
     const { item, contours } = this.props
-    const zoom = 250 / item.height
+    const zoom = MAX_HEIGHT / item.height
     const base = contours.filter(c => c.title === baseContour && c.markers && c.markers.length)[0]
     const exclude = contours.filter(c => excludeContours.indexOf(c.title) > -1 && c.markers && c.markers.length) || []
 
@@ -165,7 +166,7 @@ class ContourCalculatorModal extends React.Component {
   render() {
     const { baseContour, excludeContours, info} = this.state
     const { item, contours, active, onClose } = this.props
-    const zoom = 250 / item.height
+    const zoom = MAX_HEIGHT / item.height
     const width = item.width * zoom
     const height = item.height * zoom
     const { aveIntensity, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
@@ -200,11 +201,12 @@ class ContourCalculatorModal extends React.Component {
               </div>
               <div className={s.image} style={{width: width, height: height}}>
                 <canvas ref={(c) => { this.Canvas = c; }} width={width} height={height}></canvas>
-                <canvas style={{zIndex: 1}} className={s.draw} ref={(c) => { this.CanvasImage = c; }} width={width} height={height}></canvas>
-                <canvas style={{zIndex: 2}} className={s.draw} ref={(c) => { this.CanvasDraw = c; }} width={width} height={height}></canvas>
+                <canvas name="CalcImage" style={{zIndex: 1}} className={s.draw} ref={(c) => { this.CanvasImage = c; }} width={width} height={height}></canvas>
+                <canvas name="CalcSavedContours" style={{zIndex: 2}} className={s.draw} ref={(c) => { this.CanvasDraw = c; }} width={width} height={height}></canvas>
               </div>
               <div className={s.contourRight}>
                 { ContoursList(contours, excludeContours, true, [baseContour], this.onExcludeChange) }
+                <IconButton key={'Image'} icon="Image" label="Save image" onClick={link => Draw.SaveMergedImage(['CalcImage', 'CalcSavedContours'], width, height, link)} link={true}/>
               </div>
             </div>
 
@@ -226,22 +228,22 @@ class ContourCalculatorModal extends React.Component {
                       <TableHeader displaySelectAll={false}
                                    adjustForCheckbox={false}
                                    enableSelectAll={false}>
-                        <TableRow>
-                          <TableHeaderColumn>Name</TableHeaderColumn>
-                          <TableHeaderColumn>Contour Sqare</TableHeaderColumn>
-                          <TableHeaderColumn>Total Visible Square</TableHeaderColumn>
+                        <TableRow style={{height: 26}}>
+                          <TableHeaderColumn style={{height: 26}}>Name</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Contour Sqare</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Total Visible Square</TableHeaderColumn>
                         </TableRow>
                       </TableHeader>
                       <TableBody displayRowCheckbox={false}>
-                        <TableRow>
-                          <TableRowColumn>Flat</TableRowColumn>
-                          <TableRowColumn>{totalContourAreaPixels.toFixed(3)}</TableRowColumn>
-                          <TableRowColumn>{totalAreaPixels.toFixed(3)}</TableRowColumn>
+                        <TableRow style={{height: 26}}>
+                          <TableRowColumn style={{height: 26}}>Flat</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalContourAreaPixels.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalAreaPixels.toFixed(3)}</TableRowColumn>
                         </TableRow>
-                        <TableRow>
-                          <TableRowColumn>Spherical</TableRowColumn>
-                          <TableRowColumn>{totalContourSphericalArea.toFixed(3)}</TableRowColumn>
-                          <TableRowColumn>{totalVisibleSphericalArea.toFixed(3)}</TableRowColumn>
+                        <TableRow style={{height: 26}}>
+                          <TableRowColumn style={{height: 26}}>Spherical</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalContourSphericalArea.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalVisibleSphericalArea.toFixed(3)}</TableRowColumn>
                         </TableRow>
                       </TableBody>
                     </Table>

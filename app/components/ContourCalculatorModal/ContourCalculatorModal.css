@@ -42,7 +42,7 @@
 }
 
 .containerTable {
-    height: 231px;
+    height: 125px;
     width: 450px;
     display: flex;
     flex-direction: row;
