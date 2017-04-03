@@ -1,6 +1,5 @@
+import s from './SaveFile.css'
 import React, { Component } from 'react'
-
-const s = {}
 
 class SaveFile extends Component {
   onClick = (text, name, type) => {
@@ -14,8 +13,9 @@ class SaveFile extends Component {
     return (
       <a ref={link => { this.Link = link; }}
          className={s.saveButton}
+         href=""
          onClick={this.onClick.bind(this, localStorage.getItem('SolarAppStorage'), 'SolarAppStorage.txt', 'text/plain')}>
-        Save Image
+        Save Storage
       </a>
     )
   }

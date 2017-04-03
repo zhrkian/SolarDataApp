@@ -11,6 +11,8 @@ import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 
+import SaveFile from '../SaveFile/SaveFile'
+
 import * as Utils from '../../utils'
 
 const iconButtonElement = (
@@ -67,6 +69,8 @@ class ItemList extends Component {
             }
           </TableBody>
         </Table>
+
+        <SaveFile />
       </div>
     );
   }
