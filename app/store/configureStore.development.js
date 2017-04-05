@@ -33,7 +33,7 @@ const enhancer = composeEnhancers(
 );
 
 export default function configureStore() {
-  const store = createStore(rootReducer, enhancer);
+  const store = createStore(rootReducer, { items: { items: [], suko: true } }, enhancer);
 
   if (module.hot) {
     module.hot.accept('../reducers', () =>

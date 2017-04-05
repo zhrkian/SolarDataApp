@@ -1,6 +1,39 @@
 // @flow
-if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./configureStore.production'); // eslint-disable-line global-require
-} else {
-  module.exports = require('./configureStore.development'); // eslint-disable-line global-require
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { hashHistory } from 'react-router'
+import { routerMiddleware } from 'react-router-redux'
+import rootReducer from '../reducers'
+
+const router = routerMiddleware(hashHistory)
+
+const enhancer = applyMiddleware(thunk, router)
+
+//localStorage.clear()
+
+const getLocalStorageStore = () => {
+  const store = localStorage.getItem('SolarAppStorage')
+  return store ? JSON.parse(store) : {}
+}
+
+const writeLocalStorageStore = (data, blacklist) => {
+  let toWrite = {}
+  for (let key in data) {
+    if (data.hasOwnProperty(key) && blacklist.indexOf(key) < 0) {
+      toWrite[key] = data[key]
+    }
+  }
+  localStorage.setItem('SolarAppStorage', JSON.stringify(toWrite))
+}
+
+const storeHandler = (store, blacklist) => {
+  let data = store.getState() || {}
+  writeLocalStorageStore(data, blacklist)
+}
+
+export default function configureStore(blacklist) {
+  let savedStore = getLocalStorageStore()
+  const store = createStore(rootReducer, savedStore, enhancer)
+  store.subscribe(() => storeHandler(store, blacklist || []))
+  return store
 }

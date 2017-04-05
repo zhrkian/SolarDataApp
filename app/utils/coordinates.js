@@ -1,5 +1,6 @@
 export const isIsCircle = (x, y, radius, x0, y0) => Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) < radius
 
+export const from2dToSingle = (x, y, rowLength) => y * rowLength + x
 
 export const inPoly = (x, y, points) => {
   let npol = points.length;
@@ -31,17 +32,30 @@ export const getContourRect = contour => {
   return { x0, y0, x1, y1 }
 }
 
-export const getContourSqareInfo = (contour, radiusValue, xCenterValue, yCenterValue) => {
-  let totalContourSquarePixels = 0
-  let totalContourSphericalSquare = 0.0
+export const isInContours = (x, y, contours = []) => {
+  let result = false
+
+  contours.forEach(contour => {
+    if (!result) {
+      result = inPoly(x, y, contour)
+    }
+  })
+
+  return result
+}
+
+export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue) => {
+  let totalContourAreaPixels = 0
+  let totalContourSphericalArea = 0.0
 
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
   for (let y = y0; y <= y1; y++) {
     for (let x = x0; x <= x1; x++) {
       const isInContour = inPoly(x, y, contour)
+      const isInExcludeContour = isInContours(x, y, excludeContours)
 
-      if (isInContour) {
+      if (isInContour && !isInExcludeContour) {
         const yRadius = Math.sqrt(radiusValue * radiusValue  - (y - yCenterValue) * (y - yCenterValue))
 
         let xP = x - xCenterValue
@@ -52,21 +66,70 @@ export const getContourSqareInfo = (contour, radiusValue, xCenterValue, yCenterV
 
         const theta1 = Math.acos(x_minus_05 / yRadius)
         const theta2 = Math.acos(x_plus_05 / yRadius)
-        const pixelSquare = radiusValue * (theta1 - theta2)
+        const pixelArea = radiusValue * (theta1 - theta2)
 
-        totalContourSphericalSquare += pixelSquare < 0 ? (-1) * pixelSquare : pixelSquare
+        totalContourSphericalArea += pixelArea < 0 ? (-1) * pixelArea : pixelArea
 
-        totalContourSquarePixels += 1
+        totalContourAreaPixels += 1
       }
     }
   }
 
-  totalContourSphericalSquare = isNaN(totalContourSphericalSquare) || !totalContourSphericalSquare ? 0 : totalContourSphericalSquare
-  totalContourSquarePixels = isNaN(totalContourSquarePixels) || !totalContourSquarePixels ? 0 : totalContourSquarePixels
+  totalContourSphericalArea = isNaN(totalContourSphericalArea) || !totalContourSphericalArea ? 0 : totalContourSphericalArea
+  totalContourAreaPixels = isNaN(totalContourAreaPixels) || !totalContourAreaPixels ? 0 : totalContourAreaPixels
 
-  const totalSquarePixels = Math.PI * radiusValue * radiusValue
-  const totalVisibleSphericalSquare = 2 * Math.PI * radiusValue * radiusValue
+  const totalAreaPixels = Math.PI * radiusValue * radiusValue
+  const totalVisibleSphericalArea = 2 * Math.PI * radiusValue * radiusValue
 
-  return { totalContourSquarePixels, totalSquarePixels, totalContourSphericalSquare, totalVisibleSphericalSquare }
+  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
 }
 
+export const getContourIntensityInfo = (contour, excludeContours, frame, width) => {
+  let totalPoints = 0
+  let totalIntensity = 0
+
+  const { x0, x1, y0, y1 } = getContourRect(contour)
+
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      const isInContour = inPoly(x, y, contour)
+      const isInExcludeContour = isInContours(x, y, excludeContours)
+
+      if (isInContour && !isInExcludeContour) {
+        const position = parseInt(from2dToSingle(x, y, width))
+        totalIntensity += frame[position]
+        totalPoints += 1
+      }
+    }
+  }
+
+  return { aveIntensity: totalIntensity / totalPoints }
+}
+
+export const toImageCoords = (item, coords) => {
+  const { height, zoom } = item
+  const fromView = c => {
+    const y = height - c.y / zoom
+    return { x: c.x / zoom, y: y }
+  }
+  if (Array.isArray(coords)) {
+    let result = []
+    coords.forEach(co => result.push(fromView(co)))
+    return result
+  }
+  return fromView(coords)
+}
+
+export const toViewCoords = (item, coords) => {
+  const { height, zoom } = item
+  const fromImage = c => {
+    const y = (height - c.y) * zoom
+    return { x: c.x * zoom, y: y }
+  }
+  if (Array.isArray(coords)) {
+    let result = []
+    coords.forEach(co => result.push(fromImage(co)))
+    return result
+  }
+  return fromImage(coords)
+}

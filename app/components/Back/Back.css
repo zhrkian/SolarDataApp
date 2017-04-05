@@ -1,0 +1,50 @@
+.back {
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+    margin-right: auto;
+    width: 100px;
+}
+
+.backIconHolder {
+    display: flex;
+    position: relative;
+    height: 51px;
+    width: 27px;
+    overflow: hidden;
+    padding-top: 40px;
+    left: -5px;
+}
+
+.backIcon {
+    position: absolute;
+    border: solid 2px #ff4081;
+    border-width: 0 2px 2px 0;
+    transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+    height: 51px;
+    width: 51px;
+    padding: 3px;
+    left: 15px;
+    top: 34px;
+}
+
+.backMessage {
+    width: 54px;
+    height: 15px;
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: 300;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.63);
+    padding-top: 15px;
+}
+
+.back:hover {
+    background-color: #181818;
+}

@@ -1,0 +1,7 @@
+.dock {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}

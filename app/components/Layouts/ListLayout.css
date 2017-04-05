@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    background-color: #181818;
+    padding: 30px 50px;
+}
+
+.header {
+    font-family: Roboto;
+    font-size: 48px;
+    font-weight: 300;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    /*text-align: center;*/
+    color: #ffffff;
+    padding-bottom: 50px;
+}

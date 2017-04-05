@@ -31,3 +31,24 @@ export const drawMarker = (canvas, x, y, size = 3, color) => {
   context.stroke()
   context.closePath()
 }
+
+export const clearCanvas = canvas => {
+  const context = canvas.getContext('2d')
+  context.clearRect(0, 0, canvas.width, canvas.height)
+}
+
+export const SaveMergedImage = (images, width, height, link) => {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = width
+  canvas.height = height
+
+  images.forEach(image => {
+    const imageLayerCanvas = document.querySelector(`[name="${image}"]`)
+    ctx.drawImage(imageLayerCanvas, 0, 0)
+  })
+
+  link.href = canvas.toDataURL()
+  link.download = 'image.png'
+}

@@ -13,13 +13,23 @@
     padding: 10px;
 }
 
-
 .drawingContainer {
     display: flex;
     position: relative;
     justify-content: center;
+    margin-bottom: 15px;
+}
+.drawingSubContainer {
+    display: flex;
+    position: relative;
 }
 
+.contourList {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin-bottom: 15px;
+}
 
 .buttonsContainer {
     display: flex;
@@ -41,20 +51,26 @@
     z-index: 1;
 }
 
-.radius {
+.savedContours {
     cursor:none;
     position:absolute;
     z-index: 2;
 }
 
-.draw {
+.radius {
     cursor:none;
     position:absolute;
     z-index: 3;
 }
 
-.crossHair {
+.draw {
     cursor:none;
     position:absolute;
     z-index: 4;
+}
+
+.crossHair {
+    cursor:none;
+    position:absolute;
+    z-index: 5;
 }

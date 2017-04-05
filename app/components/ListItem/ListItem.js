@@ -7,24 +7,13 @@ import ActionDelete from 'material-ui/svg-icons/action/delete'
 
 import Spinner from '../Spinner/Spinner'
 
-const PaperStyle = {
-  height: '250px',
-  width: '150px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  margin: '10px',
-  padding: '10px',
-  position: 'relative',
-}
-
 const ListItem = props => {
   const { item, frame } = props
   const { image } = frame || {}
   const { header } = item
   const { item_thinking } = item
   return (
-    <div className={s.container}>
+    <div className={s.container} style={{border: 'solid red'}}>
       {
         item_thinking ? <Spinner /> : (
         <Link to={`/items/${item.id}`}>
@@ -39,7 +28,7 @@ const ListItem = props => {
               header ? (
                 <div className={s.footerContent}>
                   <span>{header['DATE-OBS'].value}</span>
-                  <span>{header['TIME-OBS'].value}</span>
+                  {/*<span>{header['TIME-OBS'].value}</span>*/}
                 </div>
               ) : null
             }

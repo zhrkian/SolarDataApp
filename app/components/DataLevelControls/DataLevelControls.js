@@ -3,12 +3,24 @@ import Slider from 'material-ui/Slider'
 import { Grid } from '../Layouts/Grid'
 import s from './DataLevelControls.css'
 
+const styles = {
+  group: {
+    fontFamily: 'Roboto',
+    fontSize: 14
+  },
+  slider: {
+    paddingTop: 15,
+    marginTop: 0,
+    marginBottom: 0
+  }
+}
+
 class DataLevelControls extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      min_value: props.frame_min_value,
-      max_value: props.frame_max_value
+      min_value: props.image_min,
+      max_value: props.image_max
     }
   }
 
@@ -27,37 +39,41 @@ class DataLevelControls extends Component {
   }
 
   render() {
-    const { frame_min_value, frame_max_value, min, max } = this.props
+    const { image_min, image_max, frame_min, frame_max } = this.props
     const { min_value, max_value } = this.state
+
+    if (min_value === undefined || max_value === undefined) return null
+
     return (
       <div className={s.container}>
-        <div className={s.heading}>Data level</div>
-        <Grid>
-          <div style={{width: '250px', padding: 10}}>
-            { min_value ? <span>{'The min data value is: '}{min_value.toFixed(3)}</span> : null }
-            <Slider
-              min={min < 0 ? 0 : min}
-              max={max_value}
-              step={0.005}
-              defaultValue={frame_min_value}
-              value={min_value}
-              onDragStop={this.onDragStop}
-              onChange={this.handleMinLevel}
-            />
-          </div>
-          <div style={{width: '250px', padding: 10}}>
-            { max_value ? <span>{'The max data value is: '}{max_value.toFixed(3)}</span> : null }
-            <Slider
-              min={min_value}
-              max={max}
-              step={0.005}
-              defaultValue={frame_max_value}
-              value={max_value}
-              onDragStop={this.onDragStop}
-              onChange={this.handleMaxLevel}
-            />
-          </div>
-        </Grid>
+        <div style={styles.group}>
+          <span>{'Min: '}{min_value.toFixed(3)}</span>
+          <Slider
+            sliderStyle={styles.slider}
+            min={frame_min < 0 ? 0 : frame_min}
+            max={max_value}
+            step={0.005}
+            defaultValue={image_min}
+            value={min_value}
+            onDragStop={this.onDragStop}
+            onChange={this.handleMinLevel}
+          />
+        </div>
+
+        <div style={styles.group}>
+          <span>{'Max: '}{max_value.toFixed(3)}</span>
+          <Slider
+            sliderStyle={styles.slider}
+            min={min_value}
+            max={frame_max}
+            step={0.005}
+            defaultValue={image_max}
+            value={max_value}
+            onDragStop={this.onDragStop}
+            onChange={this.handleMaxLevel}
+          />
+        </div>
+
       </div>
     )
   }

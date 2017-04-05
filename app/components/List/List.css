@@ -1,0 +1,52 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.noItemsMessage {
+    color: #ffffff!important;
+    font-family: Roboto!important;
+    font-size: 16px!important;
+    font-weight: normal!important;
+    font-style: normal!important;
+    font-stretch: normal!important;
+    line-height: normal!important;
+    letter-spacing: normal!important;
+}
+
+.tableHeader {
+    color: rgba(255, 255, 255, 0.46);
+    background-color: #181818;
+}
+
+.tableHeaderCell {
+    font-size: 14px!important;
+}
+
+.tableBody {
+    color: #ffffff;
+    background-color: #181818;
+}
+
+.tableBodyRow {
+    color: #ffffff!important;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.1)!important;
+    font-family: Roboto!important;
+    font-size: 16px!important;
+    font-weight: normal!important;
+    font-style: normal!important;
+    font-stretch: normal!important;
+    line-height: normal!important;
+    letter-spacing: normal!important;
+}
+
+.tableBodyCell {
+    cursor: pointer;
+    font-size: 16px!important;
+}
+

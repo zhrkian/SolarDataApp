@@ -5,3 +5,7 @@ export const generatePortId = (items = []) => {
   }
   return generatePortId(items)
 }
+
+export const getFilename = url => {
+  return url ? url.substring(url.lastIndexOf('/') + 1) : null
+}

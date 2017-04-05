@@ -1,7 +1,7 @@
 {
   "name": "solar-data-app",
   "productName": "SolarDataApp",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Solar data processing applicationt",
   "main": "main.js",
   "scripts": {
@@ -165,10 +165,11 @@
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
+    "FileSaver": "^0.10.0",
     "electron-debug": "^1.1.0",
     "font-awesome": "^4.7.0",
     "histogramjs": "0.0.1",
-    "material-ui": "^0.17.0",
+    "material-ui": "^0.17.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.10.0",
@@ -176,6 +177,7 @@
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.7",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-persist": "^4.4.2",
     "redux-thunk": "^2.2.0",

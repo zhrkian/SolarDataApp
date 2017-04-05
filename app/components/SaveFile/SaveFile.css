@@ -1,0 +1,12 @@
+.saveButton {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1000;
+    color: white;
+    opacity: 0;
+}
+
+.saveButton:hover {
+    opacity: 1;
+}

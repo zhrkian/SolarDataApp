@@ -1,5 +1,6 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
@@ -11,9 +12,11 @@ import './app.global.css'
 
 require('./utils/fits')
 
-const store = configureStore()
+const store = configureStore([ 'frames', 'routing' ])
 const history = syncHistoryWithStore(hashHistory, store)
 const muiTheme = getMuiTheme({})
+
+injectTapEventPlugin()
 
 render(
   <Provider store={store}>

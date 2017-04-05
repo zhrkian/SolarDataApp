@@ -1,0 +1,37 @@
+::-webkit-scrollbar
+{
+    width: 3px;  /* for vertical scrollbars */
+    height: 3px; /* for horizontal scrollbars */
+    background: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar * {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb
+{
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+.controls {
+    position: relative;
+    width: 435px;
+    background-color: #181818;
+    margin-left: auto;
+}
+
+.dock {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0px;
+    right: 100%;
+    margin: 4px;
+    z-index: 100;
+}
+
+.blocks {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
