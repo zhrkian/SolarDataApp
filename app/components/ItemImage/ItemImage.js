@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import s from './ItemImage.css'
+
 import FlatButton from 'material-ui/FlatButton'
 import Chip from 'material-ui/Chip'
 

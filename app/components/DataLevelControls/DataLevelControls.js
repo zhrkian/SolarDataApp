@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 import TextField from 'material-ui/TextField'
+
+import InputRange from 'react-input-range'
 import { Grid } from '../Layouts/Grid'
 import s from './DataLevelControls.css'
 
 const styles = {
+  groupRange: {
+    padding: '10px 0px',
+    fontFamily: 'Roboto',
+    fontSize: 14
+  },
   group: {
     fontFamily: 'Roboto',
     fontSize: 14
@@ -20,6 +27,10 @@ class DataLevelControls extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      value: {
+        min: props.image_min,
+        max: props.image_max
+      },
       min_value: props.image_min,
       max_value: props.image_max
     }
@@ -29,72 +40,44 @@ class DataLevelControls extends Component {
     e.preventDefault()
     const value = e.target.elements['frame_min'].value
     const { frame_max } = this.props
-    const { min_value, max_value } = this.state
-    return this.props.onImageLevelChange(min_value, max_value, parseFloat(value), frame_max)
+    const { min, max } = this.state.value
+    return this.props.onImageLevelChange(min, max, parseFloat(value), frame_max)
   }
 
   onFrameMaxChange = e => {
     e.preventDefault()
     const value = e.target.elements['frame_max'].value
     const { frame_min } = this.props
-    const { min_value, max_value } = this.state
-    return this.props.onImageLevelChange(min_value, max_value, frame_min, parseFloat(value))
+    const { min, max } = this.state.value
+    return this.props.onImageLevelChange(min, max, frame_min, parseFloat(value))
   }
 
-  handleMinLevel = (event, value) => {
-    this.setState({min_value: value});
-  }
-
-  handleMaxLevel = (event, value) => {
-    this.setState({max_value: value});
-  }
-
-  onDragStop = () => {
-    const { min_value, max_value } = this.state
+  onDragStop = value => {
+    const { min, max } = value
     const { frame_min, frame_max } = this.props
-    return this.props.onImageLevelChange(min_value, max_value, frame_min, frame_max)
+    return this.props.onImageLevelChange(min, max, frame_min, frame_max)
   }
 
   render() {
+    const { frame_min, frame_max } = this.props
+    const { min_value, max_value, value } = this.state
 
-    console.log(this.props)
-
-    const { image_min, image_max, frame_min, frame_max } = this.props
-    const { min_value, max_value } = this.state
-
-    if (min_value === undefined || max_value === undefined) return null
+    if (min_value === undefined || max_value === undefined || frame_min === undefined || frame_max === undefined) return null
 
     return (
       <div className={s.container}>
-        <div style={styles.group}>
-          <span>{'Min: '}{min_value.toFixed(3)}</span>
-          <Slider
-            sliderStyle={styles.slider}
-            min={frame_min < 0 ? 0 : frame_min}
-            max={max_value}
-            step={0.005}
-            defaultValue={image_min}
-            value={min_value}
-            onDragStop={this.onDragStop}
-            onChange={this.handleMinLevel}
-          />
+        <div className={s.range}>
+          <InputRange
+            step={0.01}
+            minValue={frame_min}
+            maxValue={frame_max}
+            formatLabel={v => `${v.toFixed(2)}`}
+            value={value}
+            onChange={v => this.setState({ value: v })}
+            onChangeComplete={v => console.log(v) & this.onDragStop(v)} />
         </div>
 
-        <div style={styles.group}>
-          <span>{'Max: '}{max_value.toFixed(3)}</span>
-          <Slider
-            sliderStyle={styles.slider}
-            min={min_value}
-            max={frame_max}
-            step={0.005}
-            defaultValue={image_max}
-            value={max_value}
-            onDragStop={this.onDragStop}
-            onChange={this.handleMaxLevel}
-          />
-        </div>
-
-        <div style={styles.group}>
+        <div style={styles.groupRange}>
           <form onSubmit={this.onFrameMinChange}>
             <TextField
               name="frame_min"

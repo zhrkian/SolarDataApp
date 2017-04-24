@@ -42,6 +42,8 @@ import ContourNewModal from '../app/components/ContourNewModal/ContourNewModal'
 import ContourCalculatorModal from '../app/components/ContourCalculatorModal/ContourCalculatorModal'
 import AreaInfo from '../app/components/AreaInfo/AreaInfo'
 
+import InputRange from 'react-input-range'
+
 import SaveFile from '../app/components/SaveFile/SaveFile'
 const _item = {
   path: 'http://127.0.0.1:3030/D0612115.fts'
@@ -130,7 +132,7 @@ storiesOf('Item', module)
   .add('Item Layout', () => (
     <MUI>
       <ItemLayout>
-        <ContourCalculatorModal active={true}
+        <ContourCalculatorModal active={false}
                                 dev={true}
                                 item={items[0]}
                                 frame={[]}
@@ -159,14 +161,12 @@ storiesOf('Item', module)
           </Block>
           <Block title="Block2">
             <div style={{display: 'flex', flexWrap: 'wrap'}}>
-              <IconButton icon="New"  label="New contour" onClick={() => {}} />
-              <IconButton icon="Contour"    label="Draw contour" disabled={true} onClick={() => {}}/>
-              <IconButton icon="Area"       label="Area info" onClick={() => {}} />
-              <IconButton icon="Calc"       label="Contour calc" onClick={() => {}} />
-              <IconButton icon="Remove"     label="Remove all markers" onClick={() => {}} />
-              <IconButton icon="RemoveOne"  label="Remove last marker" onClick={() => {}} />
-              <IconButton icon="ZoomIn"  label="Remove last marker" onClick={() => {}} />
-              <IconButton icon="ZoomOut"  label="Remove last marker" onClick={() => {}} />
+              <InputRange
+                maxValue={20}
+                minValue={0}
+                value={10}
+                onChange={value => console.log(value)} />
+              )
             </div>
           </Block>
           <Block title="Block3">
