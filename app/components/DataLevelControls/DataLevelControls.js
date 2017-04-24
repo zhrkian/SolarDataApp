@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
+import TextField from 'material-ui/TextField'
 import { Grid } from '../Layouts/Grid'
 import s from './DataLevelControls.css'
 
@@ -24,6 +25,21 @@ class DataLevelControls extends Component {
     }
   }
 
+  onFrameMinChange = e => {
+    e.preventDefault()
+    const value = e.target.elements['frame_min'].value
+    const { frame_max } = this.props
+    const { min_value, max_value } = this.state
+    return this.props.onImageLevelChange(min_value, max_value, parseFloat(value), frame_max)
+  }
+
+  onFrameMaxChange = e => {
+    e.preventDefault()
+    const value = e.target.elements['frame_max'].value
+    const { frame_min } = this.props
+    const { min_value, max_value } = this.state
+    return this.props.onImageLevelChange(min_value, max_value, frame_min, parseFloat(value))
+  }
 
   handleMinLevel = (event, value) => {
     this.setState({min_value: value});
@@ -35,10 +51,14 @@ class DataLevelControls extends Component {
 
   onDragStop = () => {
     const { min_value, max_value } = this.state
-    return this.props.onImageLevelChange(min_value, max_value)
+    const { frame_min, frame_max } = this.props
+    return this.props.onImageLevelChange(min_value, max_value, frame_min, frame_max)
   }
 
   render() {
+
+    console.log(this.props)
+
     const { image_min, image_max, frame_min, frame_max } = this.props
     const { min_value, max_value } = this.state
 
@@ -72,6 +92,36 @@ class DataLevelControls extends Component {
             onDragStop={this.onDragStop}
             onChange={this.handleMaxLevel}
           />
+        </div>
+
+        <div style={styles.group}>
+          <form onSubmit={this.onFrameMinChange}>
+            <TextField
+              name="frame_min"
+              floatingLabelStyle={{color: 'white'}}
+              hintStyle={{color: 'white'}}
+              inputStyle={{color: 'white'}}
+              floatingLabelFixed={true}
+              floatingLabelText="Min image value"
+              hintText="Input min image value"
+              defaultValue={frame_min}
+            />
+          </form>
+        </div>
+
+        <div style={styles.group}>
+          <form onSubmit={this.onFrameMaxChange}>
+            <TextField
+              name="frame_max"
+              floatingLabelStyle={{color: 'white'}}
+              hintStyle={{color: 'white'}}
+              inputStyle={{color: 'white'}}
+              floatingLabelFixed={true}
+              floatingLabelText="Max image value"
+              hintText="Input max image value"
+              defaultValue={frame_max}
+            />
+          </form>
         </div>
 
       </div>

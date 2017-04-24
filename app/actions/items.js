@@ -86,8 +86,8 @@ export const updateItemZoom = (id, zoom) => {
   return { type: ITEMS_UPDATE_ITEM_ZOOM, id, zoom }
 }
 
-export const updateItemLevel = (id, min, max) => {
-  return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max }
+export const updateItemLevel = (id, min, max, f_min, f_max) => {
+  return { type: ITEMS_UPDATE_ITEM_LEVEL, id, min, max, f_min, f_max }
 }
 
 export const updateItemRadius = (id, radius, xCenter, yCenter) => {

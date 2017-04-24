@@ -75,7 +75,7 @@ class ItemPage extends Component {
 
   onUpdateZoom = (id, zoom) => this.props.dispatch(ItemsAction.updateItemZoom(id, zoom))
 
-  onImageLevelChange = (id, min, max) => console.log(id, min, max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max))
+  onImageLevelChange = (id, min, max, f_min, f_max) => console.log(id, min, max, f_min, f_max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max, f_min, f_max))
 
   onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
 

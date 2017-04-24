@@ -241,7 +241,7 @@ class ItemImage extends Component {
     return zoomMin > nextZoom ? null : onUpdateZoom(item.id, nextZoom)
   }
 
-  onImageLevelChange = (min, max) => this.props.onImageLevelChange(this.props.item.id, min, max)
+  onImageLevelChange = (min, max, f_min, f_max) => this.props.onImageLevelChange(this.props.item.id, min, max, f_min, f_max)
 
   onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
 

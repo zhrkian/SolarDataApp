@@ -20,11 +20,20 @@ const updateItemZoom = (items, id, zoom) =>
     return item
   })
 
-const updateItemLevel = (items, id, min, max) =>
+const updateItemLevel = (items, id, min, max, f_min, f_max) =>
   items.map(item => {
     if (item.id === id) {
+      if (f_max < max) {
+        max = f_max
+      }
+      if (f_min > min) {
+        min = f_min
+      }
+
       item.image_min = min
       item.image_max = max
+      item.frame_min = f_min
+      item.frame_max = f_max
     }
     return item
   })
@@ -49,7 +58,7 @@ const items = (state = initialState, action) => {
     case ITEMS_UPDATE_ITEM_ZOOM:
       return {...state, items: updateItemZoom(state.items, action.id, action.zoom)}
     case ITEMS_UPDATE_ITEM_LEVEL:
-      return {...state, items: updateItemLevel(state.items, action.id, action.min, action.max)}
+      return {...state, items: updateItemLevel(state.items, action.id, action.min, action.max, action.f_min, action.f_max)}
     case ITEMS_UPDATE_ITEM_RADIUS:
       return {...state, items: updateItemRadius(state.items, action.id, action.radius, action.xCenter, action.yCenter)}
     case ITEMS_REMOVE_ITEM: {
