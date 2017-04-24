@@ -109,12 +109,12 @@ class ItemImage extends Component {
       const { item, contour, frame } = props
       const { image_min, image_max, zoom } = this.state.item
 
-      renderSolarRadius(this.CanvasDrawRadius, item)
-      this.initCurrentContour(item, contour)
-
       if (image_min !== props.item.image_min || image_max !== props.item.image_max || zoom !== props.item.zoom) {
         this.buildCanvasImage(item, frame)
       }
+
+      renderSolarRadius(this.CanvasDrawRadius, item)
+      this.initCurrentContour(item, contour)
 
       this.setState({ item: JSON.parse(JSON.stringify(item)) })
     }
