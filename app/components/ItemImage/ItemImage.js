@@ -62,6 +62,10 @@ const renderMouseCursor = (canvas, event) => {
 const renderSolarRadius = (canvas, item) => {
   const { zoom, radius, crpix_x, crpix_y } = item
   const { x, y } = Coordinates.toViewCoords(item, { x: crpix_x, y: crpix_y })
+  const { width, height } = canvas
+  const context = canvas.getContext('2d')
+
+  context.clearRect(0, 0, width, height)
 
   Draw.drawMarker(canvas, x, y, 1, 'red')
   Draw.drawCircle(canvas, x, y, radius * zoom, 'red')
@@ -88,21 +92,29 @@ class ItemImage extends Component {
   }
 
   componentDidMount() {
-    const { item, contour } = this.props
-    this.buildCanvasImage()
+    const { item, contour, frame } = this.props
+    this.buildCanvasImage(item, frame)
+    this.initCurrentContour(item, contour)
     this.CanvasCrossHair.addEventListener('mousedown', onMouseClick.bind(this, this.CanvasCrossHair, this.onMouseClick))
     this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair))
     this.CanvasCrossHair.addEventListener('mousewheel', e => e.wheelDelta / 60 > 0 ? this.onZoomIn() : this.onZoomOut())
+    this.setState({ item: JSON.parse(JSON.stringify(item)) })
+
     renderSolarRadius(this.CanvasDrawRadius, item)
-    this.initCurrentContour(item, contour)
   }
 
   componentWillUpdate(props) {
     if (this.props !== props) {
-      const { item, contour } = props
-      this.buildCanvasImage()
+      const { item, contour, frame } = props
+      const { image_min, image_max, zoom } = this.state.item
+
+      if (image_min !== props.item.image_min || image_max !== props.item.image_max || zoom !== props.item.zoom) {
+        this.buildCanvasImage(item, frame)
+      }
       renderSolarRadius(this.CanvasDrawRadius, item)
       this.initCurrentContour(item, contour)
+
+      this.setState({ item: JSON.parse(JSON.stringify(item)) })
     }
   }
 
@@ -117,12 +129,20 @@ class ItemImage extends Component {
     }
   }
 
-  buildCanvasImage = () => {
-    const { item, frame } = this.props
-    const { zoom } = item
-    const { width, height, image_min, image_max } = item
-    const imageBuffer = FITSLib.getFrameImageBuffer(width, height, image_min, image_max, 0, frame.array)
-    this.updateCanvas(imageBuffer,  width, height, zoom)
+  buildCanvasImage = (newItem, frame = {}) => {
+    const { zoom } = newItem
+    const { width, height, image_min, image_max } = newItem
+    const { item, imageBuffer } = this.state
+    let newImageBuffer = null
+
+    if ((item && item.zoom === zoom) || !imageBuffer) {
+      newImageBuffer = FITSLib.getFrameImageBuffer(width, height, image_min, image_max, 0, frame.array)
+    } else {
+      newImageBuffer = imageBuffer
+    }
+
+    this.updateCanvas(newImageBuffer,  width, height, zoom)
+    this.setState({ imageBuffer: newImageBuffer })
   }
 
   updateCanvasSize = (width, height) => {

@@ -748,6 +748,7 @@
       var arr, bytes, dataType, i, nPixels, swapEndian, tmp, value;
       bytes = Math.abs(bitpix) / 8;
       nPixels = i = buffer.byteLength / bytes;
+      bscale = bscale || 1;
       dataType = Math.abs(bitpix);
       if (bitpix > 0) {
         switch (bitpix) {
