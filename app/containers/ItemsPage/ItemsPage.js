@@ -15,6 +15,8 @@ class ItemsPage extends Component {
 
   onOpenFiles = files => this.props.dispatch(ItemsAction.getItems(files))
 
+  restoreStorage = items => console.log(items) & this.props.dispatch({ type: 'ITEMS_UPDATE_ALL', items })
+
   onView = id => this.context.router.push(`/items/${id}`)
 
   onRemove = id => this.props.dispatch(ItemsAction.removeItem(id))
@@ -27,7 +29,7 @@ class ItemsPage extends Component {
     return (
       <ListLayout>
         <OpenFITS onOpenFiles={this.onOpenFiles} onRemoveAll={this.onRemoveAll} />
-        <List items={items} onView={this.onView} onRemove={this.onRemove}/>
+        <List items={items} onView={this.onView} onRemove={this.onRemove} restoreStorage={this.restoreStorage}/>
       </ListLayout>
     );
   }
