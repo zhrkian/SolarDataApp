@@ -4,7 +4,7 @@ import IButton from 'material-ui/IconButton'
 import * as Icons from '../Icons/Icons'
 
 const IconButton = props => {
-  const { icon, label, disabled, onClick, link } = props
+  const { icon, label, disabled, onClick, link, simple } = props
   const Icon = Icons[icon]
   const styles = disabled ? {opacity: 0.5, cursor: 'not-allowed'} : {}
 
@@ -20,6 +20,18 @@ const IconButton = props => {
     const linkElement = isLink(e.target, lvl)
     if (!link) e.preventDefault()
     return disabled ? null : onClick(linkElement)
+  }
+
+  if (simple) {
+    return (
+      <div style={{paddingTop: 10}}>
+        <a href="#0"
+           style={{padding: 5, backgroundColor: 'rgb(224, 224, 224)'}}
+           onClick={click}>
+          {label}
+        </a>
+      </div>
+    )
   }
 
   return (
