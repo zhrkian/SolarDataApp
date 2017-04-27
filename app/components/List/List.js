@@ -12,6 +12,7 @@ import MenuItem from 'material-ui/MenuItem'
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 
 import SaveFile from '../SaveFile/SaveFile'
+import OpenFile from '../OpenFile/OpenFile'
 
 import * as Utils from '../../utils'
 
@@ -49,38 +50,49 @@ class ItemList extends Component {
   }
 
   render() {
-    const { items, onRemove } = this.props
+    const { items, onRemove, restoreStorage } = this.props
 
-    if (!items || !items.length) return null //<div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
+    //if (!items || !items.length) return null //<div className={s.container}><span className={s.noItemsMessage}>You have no loaded files</span></div>
 
     return (
       <div className={s.container}>
-        <Table height={600} fixedHeader={true} fixedFooter={true} selectable={false} multiSelectable={false} style={{backgroundColor: 'transparent'}}
-          onCellClick={this.onRowClick}
-        >
-          <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} style={{borderBottom: 'none'}}>
-            <TableRow style={{borderBottom: 'solid 1px rgba(255, 255, 255, 0.1)'}}>
-              <TableHeaderColumn className={s.tableHeaderCell} tooltip="File name">File</TableHeaderColumn>
-              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Date">Date</TableHeaderColumn>
-              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Activity">Activity</TableHeaderColumn>
-              <TableHeaderColumn className={s.tableHeaderCell} tooltip="Menu"></TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody className={s.tableBody} displayRowCheckbox={false} deselectOnClickaway={false} showRowHover={false} stripedRows={false}>
-            {
-              items.map( item => (
-                <TableRow className={s.tableBodyRow} key={item.id}>
-                  <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
-                  <TableRowColumn className={s.tableBodyCell}>{item.date ? `${item.date}` : ''}</TableRowColumn>
-                  <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? '' : getContours(item)}</TableRowColumn>
-                  <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu item={item} onRemove={onRemove} />}</TableRowColumn>
+        {
+          !items || !items.length ? (
+            <p>No loaded items</p>
+          ) : (
+            <Table height={600} fixedHeader={true} fixedFooter={true} selectable={false} multiSelectable={false} style={{backgroundColor: 'transparent'}}
+                   onCellClick={this.onRowClick}
+            >
+              <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} style={{borderBottom: 'none'}}>
+                <TableRow style={{borderBottom: 'solid 1px rgba(255, 255, 255, 0.1)'}}>
+                  <TableHeaderColumn className={s.tableHeaderCell} tooltip="File name">File</TableHeaderColumn>
+                  <TableHeaderColumn className={s.tableHeaderCell} tooltip="Date">Date</TableHeaderColumn>
+                  <TableHeaderColumn className={s.tableHeaderCell} tooltip="Activity">Activity</TableHeaderColumn>
+                  <TableHeaderColumn className={s.tableHeaderCell} tooltip="Menu"></TableHeaderColumn>
                 </TableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody className={s.tableBody} displayRowCheckbox={false} deselectOnClickaway={false} showRowHover={false} stripedRows={false}>
+                {
+                  items.map( item => (
+                    <TableRow className={s.tableBodyRow} key={item.id}>
+                      <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? 'Loading...' : Utils.getFilename(item.url)}</TableRowColumn>
+                      <TableRowColumn className={s.tableBodyCell}>{item.date ? `${item.date}` : ''}</TableRowColumn>
+                      <TableRowColumn className={s.tableBodyCell}>{item.item_thinking ? '' : getContours(item)}</TableRowColumn>
+                      <TableRowColumn  className={s.tableBodyCell} style={{textAlign: 'right'}}>{item.item_thinking ? '' : <Menu item={item} onRemove={onRemove} />}</TableRowColumn>
+                    </TableRow>
+                  ))
+                }
+              </TableBody>
+            </Table>
+          )
+        }
 
-        <SaveFile />
+
+        <div>
+          <OpenFile restoreStorage={restoreStorage} />
+          <SaveFile />
+        </div>
+
       </div>
     );
   }

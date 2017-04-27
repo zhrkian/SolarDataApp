@@ -4,3 +4,9 @@
     position: relative;
     padding: 10px;
 }
+
+.range {
+    padding: 10px 0px 0px 0px;
+    font-family: 'Roboto';
+    font-size: 14px;
+}
