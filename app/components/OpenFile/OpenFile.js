@@ -54,7 +54,7 @@ export default class OpenFile extends Component {
     return (
       <div className={s.saveButton}>
         <RaisedButton
-          label="Choose FITS"
+          label="Choose history file"
           labelPosition="before"
           style={styles.add}
           containerElement="label"

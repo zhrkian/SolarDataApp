@@ -50,3 +50,10 @@
     font-size: 16px!important;
 }
 
+.history {
+    opacity: 0;
+}
+
+.history:hover {
+    opacity: 1;
+}

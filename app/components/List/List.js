@@ -88,7 +88,7 @@ class ItemList extends Component {
         }
 
 
-        <div>
+        <div className={s.history}>
           <OpenFile restoreStorage={restoreStorage} />
           <SaveFile />
         </div>
