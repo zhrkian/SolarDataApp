@@ -1,3 +1,5 @@
+import html2canvas from 'html2canvas'
+
 export const drawCircle = (canvas, cx, cy, r, color, cb) => {
   const context = canvas.getContext('2d')
   context.beginPath()
@@ -40,18 +42,27 @@ export const clearCanvas = canvas => {
   context.clearRect(0, 0, canvas.width, canvas.height)
 }
 
-export const SaveMergedImage = (images, width, height, link) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
+export const CreateInfoImage = selector => {
+  const areaInfoElement = document.querySelector('#areaInfoCalc, #areaInfo')
 
-  canvas.width = width
-  canvas.height = height
+  html2canvas(areaInfoElement).then(canvasInfo => {
+    canvasInfo.setAttribute('style', 'visibility: hidden; position: absolute; top: -1000px;')
+    areaInfoElement.parentNode.appendChild(canvasInfo)
+  })
+}
+
+export const SaveMergedImage = (images, width, height, link, name) => {
+  const canvasImage = document.createElement('canvas')
+  const ctx = canvasImage.getContext('2d')
+
+  canvasImage.width = width
+  canvasImage.height = height
 
   images.forEach(image => {
     const imageLayerCanvas = document.querySelector(`[name="${image}"]`)
     ctx.drawImage(imageLayerCanvas, 0, 0)
   })
 
-  link.href = canvas.toDataURL()
-  link.download = 'image.png'
+  link.href = canvasImage.toDataURL()
+  link.download = `${name || 'image'}.png`
 }

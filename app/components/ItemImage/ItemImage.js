@@ -45,7 +45,7 @@ const onMouseClick = (canvas, callback, event) => {
   return callback ? callback(coordinates) : null
 }
 
-const renderMouseCursor = (canvas, event) => {
+const renderMouseCursor = (canvas, callback, event) => {
   let { x, y } = getMouseCoordinates(canvas, event)
   const { width, height } = canvas
   const context = canvas.getContext('2d')
@@ -58,7 +58,23 @@ const renderMouseCursor = (canvas, event) => {
   context.strokeStyle = "green"
   context.stroke()
   context.closePath()
+  callback(x, y)
 }
+
+const renderPixelInfo = (canvas, x, y, text) => {
+  const { width } = canvas
+  const context = canvas.getContext('2d')
+
+  context.fillStyle = 'blue'
+  context.font = 'bold 15px Roboto'
+
+  const textWidth = context.measureText(text).width
+  const textHeight = context.measureText(text).height
+  const dx = x + textWidth > width ? (-1) * textWidth -5 : 5
+  const dy = y - 15 < 0 ? 20 : -5
+  context.fillText(text, x + dx, y + dy)
+}
+
 
 const renderSolarRadius = (canvas, item) => {
   const { zoom, radius, crpix_x, crpix_y } = item
@@ -97,7 +113,7 @@ class ItemImage extends Component {
     this.buildCanvasImage(item, frame)
     this.initCurrentContour(item, contour)
     this.CanvasCrossHair.addEventListener('mousedown', onMouseClick.bind(this, this.CanvasCrossHair, this.onMouseClick))
-    this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair))
+    this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair, this.renderPixelInfo))
     this.CanvasCrossHair.addEventListener('mousewheel', e => e.wheelDelta / 60 > 0 ? this.onZoomIn() : this.onZoomOut())
     this.setState({ item: JSON.parse(JSON.stringify(item)) })
 
@@ -127,10 +143,17 @@ class ItemImage extends Component {
       const lastMarker = viewMarkers[viewMarkers.length - 1]
       renderMarkers(this.CanvasDraw, viewMarkers)
       if (contour.contourCreated) Draw.drawContour(this.CanvasDraw, viewMarkers, 'red')
-      renderMouseCursor(this.CanvasCrossHair, {...lastMarker, update: true})
+      renderMouseCursor(this.CanvasCrossHair, this.renderPixelInfo, {...lastMarker, update: true})
     } else {
       renderMarkers(this.CanvasDraw, [])
     }
+  }
+
+  renderPixelInfo = (x, y) => {
+    const { item, frame } = this.props
+    const convertedCoords = Coordinates.toImageCoords(item, { x, y })
+    const position = Coordinates.from2dToSingle(convertedCoords.x, convertedCoords.y, item.width)
+    renderPixelInfo(this.CanvasCrossHair, x, y, `x: ${x.toFixed(0)} y: ${y.toFixed(0)} i: ${frame.array[parseInt(position)].toFixed(3)}`)
   }
 
   buildCanvasImage = (newItem, frame = {}) => {
@@ -263,7 +286,8 @@ class ItemImage extends Component {
     const width = item.width * item.zoom
     const height = item.height * item.zoom
 
-    let heading = `${Utils.getFilename(item.url)}`
+    const filename = Utils.getFilename(item.url)
+    let heading = `${filename}`
     if (contour) heading = `${heading} / ${contour.title}`
 
     return (
@@ -280,7 +304,7 @@ class ItemImage extends Component {
           </div>
           <div>
             {
-              markers.length > 2 ? <AreaInfo item={item} frame={frame} markers={markers} /> : null
+              markers.length > 2 ? <AreaInfo item={item} frame={frame} markers={markers} build={contour.contourCreated}/> : null
             }
           </div>
         </ItemImageHolder>
@@ -292,7 +316,7 @@ class ItemImage extends Component {
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
               <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={!contours || contours.length < 2}/>,
-              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
+              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link, filename)} link={true} />
             ]}>
 
           {

@@ -84,7 +84,7 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
 }
 
-export const getContourIntensityInfo = (contour, excludeContours, frame, width) => {
+export const getContourIntensityInfo = (contour, excludeContours, frame, width, item) => {
   let totalPoints = 0
   let totalIntensity = 0
 
@@ -97,8 +97,13 @@ export const getContourIntensityInfo = (contour, excludeContours, frame, width) 
 
       if (isInContour && !isInExcludeContour) {
         const position = parseInt(from2dToSingle(x, y, width))
-        totalIntensity += frame[position]
-        totalPoints += 1
+        if (frame[position] <= item.frame_max && frame[position] >= item.frame_min) {
+          totalIntensity += frame[position]
+          totalPoints += 1
+        } else {
+          console.log(frame[position], x, y)
+        }
+
       }
     }
   }

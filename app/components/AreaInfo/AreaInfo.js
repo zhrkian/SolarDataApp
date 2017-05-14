@@ -3,6 +3,7 @@ import React from 'react'
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 
 import * as Coordinates from '../../utils/coordinates'
+import * as Draw from '../../utils/draw'
 
 import IconButton from '../IconButton/IconButton'
 import * as Icons from '../Icons/Icons'
@@ -12,8 +13,9 @@ const copy = obj => JSON.parse(JSON.stringify(obj))
 class AreaInfo extends React.Component {
   constructor(props) {
     super(props)
-    const { item, frame, markers } = props
-    const info = this.getAreaInfo(item, frame, markers)
+    const { item, frame, markers, build } = props
+    console.log(build)
+    const info = this.getAreaInfo(item, frame, markers, build)
     this.state = { item: copy(item), markers: copy(markers), info }
   }
 
@@ -21,18 +23,22 @@ class AreaInfo extends React.Component {
     return markers !== newMarkers || item.radius !== newItem.radius || item.crpix_x !== newItem.crpix_x || item.crpix_y !== newItem.crpix_y
   }
 
-  getAreaInfo = (item, frame, markers) => {
+  getAreaInfo = (item, frame, markers, build) => {
+    if (!build) return null
+    console.log(item)
     const contourAreaInfo = Coordinates.getContourAreaInfo(markers, [], item.radius, item.crpix_x, item.crpix_y)
-    const contourIntensityInfo = Coordinates.getContourIntensityInfo(markers, [], frame.array, item.width)
+    const contourIntensityInfo = Coordinates.getContourIntensityInfo(markers, [], frame.array, item.width, item)
 
     return {...contourAreaInfo,...contourIntensityInfo}
   }
 
   componentWillReceiveProps(props) {
+    const { build } = props
     const { item, markers } = this.state
-    if (this.needUpdateAreaInfo(item, markers, props.item, props.markers)) {
-      const info = this.getAreaInfo(props.item, props.frame, props.markers)
+    if (this.needUpdateAreaInfo(item, markers, props.item, props.markers) && build) {
+      const info = this.getAreaInfo(props.item, props.frame, props.markers, build)
       this.setState({ item: copy(props.item), markers: copy(props.markers), info })
+      setTimeout(() => Draw.CreateInfoImage('#areaInfo'), 1000)
     }
   }
 
@@ -42,7 +48,7 @@ class AreaInfo extends React.Component {
     const { aveIntensity, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info
 
     return (
-      <div className={s.container}>
+      <div className={s.container} id="areaInfo">
         <div className={s.icon}>
           <div className={s.iconHolder}>
             <Icons.Area />

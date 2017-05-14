@@ -30,10 +30,6 @@ const ContoursList = (contours, selected, multi, disabled = [], onClick) => {
     return disabled.indexOf(title) > -1
   }
 
-  //(
-  //  <Chip key={contour.title}>{contour.title}</Chip>
-  //)
-
   return contours.map(contour => {
     return isDisabled(contour.title, disabled) ? null : (
       <Chip key={contour.title}
@@ -216,7 +212,7 @@ class ContourCalculatorModal extends React.Component {
               info ? <span className={s.tableHeading}>{tableHeading(baseContour, excludeContours)}</span> : null
             }
 
-            <div className={s.containerTable}>
+            <div className={s.containerTable} id="areaInfoCalc">
               <div className={s.icon}>
                 <div className={s.iconHolder}>
                   <Icons.Area />
