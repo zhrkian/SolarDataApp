@@ -129,7 +129,7 @@ class ContourCalculatorModal extends React.Component {
 
     if (base && exclude) {
       const contourAreaInfo = Coordinates.getContourAreaInfo(base.markers, exclude.map(c => c.markers), radius, crpix_x, crpix_y)
-      const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.markers, exclude.map(c => c.markers), frame.array, width)
+      const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.markers, exclude.map(c => c.markers), frame.array, width, item)
 
       this.setState({ info: {...contourAreaInfo,...contourIntensityInfo} })
     } else {
@@ -165,7 +165,7 @@ class ContourCalculatorModal extends React.Component {
     const zoom = MAX_HEIGHT / item.height
     const width = item.width * zoom
     const height = item.height * zoom
-    const { aveIntensity, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
+    const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
     const actions = [
       <FlatButton
         label="Close"
@@ -245,54 +245,30 @@ class ContourCalculatorModal extends React.Component {
                         </TableRow>
                       </TableBody>
                     </Table>
-                    <p>{ `Contour average intensity: ${aveIntensity.toFixed(3)}` }</p>
+
+                    <Table selectable={false}>
+                      <TableHeader displaySelectAll={false}
+                                   adjustForCheckbox={false}
+                                   enableSelectAll={false}>
+                        <TableRow style={{height: 26}}>
+                          <TableHeaderColumn style={{height: 26}}>Average Intensity</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>&sigma; (Sigma)</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Standard deviation</TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={false}>
+                        <TableRow style={{height: 26}}>
+                          <TableRowColumn style={{height: 26}}>{aveIntensity.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{sigma.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{standardDeviation.toFixed(3)}</TableRowColumn>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : null
               }
 
             </div>
-
-
-
-            {/*<div className={s.selectBox}>
-              <ContourSelect contours={contours} hintText='Base contour' color={'black'} onChange={this.onBaseChange} />
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <ContourSelect contours={contours} hintText='Exclude contours' color={'black'} multiple={true} onChange={this.onExcludeChange} />
-            </div>*/}
-
-            {/*
-              contourSquareInfo ? (
-                <div className={s.container}>
-                  <h2>Contour Info</h2>
-
-                  <Table selectable={false}>
-                    <TableHeader displaySelectAll={false}
-                                 adjustForCheckbox={false}
-                                 enableSelectAll={false}>
-                      <TableRow>
-                        <TableHeaderColumn>Name</TableHeaderColumn>
-                        <TableHeaderColumn>Contour Sqare</TableHeaderColumn>
-                        <TableHeaderColumn>Total Visible Square</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={false}>
-                      <TableRow>
-                        <TableRowColumn>Flat</TableRowColumn>
-                        <TableRowColumn>{totalContourSquarePixels.toFixed(4)}</TableRowColumn>
-                        <TableRowColumn>{totalSquarePixels.toFixed(4)}</TableRowColumn>
-                      </TableRow>
-                      <TableRow>
-                        <TableRowColumn>Spherical</TableRowColumn>
-                        <TableRowColumn>{totalContourSphericalSquare.toFixed(4)}</TableRowColumn>
-                        <TableRowColumn>{totalVisibleSphericalSquare.toFixed(4)}</TableRowColumn>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-
-                  <p>{ `Contour average intensity: ${aveIntensity}` }</p>
-                </div>
-              ) : null
-            */}
           </div>
         </Dialog>
       </div>

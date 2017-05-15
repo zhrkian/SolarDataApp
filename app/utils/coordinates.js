@@ -84,9 +84,27 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
 }
 
+const getStandardDeviation = (points, sigma) => {
+  const length = points.length
+
+  return Math.sqrt(length * sigma * sigma / (length - 1))
+}
+
+const getSigma = (points, ave) => {
+  const length = points.length
+  let result = 0
+
+  points.forEach(point => {
+    result += (point - ave) * (point - ave) / length
+  })
+
+  return Math.sqrt(result)
+}
+
 export const getContourIntensityInfo = (contour, excludeContours, frame, width, item) => {
   let totalPoints = 0
   let totalIntensity = 0
+  let points = []
 
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
@@ -100,15 +118,18 @@ export const getContourIntensityInfo = (contour, excludeContours, frame, width, 
         if (frame[position] <= item.frame_max && frame[position] >= item.frame_min) {
           totalIntensity += frame[position]
           totalPoints += 1
-        } else {
-          console.log(frame[position], x, y)
+          points.push(frame[position])
         }
-
       }
     }
   }
 
-  return { aveIntensity: totalIntensity / totalPoints }
+  const aveIntensity = totalIntensity / totalPoints
+  const sigma = getSigma(points, aveIntensity)
+  const standardDeviation = getStandardDeviation(points, sigma)
+
+
+  return { aveIntensity, sigma, standardDeviation }
 }
 
 export const toImageCoords = (item, coords) => {

@@ -11,6 +11,7 @@ import ItemControls from '../ItemControls/ItemControls'
 import IconButton from '../IconButton/IconButton'
 import Back from '../Back/Back'
 import Block from '../Block/Block'
+import Spinner from '../Spinner/Spinner'
 
 
 import ContourNewModal from '../ContourNewModal/ContourNewModal'
@@ -99,6 +100,7 @@ class ItemImage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      thinking: false,
       currentContour: null,
       imageBuffer: null,
       currentMarkers: [],
@@ -157,6 +159,8 @@ class ItemImage extends Component {
   }
 
   buildCanvasImage = (newItem, frame = {}) => {
+    this.setState({ thinking: true })
+
     const { zoom } = newItem
     const { width, height, image_min, image_max } = newItem
     const { item, imageBuffer } = this.state
@@ -213,7 +217,8 @@ class ItemImage extends Component {
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
 
     const { item, onFrameImageUpdate } = this.props
-    return onFrameImageUpdate(item.id, canvas.toDataURL())
+    onFrameImageUpdate(item.id, canvas.toDataURL())
+    return this.setState({ thinking: false })
   }
 
   onMouseClick = marker => {
@@ -246,6 +251,7 @@ class ItemImage extends Component {
   }
 
   onZoomIn = () => {
+    this.setState({ thinking: true })
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
@@ -256,6 +262,7 @@ class ItemImage extends Component {
   }
 
   onZoomOut = () => {
+    this.setState({ thinking: true })
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
@@ -278,7 +285,7 @@ class ItemImage extends Component {
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
 
   render() {
-    const { contourCalculatorModal, contourNewModal } = this.state
+    const { contourCalculatorModal, contourNewModal, thinking } = this.state
     const { item, frame, contours, contour } = this.props
     const { onAddNewContour, onSelectContour, onEditContour, onRemoveContour } = this.props
     const markers = contour ? contour.markers : []
@@ -292,6 +299,13 @@ class ItemImage extends Component {
 
     return (
       <ItemLayout>
+        {
+          thinking ? (
+            <div className={s.spinner}>
+              <Spinner />
+            </div>
+          ) : null
+        }
         <Back />
         <ItemImageHolder heading={heading}>
           <div className={s.drawingContainer}>

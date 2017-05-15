@@ -25,7 +25,6 @@ class AreaInfo extends React.Component {
 
   getAreaInfo = (item, frame, markers, build) => {
     if (!build) return null
-    console.log(item)
     const contourAreaInfo = Coordinates.getContourAreaInfo(markers, [], item.radius, item.crpix_x, item.crpix_y)
     const contourIntensityInfo = Coordinates.getContourIntensityInfo(markers, [], frame.array, item.width, item)
 
@@ -45,7 +44,7 @@ class AreaInfo extends React.Component {
   render() {
     const { info } = this.state
     if (!info) return null
-    const { aveIntensity, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info
+    const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info
 
     return (
       <div className={s.container} id="areaInfo">
@@ -77,7 +76,22 @@ class AreaInfo extends React.Component {
               </TableRow>
             </TableBody>
           </Table>
-          <p>Contour average intensity: {aveIntensity.toFixed(3)}</p>
+          <Table fixedHeader={true} fixedFooter={true} selectable={false} multiSelectable={false} style={{backgroundColor: 'transparent'}}>
+            <TableHeader className={s.tableHeader} displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false} style={{borderBottom: 'none'}}>
+              <TableRow style={{borderBottom: 'solid 1px rgba(255, 255, 255, 0.1)'}}>
+                <TableHeaderColumn className={s.tableHeaderCell} tooltip="File name">Average Intensity</TableHeaderColumn>
+                <TableHeaderColumn className={s.tableHeaderCell} tooltip="Date">&sigma; (Sigma)</TableHeaderColumn>
+                <TableHeaderColumn className={s.tableHeaderCell} tooltip="Activity">Standard deviation</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody className={s.tableBody} displayRowCheckbox={false} deselectOnClickaway={false} showRowHover={false} stripedRows={false}>
+              <TableRow className={s.tableBodyRow}>
+                <TableRowColumn className={s.tableBodyCell}>{aveIntensity.toFixed(3)}</TableRowColumn>
+                <TableRowColumn className={s.tableBodyCell}>{sigma.toFixed(3)}</TableRowColumn>
+                <TableRowColumn className={s.tableBodyCell}>{standardDeviation.toFixed(3)}</TableRowColumn>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </div>
     )
