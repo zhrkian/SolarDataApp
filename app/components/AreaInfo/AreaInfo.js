@@ -14,7 +14,6 @@ class AreaInfo extends React.Component {
   constructor(props) {
     super(props)
     const { item, frame, markers, build } = props
-    console.log(build)
     const info = this.getAreaInfo(item, frame, markers, build)
     this.state = { item: copy(item), markers: copy(markers), info }
   }
@@ -27,7 +26,6 @@ class AreaInfo extends React.Component {
     if (!build) return null
     const contourAreaInfo = Coordinates.getContourAreaInfo(markers, [], item.radius, item.crpix_x, item.crpix_y)
     const contourIntensityInfo = Coordinates.getContourIntensityInfo(markers, [], frame.array, item.width, item)
-
     return {...contourAreaInfo,...contourIntensityInfo}
   }
 
@@ -37,7 +35,7 @@ class AreaInfo extends React.Component {
     if (this.needUpdateAreaInfo(item, markers, props.item, props.markers) && build) {
       const info = this.getAreaInfo(props.item, props.frame, props.markers, build)
       this.setState({ item: copy(props.item), markers: copy(props.markers), info })
-      setTimeout(() => Draw.CreateInfoImage('#areaInfo'), 1000)
+      setTimeout(() => Draw.CreateInfoImage('areaInfo'), 1000)
     }
   }
 
@@ -45,6 +43,7 @@ class AreaInfo extends React.Component {
     const { info } = this.state
     if (!info) return null
     const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info
+    const { item } = this.props
 
     return (
       <div className={s.container} id="areaInfo">

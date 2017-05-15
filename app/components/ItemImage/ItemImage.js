@@ -293,9 +293,10 @@ class ItemImage extends Component {
     const width = item.width * item.zoom
     const height = item.height * item.zoom
 
-    const filename = Utils.getFilename(item.url)
+    let filename = Utils.getFilename(item.url)
     let heading = `${filename}`
     if (contour) heading = `${heading} / ${contour.title}`
+    if (contour) filename = `${filename}_${contour.title}`.replace(/\s/g, '_')
 
     return (
       <ItemLayout>
@@ -330,7 +331,7 @@ class ItemImage extends Component {
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
               <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={!contours || contours.length < 2}/>,
-              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link, filename)} link={true} />
+              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link, filename, 'areaInfo')} link={true} />
             ]}>
 
           {

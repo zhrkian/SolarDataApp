@@ -11,6 +11,7 @@ import IconButton from '../IconButton/IconButton'
 import * as Icons from '../Icons/Icons'
 import ContourSelect from '../ContourSelect/ContourSelect'
 import * as Coordinates from '../../utils/coordinates'
+import * as Utils from '../../utils'
 
 import * as Draw from '../../utils/draw'
 
@@ -132,6 +133,7 @@ class ContourCalculatorModal extends React.Component {
       const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.markers, exclude.map(c => c.markers), frame.array, width, item)
 
       this.setState({ info: {...contourAreaInfo,...contourIntensityInfo} })
+      setTimeout(() => Draw.CreateInfoImage('areaInfoCalc'), 1000)
     } else {
       this.setState({ info: null })
     }
@@ -165,6 +167,7 @@ class ContourCalculatorModal extends React.Component {
     const zoom = MAX_HEIGHT / item.height
     const width = item.width * zoom
     const height = item.height * zoom
+    const filename = Utils.getFilename(item.url)
     const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
     const actions = [
       <FlatButton
@@ -206,7 +209,7 @@ class ContourCalculatorModal extends React.Component {
               </div>
             </div>
 
-            <IconButton key={'Image'} icon="Image" label="Save image" simple={true} onClick={link => Draw.SaveMergedImage(['CalcImage', 'CalcSavedContours'], width, height, link)} link={true}/>
+            <IconButton key={'Image'} icon="Image" label="Save image" simple={true} onClick={link => Draw.SaveMergedImage(['CalcImage', 'CalcSavedContours'], width, height, link, filename, 'areaInfoCalc', 'white')} link={true}/>
 
             {
               info ? <span className={s.tableHeading}>{tableHeading(baseContour, excludeContours)}</span> : null
