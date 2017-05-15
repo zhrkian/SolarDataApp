@@ -1,3 +1,5 @@
+import html2canvas from 'html2canvas'
+
 export const drawCircle = (canvas, cx, cy, r, color, cb) => {
   const context = canvas.getContext('2d')
   context.beginPath()
@@ -40,18 +42,64 @@ export const clearCanvas = canvas => {
   context.clearRect(0, 0, canvas.width, canvas.height)
 }
 
-export const SaveMergedImage = (images, width, height, link) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
+export const CreateInfoImage = (selector) => {
+  const areaInfoElement = document.querySelector(`#${selector}`)
+  const infoCanvas = document.querySelector(`[name="${selector}"]`)
 
-  canvas.width = width
-  canvas.height = height
+  if (infoCanvas) {
+    infoCanvas.parentNode.removeChild(infoCanvas)
+  }
+
+  if (!areaInfoElement) return
+
+  html2canvas(areaInfoElement).then(canvasInfo => {
+    canvasInfo.setAttribute('style', 'visibility: hidden; position: absolute; top: -1000px;')
+    canvasInfo.setAttribute('name', selector)
+    areaInfoElement.parentNode.appendChild(canvasInfo)
+  })
+}
+
+
+
+export const SaveMergedImage = (images, width, height, link, name, tableSelector, color) => {
+  const canvasImage = document.createElement('canvas')
+  const ctx = canvasImage.getContext('2d')
+
+  canvasImage.width = width
+  canvasImage.height = height
 
   images.forEach(image => {
     const imageLayerCanvas = document.querySelector(`[name="${image}"]`)
     ctx.drawImage(imageLayerCanvas, 0, 0)
   })
 
-  link.href = canvas.toDataURL()
-  link.download = 'image.png'
+  const tableCanvas = document.querySelector(`[name="${tableSelector}"]`)
+
+  if (!tableCanvas) {
+    link.href = canvasImage.toDataURL()
+    link.download = `${name || 'image'}.png`
+    return
+  }
+
+  const canvasBig = document.createElement('canvas')
+  const ctxBig = canvasBig.getContext('2d')
+
+  canvasBig.width = tableCanvas.width > canvasImage.width ? tableCanvas.width : canvasImage.width
+  canvasBig.height = tableCanvas.height + canvasImage.height + 20
+
+  ctxBig.beginPath()
+  ctxBig.rect(0, 0, canvasBig.width, canvasBig.height)
+  ctxBig.fillStyle = color || 'black'
+  ctxBig.fill()
+
+  ctxBig.drawImage(tableCanvas, 0, canvasImage.height + 10) //, tableCanvas.width, tableCanvas.height)
+
+  const imageX = canvasBig.width / 2 - canvasImage.width / 2
+  ctxBig.drawImage(canvasImage, imageX, 0) //, imageX + canvasImage.width, canvasImage.height)
+
+  canvasBig.setAttribute('style', 'position: absolute; z-index: 100000')
+
+  link.href = canvasBig.toDataURL()
+  link.download = `${name || 'image'}.png`
+
 }

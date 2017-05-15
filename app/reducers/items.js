@@ -38,12 +38,13 @@ const updateItemLevel = (items, id, min, max, f_min, f_max) =>
     return item
   })
 
-const updateItemRadius = (items, id, radius, xCenter, yCenter) =>
+const updateItemRadius = (items, id, radius, xCenter, yCenter, solarRadius) =>
   items.map(item => {
     if (item.id === id) {
       item.radius = radius
       item.crpix_x = xCenter
       item.crpix_y = yCenter
+      item.solar_radius = parseFloat(solarRadius || 695700)
     }
     return item
   })
@@ -60,7 +61,7 @@ const items = (state = initialState, action) => {
     case ITEMS_UPDATE_ITEM_LEVEL:
       return {...state, items: updateItemLevel(state.items, action.id, action.min, action.max, action.f_min, action.f_max)}
     case ITEMS_UPDATE_ITEM_RADIUS:
-      return {...state, items: updateItemRadius(state.items, action.id, action.radius, action.xCenter, action.yCenter)}
+      return {...state, items: updateItemRadius(state.items, action.id, action.radius, action.xCenter, action.yCenter, action.solarRadius)}
     case ITEMS_REMOVE_ITEM: {
       return {...state, items: removeItem(state.items, action.id)}
     }

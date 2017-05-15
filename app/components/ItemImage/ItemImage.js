@@ -11,6 +11,7 @@ import ItemControls from '../ItemControls/ItemControls'
 import IconButton from '../IconButton/IconButton'
 import Back from '../Back/Back'
 import Block from '../Block/Block'
+import Spinner from '../Spinner/Spinner'
 
 
 import ContourNewModal from '../ContourNewModal/ContourNewModal'
@@ -45,7 +46,7 @@ const onMouseClick = (canvas, callback, event) => {
   return callback ? callback(coordinates) : null
 }
 
-const renderMouseCursor = (canvas, event) => {
+const renderMouseCursor = (canvas, callback, event) => {
   let { x, y } = getMouseCoordinates(canvas, event)
   const { width, height } = canvas
   const context = canvas.getContext('2d')
@@ -58,7 +59,23 @@ const renderMouseCursor = (canvas, event) => {
   context.strokeStyle = "green"
   context.stroke()
   context.closePath()
+  callback(x, y)
 }
+
+const renderPixelInfo = (canvas, x, y, text) => {
+  const { width } = canvas
+  const context = canvas.getContext('2d')
+
+  context.fillStyle = 'blue'
+  context.font = 'bold 15px Roboto'
+
+  const textWidth = context.measureText(text).width
+  const textHeight = context.measureText(text).height
+  const dx = x + textWidth > width ? (-1) * textWidth -5 : 5
+  const dy = y - 15 < 0 ? 20 : -5
+  context.fillText(text, x + dx, y + dy)
+}
+
 
 const renderSolarRadius = (canvas, item) => {
   const { zoom, radius, crpix_x, crpix_y } = item
@@ -83,6 +100,7 @@ class ItemImage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      thinking: false,
       currentContour: null,
       imageBuffer: null,
       currentMarkers: [],
@@ -97,7 +115,7 @@ class ItemImage extends Component {
     this.buildCanvasImage(item, frame)
     this.initCurrentContour(item, contour)
     this.CanvasCrossHair.addEventListener('mousedown', onMouseClick.bind(this, this.CanvasCrossHair, this.onMouseClick))
-    this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair))
+    this.CanvasCrossHair.addEventListener('mousemove', renderMouseCursor.bind(this, this.CanvasCrossHair, this.renderPixelInfo))
     this.CanvasCrossHair.addEventListener('mousewheel', e => e.wheelDelta / 60 > 0 ? this.onZoomIn() : this.onZoomOut())
     this.setState({ item: JSON.parse(JSON.stringify(item)) })
 
@@ -127,13 +145,22 @@ class ItemImage extends Component {
       const lastMarker = viewMarkers[viewMarkers.length - 1]
       renderMarkers(this.CanvasDraw, viewMarkers)
       if (contour.contourCreated) Draw.drawContour(this.CanvasDraw, viewMarkers, 'red')
-      renderMouseCursor(this.CanvasCrossHair, {...lastMarker, update: true})
+      renderMouseCursor(this.CanvasCrossHair, this.renderPixelInfo, {...lastMarker, update: true})
     } else {
       renderMarkers(this.CanvasDraw, [])
     }
   }
 
+  renderPixelInfo = (x, y) => {
+    const { item, frame } = this.props
+    const convertedCoords = Coordinates.toImageCoords(item, { x, y })
+    const position = Coordinates.from2dToSingle(convertedCoords.x, convertedCoords.y, item.width)
+    renderPixelInfo(this.CanvasCrossHair, x, y, `x: ${x.toFixed(0)} y: ${y.toFixed(0)} i: ${frame.array[parseInt(position)].toFixed(3)}`)
+  }
+
   buildCanvasImage = (newItem, frame = {}) => {
+    this.setState({ thinking: true })
+
     const { zoom } = newItem
     const { width, height, image_min, image_max } = newItem
     const { item, imageBuffer } = this.state
@@ -190,7 +217,8 @@ class ItemImage extends Component {
     mainCTX.drawImage(canvas, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight)
 
     const { item, onFrameImageUpdate } = this.props
-    return onFrameImageUpdate(item.id, canvas.toDataURL())
+    onFrameImageUpdate(item.id, canvas.toDataURL())
+    return this.setState({ thinking: false })
   }
 
   onMouseClick = marker => {
@@ -223,6 +251,7 @@ class ItemImage extends Component {
   }
 
   onZoomIn = () => {
+    this.setState({ thinking: true })
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
@@ -233,6 +262,7 @@ class ItemImage extends Component {
   }
 
   onZoomOut = () => {
+    this.setState({ thinking: true })
     const { item, onUpdateZoom } = this.props
     const { height, zoom } = item
     const zoomMax = ZOOM / height
@@ -244,7 +274,7 @@ class ItemImage extends Component {
 
   onImageLevelChange = (min, max, f_min, f_max) => this.props.onImageLevelChange(this.props.item.id, min, max, f_min, f_max)
 
-  onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
+  onImageRadiusChange = (radius, xCenter, yCenter, solarRadius) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter, solarRadius)
 
   onOpenContourCalculator = () => {
     this.setState({ contourCalculatorModal: true })
@@ -255,7 +285,7 @@ class ItemImage extends Component {
   onCloseContourNewModal = () => this.setState({ contourNewModal: false })
 
   render() {
-    const { contourCalculatorModal, contourNewModal } = this.state
+    const { contourCalculatorModal, contourNewModal, thinking } = this.state
     const { item, frame, contours, contour } = this.props
     const { onAddNewContour, onSelectContour, onEditContour, onRemoveContour } = this.props
     const markers = contour ? contour.markers : []
@@ -263,11 +293,20 @@ class ItemImage extends Component {
     const width = item.width * item.zoom
     const height = item.height * item.zoom
 
-    let heading = `${Utils.getFilename(item.url)}`
+    let filename = Utils.getFilename(item.url)
+    let heading = `${filename}`
     if (contour) heading = `${heading} / ${contour.title}`
+    if (contour) filename = `${filename}_${contour.title}`.replace(/\s/g, '_')
 
     return (
       <ItemLayout>
+        {
+          thinking ? (
+            <div className={s.spinner}>
+              <Spinner />
+            </div>
+          ) : null
+        }
         <Back />
         <ItemImageHolder heading={heading}>
           <div className={s.drawingContainer}>
@@ -280,7 +319,7 @@ class ItemImage extends Component {
           </div>
           <div>
             {
-              markers.length > 2 ? <AreaInfo item={item} frame={frame} markers={markers} /> : null
+              markers.length > 2 ? <AreaInfo item={item} frame={frame} markers={markers} build={contour.contourCreated}/> : null
             }
           </div>
         </ItemImageHolder>
@@ -292,7 +331,7 @@ class ItemImage extends Component {
               <IconButton key={'RemoveOne'} icon="RemoveOne"  label="Remove last marker"  onClick={this.onRemoveLastMarker} disabled={!markers.length}/>,
               <IconButton key={'Contour'}   icon="Contour"    label="Draw contour"        onClick={this.onDrawContour} disabled={markers.length < 3}/>,
               <IconButton key={'Calc'}      icon="Calc"       label="Contour calc"        onClick={this.onOpenContourCalculator} disabled={!contours || contours.length < 2}/>,
-              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link)} link={true}/>
+              <IconButton key={'Image'}     icon="Image"      label="Save image"          onClick={link => Draw.SaveMergedImage(['Image', 'SavedContours', 'Radius', 'Contour'], width, height, link, filename, 'areaInfo')} link={true} />
             ]}>
 
           {

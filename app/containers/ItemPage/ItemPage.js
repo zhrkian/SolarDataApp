@@ -77,7 +77,7 @@ class ItemPage extends Component {
 
   onImageLevelChange = (id, min, max, f_min, f_max) => console.log(id, min, max, f_min, f_max) & this.props.dispatch(ItemsAction.updateItemLevel(id, min, max, f_min, f_max))
 
-  onImageRadiusChange = (id, radius, xCenter, yCenter) => console.log(id, radius, xCenter, yCenter) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter))
+  onImageRadiusChange = (id, radius, xCenter, yCenter, solarRadius) => console.log(id, radius, xCenter, yCenter, solarRadius) & this.props.dispatch(ItemsAction.updateItemRadius(id, radius, xCenter, yCenter, solarRadius))
 
   onFrameImageUpdate = (id, src) => {
     const { frames } = this.props.frames

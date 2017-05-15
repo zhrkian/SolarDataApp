@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
 import { Grid } from '../Layouts/Grid'
 
 import s from './ImageRadiusControls.css'
 
+const SOLAR_RADIUS = 695700
+
 const styles = {
+  groupInput: {
+    fontFamily: 'Roboto',
+    fontSize: 14,
+    marginTop: -15,
+    paddingBottom: 10
+  },
   group: {
     fontFamily: 'Roboto',
     fontSize: 14
@@ -49,9 +58,17 @@ class ImageRadiusControls extends Component {
     this.setState({y_center: value});
   }
 
-  onDragStop = () => {
+  onSolarRadiusChange = e => {
+    e.preventDefault()
+    const value = e.target.elements['solar_radius'].value
     const { radius_value, x_center, y_center } = this.state
-    return this.props.onImageRadiusChange(radius_value, x_center, y_center)
+    return this.props.onImageRadiusChange(radius_value, x_center, y_center, value)
+  }
+
+  onDragStop = () => {
+    const { solar_radius } = this.props
+    const { radius_value, x_center, y_center } = this.state
+    return this.props.onImageRadiusChange(radius_value, x_center, y_center, solar_radius || SOLAR_RADIUS)
   }
 
   onResetToDefaults = () => {
@@ -60,12 +77,14 @@ class ImageRadiusControls extends Component {
     const x_center = default_crpix_x
     const y_center = default_crpix_y
     this.setState({ radius_value, x_center, y_center })
-    return this.props.onImageRadiusChange(radius_value, x_center, y_center)
+    return this.props.onImageRadiusChange(radius_value, x_center, y_center, SOLAR_RADIUS)
   }
 
   render() {
-    const { height, width, radius, crpix_x, crpix_y } = this.props
+    const { height, width, radius, crpix_x, crpix_y, solar_radius } = this.props
     const { radius_value, x_center, y_center } = this.state
+
+    const SR = solar_radius || SOLAR_RADIUS
 
     const maxRadiusValue = Math.sqrt(height * height / 4 + width * width / 4)
 
@@ -111,6 +130,21 @@ class ImageRadiusControls extends Component {
             onDragStop={this.onDragStop}
             onChange={this.handleYCenterValue}
           />
+        </div>
+        <div style={styles.groupInput}>
+          <form onSubmit={this.onSolarRadiusChange}>
+            <TextField
+              name="solar_radius"
+              type="number"
+              floatingLabelStyle={{color: 'white'}}
+              hintStyle={{color: 'white'}}
+              inputStyle={{color: 'white'}}
+              floatingLabelFixed={true}
+              floatingLabelText="Solar radius (km)"
+              hintText="Solar radius (km)"
+              defaultValue={SR}
+            />
+          </form>
         </div>
         <FlatButton style={styles.button} labelStyle={styles.buttonLabel} label="Reset radius to defaults" onClick={this.onResetToDefaults} primary />
       </div>

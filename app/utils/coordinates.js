@@ -44,10 +44,11 @@ export const isInContours = (x, y, contours = []) => {
   return result
 }
 
-export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue) => {
+export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue, solarRadius) => {
   let totalContourAreaPixels = 0
   let totalContourSphericalArea = 0.0
 
+  const SR = solarRadius || 695700
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
   for (let y = y0; y <= y1; y++) {
@@ -78,15 +79,40 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   totalContourSphericalArea = isNaN(totalContourSphericalArea) || !totalContourSphericalArea ? 0 : totalContourSphericalArea
   totalContourAreaPixels = isNaN(totalContourAreaPixels) || !totalContourAreaPixels ? 0 : totalContourAreaPixels
 
+
+
   const totalAreaPixels = Math.PI * radiusValue * radiusValue
   const totalVisibleSphericalArea = 2 * Math.PI * radiusValue * radiusValue
 
-  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
+  const totalContourAreaKM = totalContourAreaPixels * (SR * SR) / (radiusValue * radiusValue) / 1000000000
+  const totalContourSphericalKM = totalContourSphericalArea * (SR * SR) / (radiusValue * radiusValue) / 1000000000
+
+  console.log({ totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM })
+
+  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM }
 }
 
-export const getContourIntensityInfo = (contour, excludeContours, frame, width) => {
+const getStandardDeviation = (points, sigma) => {
+  const length = points.length
+
+  return Math.sqrt(length * sigma * sigma / (length - 1))
+}
+
+const getSigma = (points, ave) => {
+  const length = points.length
+  let result = 0
+
+  points.forEach(point => {
+    result += (point - ave) * (point - ave) / length
+  })
+
+  return Math.sqrt(result)
+}
+
+export const getContourIntensityInfo = (contour, excludeContours, frame, width, item) => {
   let totalPoints = 0
   let totalIntensity = 0
+  let points = []
 
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
@@ -97,13 +123,21 @@ export const getContourIntensityInfo = (contour, excludeContours, frame, width) 
 
       if (isInContour && !isInExcludeContour) {
         const position = parseInt(from2dToSingle(x, y, width))
-        totalIntensity += frame[position]
-        totalPoints += 1
+        if (frame[position] <= item.frame_max && frame[position] >= item.frame_min) {
+          totalIntensity += frame[position]
+          totalPoints += 1
+          points.push(frame[position])
+        }
       }
     }
   }
 
-  return { aveIntensity: totalIntensity / totalPoints }
+  const aveIntensity = totalIntensity / totalPoints
+  const sigma = getSigma(points, aveIntensity)
+  const standardDeviation = getStandardDeviation(points, sigma)
+
+
+  return { aveIntensity, sigma, standardDeviation }
 }
 
 export const toImageCoords = (item, coords) => {
