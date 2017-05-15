@@ -44,10 +44,11 @@ export const isInContours = (x, y, contours = []) => {
   return result
 }
 
-export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue) => {
+export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCenterValue, yCenterValue, solarRadius) => {
   let totalContourAreaPixels = 0
   let totalContourSphericalArea = 0.0
 
+  const SR = solarRadius || 695700
   const { x0, x1, y0, y1 } = getContourRect(contour)
 
   for (let y = y0; y <= y1; y++) {
@@ -78,10 +79,17 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   totalContourSphericalArea = isNaN(totalContourSphericalArea) || !totalContourSphericalArea ? 0 : totalContourSphericalArea
   totalContourAreaPixels = isNaN(totalContourAreaPixels) || !totalContourAreaPixels ? 0 : totalContourAreaPixels
 
+
+
   const totalAreaPixels = Math.PI * radiusValue * radiusValue
   const totalVisibleSphericalArea = 2 * Math.PI * radiusValue * radiusValue
 
-  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea }
+  const totalContourAreaKM = totalContourAreaPixels * (SR * SR) / (radiusValue * radiusValue) / 1000000000
+  const totalContourSphericalKM = totalContourSphericalArea * (SR * SR) / (radiusValue * radiusValue) / 1000000000
+
+  console.log({ totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM })
+
+  return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM }
 }
 
 const getStandardDeviation = (points, sigma) => {

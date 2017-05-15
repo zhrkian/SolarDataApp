@@ -8,7 +8,6 @@ import s from './DataLevelControls.css'
 
 const styles = {
   groupRange: {
-    padding: '10px 0px',
     fontFamily: 'Roboto',
     fontSize: 14
   },

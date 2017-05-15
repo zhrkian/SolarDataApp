@@ -274,7 +274,7 @@ class ItemImage extends Component {
 
   onImageLevelChange = (min, max, f_min, f_max) => this.props.onImageLevelChange(this.props.item.id, min, max, f_min, f_max)
 
-  onImageRadiusChange = (radius, xCenter, yCenter) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter)
+  onImageRadiusChange = (radius, xCenter, yCenter, solarRadius) => this.props.onImageRadiusChange(this.props.item.id, radius, xCenter, yCenter, solarRadius)
 
   onOpenContourCalculator = () => {
     this.setState({ contourCalculatorModal: true })

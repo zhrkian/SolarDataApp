@@ -126,10 +126,10 @@ class ContourCalculatorModal extends React.Component {
 
   onCalculate = (base, exclude = []) => {
     const { frame, item } = this.props
-    const { radius, crpix_x, crpix_y, width } = item
+    const { radius, crpix_x, crpix_y, width, solar_radius } = item
 
     if (base && exclude) {
-      const contourAreaInfo = Coordinates.getContourAreaInfo(base.markers, exclude.map(c => c.markers), radius, crpix_x, crpix_y)
+      const contourAreaInfo = Coordinates.getContourAreaInfo(base.markers, exclude.map(c => c.markers), radius, crpix_x, crpix_y, solar_radius)
       const contourIntensityInfo = Coordinates.getContourIntensityInfo(base.markers, exclude.map(c => c.markers), frame.array, width, item)
 
       this.setState({ info: {...contourAreaInfo,...contourIntensityInfo} })
@@ -168,7 +168,7 @@ class ContourCalculatorModal extends React.Component {
     const width = item.width * zoom
     const height = item.height * zoom
     const filename = Utils.getFilename(item.url)
-    const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea } = info || {}
+    const { aveIntensity, sigma, standardDeviation, totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM } = info || {}
     const actions = [
       <FlatButton
         label="Close"
@@ -231,19 +231,22 @@ class ContourCalculatorModal extends React.Component {
                                    enableSelectAll={false}>
                         <TableRow style={{height: 26}}>
                           <TableHeaderColumn style={{height: 26}}>Name</TableHeaderColumn>
-                          <TableHeaderColumn style={{height: 26}}>Contour Sqare</TableHeaderColumn>
-                          <TableHeaderColumn style={{height: 26}}>Total Visible Square</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Contour Area</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Contour Area (10<sup>9</sup>km)</TableHeaderColumn>
+                          <TableHeaderColumn style={{height: 26}}>Total Visible Area</TableHeaderColumn>
                         </TableRow>
                       </TableHeader>
                       <TableBody displayRowCheckbox={false}>
                         <TableRow style={{height: 26}}>
                           <TableRowColumn style={{height: 26}}>Flat</TableRowColumn>
                           <TableRowColumn style={{height: 26}}>{totalContourAreaPixels.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalContourAreaKM.toFixed(6)}</TableRowColumn>
                           <TableRowColumn style={{height: 26}}>{totalAreaPixels.toFixed(3)}</TableRowColumn>
                         </TableRow>
                         <TableRow style={{height: 26}}>
                           <TableRowColumn style={{height: 26}}>Spherical</TableRowColumn>
                           <TableRowColumn style={{height: 26}}>{totalContourSphericalArea.toFixed(3)}</TableRowColumn>
+                          <TableRowColumn style={{height: 26}}>{totalContourSphericalKM.toFixed(6)}</TableRowColumn>
                           <TableRowColumn style={{height: 26}}>{totalVisibleSphericalArea.toFixed(3)}</TableRowColumn>
                         </TableRow>
                       </TableBody>
