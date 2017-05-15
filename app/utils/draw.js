@@ -75,15 +75,11 @@ export const SaveMergedImage = (images, width, height, link, name, tableSelector
 
   const tableCanvas = document.querySelector(`[name="${tableSelector}"]`)
 
-  console.log(tableCanvas)
-
   if (!tableCanvas) {
     link.href = canvasImage.toDataURL()
     link.download = `${name || 'image'}.png`
     return
   }
-
-  console.log('OOOOK')
 
   const canvasBig = document.createElement('canvas')
   const ctxBig = canvasBig.getContext('2d')
