@@ -1,6 +1,6 @@
 export const isIsCircle = (x, y, radius, x0, y0) => Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) < radius
 
-export const from2dToSingle = (x, y, rowLength) => y * rowLength + x
+export const from2dToSingle = (x, y, rowLength) => parseInt(y) * rowLength + parseInt(x)
 
 export const inPoly = (x, y, points) => {
   let npol = points.length;
