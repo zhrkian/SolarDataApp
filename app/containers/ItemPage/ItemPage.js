@@ -47,6 +47,10 @@ class ItemPage extends Component {
     const frame = this.getFrame()
 
     if (!frame || !frame.array) {
+
+      console.log('HEULA')
+      console.log('HEULA')
+
       this.props.dispatch(ItemsAction.updateItem(item))
       return {}
     }

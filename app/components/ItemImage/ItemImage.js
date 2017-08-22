@@ -29,6 +29,7 @@ import * as FITSLib from '../../utils/item_creator'
 import * as Draw from '../../utils/draw'
 import * as Coordinates from '../../utils/coordinates'
 import * as Utils from '../../utils'
+import * as Calc from '../../utils/calc'
 
 const COLORS = ['#000088', '#0000AA', '#0000BB', '#0000BB', '#0000CC']
 const ZOOM = 1000
@@ -62,7 +63,7 @@ const renderMouseCursor = (canvas, callback, event) => {
   callback(x, y)
 }
 
-const renderPixelInfo = (canvas, x, y, text) => {
+const renderPixelInfo = (canvas, x, y, text, additional) => {
   const { width } = canvas
   const context = canvas.getContext('2d')
 
@@ -74,16 +75,25 @@ const renderPixelInfo = (canvas, x, y, text) => {
   const dx = x + textWidth > width ? (-1) * textWidth -5 : 5
   const dy = y - 15 < 0 ? 20 : -5
   context.fillText(text, x + dx, y + dy)
+
+  if (additional) {
+    const h = context.measureText(additional).height
+    context.fillText(additional, x + dx, y + dy + 20)
+  }
 }
 
 
 const renderSolarRadius = (canvas, item) => {
-  const { zoom, radius, crpix_x, crpix_y } = item
+  const { zoom, radius, crpix_x, crpix_y, B0 } = item
   const { x, y } = Coordinates.toViewCoords(item, { x: crpix_x, y: crpix_y })
   const { width, height } = canvas
   const context = canvas.getContext('2d')
 
   context.clearRect(0, 0, width, height)
+
+  const grid = Coordinates.getCoordinatesGrid(x, y, radius * zoom, B0)
+
+  grid.forEach(point => Draw.drawPoint(canvas, point.x, point.y, 'green'))
 
   Draw.drawMarker(canvas, x, y, 1, 'red')
   Draw.drawCircle(canvas, x, y, radius * zoom, 'red')
@@ -153,9 +163,23 @@ class ItemImage extends Component {
 
   renderPixelInfo = (x, y) => {
     const { item, frame } = this.props
+    const { radius, crpix_x, crpix_y, zoom, B0, L0 } = item
     const convertedCoords = Coordinates.toImageCoords(item, { x, y })
     const position = Coordinates.from2dToSingle(convertedCoords.x, convertedCoords.y, item.width)
-    renderPixelInfo(this.CanvasCrossHair, x, y, `x: ${x.toFixed(0)} y: ${y.toFixed(0)} i: ${frame.array[parseInt(position)].toFixed(3)}`)
+
+    let SolarCoords = ''
+    if (Coordinates.isIsCircle(convertedCoords.x, convertedCoords.y, radius, crpix_x, crpix_y)) {
+      const coordsC = Coordinates.toViewCoords(item, { x: crpix_x, y: crpix_y })
+
+      const xp = x - coordsC.x
+      const yp = coordsC.y - y
+
+      const { B, L } = Coordinates.sphericalCoordinate(xp, yp, radius * zoom, B0, L0)
+      SolarCoords = `B: ${B.toFixed(3)} L: ${L.toFixed(3)}`
+
+    }
+
+    renderPixelInfo(this.CanvasCrossHair, x, y, `x: ${x.toFixed(0)} y: ${y.toFixed(0)} i: ${frame.array[parseInt(position)].toFixed(3)}`, SolarCoords)
   }
 
   buildCanvasImage = (newItem, frame = {}) => {

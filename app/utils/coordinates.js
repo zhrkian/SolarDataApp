@@ -1,3 +1,7 @@
+import MainLayout from "../components/Layouts/MainLayout";
+
+require('./calc')
+
 export const isIsCircle = (x, y, radius, x0, y0) => Math.sqrt((x - x0) * (x - x0) + (y - y0) * (y - y0)) < radius
 
 export const from2dToSingle = (x, y, rowLength) => parseInt(y) * rowLength + parseInt(x)
@@ -79,15 +83,11 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   totalContourSphericalArea = isNaN(totalContourSphericalArea) || !totalContourSphericalArea ? 0 : totalContourSphericalArea
   totalContourAreaPixels = isNaN(totalContourAreaPixels) || !totalContourAreaPixels ? 0 : totalContourAreaPixels
 
-
-
   const totalAreaPixels = Math.PI * radiusValue * radiusValue
   const totalVisibleSphericalArea = 2 * Math.PI * radiusValue * radiusValue
 
   const totalContourAreaKM = totalContourAreaPixels * (SR * SR) / (radiusValue * radiusValue) / 1000000000
   const totalContourSphericalKM = totalContourSphericalArea * (SR * SR) / (radiusValue * radiusValue) / 1000000000
-
-  console.log({ totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM })
 
   return { totalContourAreaPixels, totalAreaPixels, totalContourSphericalArea, totalVisibleSphericalArea, totalContourAreaKM, totalContourSphericalKM }
 }
@@ -166,4 +166,95 @@ export const toViewCoords = (item, coords) => {
     return result
   }
   return fromImage(coords)
+}
+
+const GRID_STEP = 0.5 * Math.PI / 180
+const HORIZONTAL_GLID_STEP = 10 * Math.PI / 180
+
+const horizontalGridLine = (x0, y0, radius) => {
+  let coordinates = []
+  for (let angle = 0; angle <= Math.PI; angle += GRID_STEP) {
+    const y = parseInt(y0)
+    const z = radius * Math.sin(angle)
+    const x = parseInt(radius * Math.cos(angle) + x0)
+
+    if (coordinates.indexOf({ x, y, z }) < 0) {
+      coordinates.push({ x, y, z })
+    }
+  }
+
+  return coordinates
+}
+
+const verticalGridLine = (x0, y0, radius) => {
+  let coordinates = []
+  for (let angle = 0; angle <= Math.PI; angle += GRID_STEP) {
+    const y = parseInt(y0)
+    const z = radius * Math.sin(angle)
+    const x = parseInt(radius * Math.cos(angle) + x0)
+
+    if (coordinates.indexOf({ x, y, z }) < 0) {
+      coordinates.push({ x, y, z })
+    }
+  }
+
+  return coordinates
+}
+
+export const getCoordinatesGrid = (x0, y0, radius, B0) => {
+  let equator = horizontalGridLine(x0, y0, radius)
+  let coordinates = [...equator]
+
+
+  for (let b = 5 * HORIZONTAL_GLID_STEP; b < Math.PI - 5 * HORIZONTAL_GLID_STEP; b += HORIZONTAL_GLID_STEP) {
+    const r = radius * Math.sin(b)
+    const y = radius * Math.cos(b) + y0
+    coordinates = [...coordinates, ...horizontalGridLine(x0, y, r)]
+  }
+
+  coordinates = coordinates.map(point => {
+    const angle = (90 - B0) * Math.PI / 180
+    return {
+      x: point.x, // * Math.cos(angle),
+      y: 2 * y0 - point.y * Math.sin(angle) + point.z * Math.cos(angle)
+    }
+  })
+
+  const hLine = equator.map(point => {
+    const angle = Math.PI / 2
+    return {
+      x: x0 + point.x * Math.cos(angle) - point.y * Math.sin(angle),
+      y: point.x * Math.sin(angle) + point.y * Math.cos(angle),
+      z: point.z
+    }
+  })
+
+  for (let l = - Math.PI / 2 + HORIZONTAL_GLID_STEP; l < Math.PI / 2 - HORIZONTAL_GLID_STEP; l += HORIZONTAL_GLID_STEP) {
+    const L = hLine.map(point => {
+      return {
+        x: x0 + point.x * Math.cos(l) + point.z * Math.sin(l),
+        y: point.y,
+        z: - point.x * Math.sin(l) + point.z * Math.cos(l)
+      }
+    })
+
+    coordinates = [...coordinates, ...L]
+  }
+
+  return coordinates
+}
+
+export const sphericalCoordinate = (x, y, r, B0, L0) => {
+  const drxy = Math.sqrt(x * x + y * y)
+  const z = Math.sqrt(r * r - drxy * drxy)
+  const angle = B0 * Math.PI / 180
+  const xs = x
+  const ys = y * Math.cos(angle) + z * Math.sin(angle)
+  const zs = - y * Math.sin(angle) + z * Math.cos(angle)
+
+  const B = Math.asin(ys / r) * 180 / Math.PI
+  const L = L0 + Math.atan(xs / zs) * 180 / Math.PI
+
+  return { B, L }
+
 }

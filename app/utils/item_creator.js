@@ -1,6 +1,7 @@
 //http-server -p 3030 --cors
 //In fits folder
 import { RedTemperature } from './pattern'
+import * as Calc from './calc'
 
 const ZOOM = 650
 
@@ -202,6 +203,17 @@ export const getFITSItem = (file, cb) => {
     const date = getImageDate(header)
     const time = getImageTime(header)
 
+    const dateObj = new Date(date)
+
+    const year = dateObj.getFullYear()
+    const month = dateObj.getMonth() + 1
+    const day = dateObj.getDate()
+    const hour = dateObj.getHours() || 0
+
+    const { L0, B0, CarrNo, B0r, L0r, Pr, P } = Calc.calc_LBP(year, month, day, hour)
+
+    console.log(L0, B0, CarrNo, B0r, L0r, Pr, P)
+
     const telescope = getImageTelescope(header)
     const wavelength = getImageWavelength(header)
 
@@ -209,6 +221,8 @@ export const getFITSItem = (file, cb) => {
 
     cb({ frame, url, width, height, frame_min, frame_max,
       image_min, image_max, default_crpix_x, default_crpix_y, crpix_x, crpix_y,
-      default_radius, radius, date, time, telescope, wavelength, zoom, contours: [] })
+      default_radius, radius, date, time, telescope, wavelength, zoom, contours: [],
+      L0, B0, CarrNo, B0r, L0r, Pr, P
+    })
   })
 }

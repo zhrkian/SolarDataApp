@@ -24,6 +24,15 @@ export const drawContour = (canvas, markers, color, cb) => {
   cb ? cb() : null
 }
 
+export const drawPoint = (canvas, x, y, color) => {
+  const context = canvas.getContext('2d')
+  context.beginPath()
+  context.moveTo(x, y)
+  context.lineTo(x + 1, y + 1)
+  context.strokeStyle = color || 'red'
+  context.stroke()
+}
+
 export const drawMarker = (canvas, x, y, size = 2, color) => {
   const context = canvas.getContext('2d')
   context.beginPath()

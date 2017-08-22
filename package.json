@@ -1,7 +1,7 @@
 {
   "name": "solar-data-app",
   "productName": "SolarDataApp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Solar data processing applicationt",
   "main": "main.js",
   "scripts": {
@@ -183,6 +183,7 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.4.2",
     "redux-thunk": "^2.2.0",
+    "solar-calculator": "^0.3.0",
     "source-map-support": "^0.4.10"
   },
   "devEngines": {
