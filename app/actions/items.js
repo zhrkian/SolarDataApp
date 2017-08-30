@@ -73,11 +73,9 @@ export const updateItem = item =>
 
     FITS.getFITSItem({ path: item.url }, updatedItem => {
       const { frame } = updatedItem
-
+      const { B0, L0, CarrNo, B0r, L0r, P, Pr } = updatedItem
       dispatch(Frame.updateFrameArray(item.id, frame))
-
-      items = itemThinking(item, items, false)
-
+      items = itemThinking(Object.assign(item, { B0, L0, CarrNo, B0r, L0r, P, Pr }), items, false)
       setTimeout(() => dispatch({ type: ITEMS_UPDATE_ALL, items }), 100)
     })
   }
