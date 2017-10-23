@@ -1,7 +1,7 @@
 {
   "name": "solar-data-app",
   "productName": "SolarDataApp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Solar data processing applicationt",
   "main": "main.js",
   "scripts": {
