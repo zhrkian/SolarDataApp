@@ -2,6 +2,7 @@
 //In fits folder
 import { RedTemperature } from './pattern'
 import * as Calc from './calc'
+import moment from 'moment'
 
 const ZOOM = 650
 
@@ -203,7 +204,14 @@ export const getFITSItem = (file, cb) => {
     const date = getImageDate(header)
     const time = getImageTime(header)
 
-    const dateObj = new Date(date)
+    let dateObj = null
+
+    if (header.cards['DATE-OBS'].comment.indexOf('dd/mm/yy') > -1) {
+      const dateParts = date.split('/')
+      dateObj = new Date(`${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`)
+    } else {
+      dateObj = new Date(date)
+    }
 
     const year = dateObj.getFullYear()
     const month = dateObj.getMonth() + 1
@@ -211,8 +219,6 @@ export const getFITSItem = (file, cb) => {
     const hour = dateObj.getHours() || 0
 
     const { L0, B0, CarrNo, B0r, L0r, Pr, P } = Calc.calc_LBP(year, month, day, hour)
-
-    console.log(L0, B0, CarrNo, B0r, L0r, Pr, P)
 
     const telescope = getImageTelescope(header)
     const wavelength = getImageWavelength(header)
