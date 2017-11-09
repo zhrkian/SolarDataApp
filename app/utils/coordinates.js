@@ -201,7 +201,7 @@ const verticalGridLine = (x0, y0, radius) => {
   return coordinates
 }
 
-export const getCoordinatesGrid = (x0, y0, radius, B0) => {
+export const getCoordinatesGrid = (x0, y0, radius, B0, vertical) => {
   let equator = horizontalGridLine(x0, y0, radius)
   let coordinates = [...equator]
 
@@ -228,6 +228,8 @@ export const getCoordinatesGrid = (x0, y0, radius, B0) => {
       z: point.z
     }
   })
+
+  if (vertical) coordinates = []
 
   for (let l = - Math.PI / 2 + HORIZONTAL_GLID_STEP; l < Math.PI / 2 - HORIZONTAL_GLID_STEP; l += HORIZONTAL_GLID_STEP) {
     const L = hLine.map(point => {

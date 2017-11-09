@@ -95,6 +95,13 @@ class ContourCalculatorModal extends React.Component {
       this.onDrawContours(baseContour, excludeContours)
     })
 
+    const { radius, crpix_x, crpix_y, B0 } = item
+    const { x, y } = Coordinates.toViewCoords({ ...item, zoom }, { x: crpix_x, y: crpix_y })
+    const grid = Coordinates.getCoordinatesGrid(x, y, radius * zoom, B0, false)
+
+    grid.forEach(point => Draw.drawPoint(this.CalcGrid, point.x, point.y, 'yellow'))
+
+
     image.src = frame.image
   }
 
@@ -202,6 +209,7 @@ class ContourCalculatorModal extends React.Component {
                 <canvas ref={(c) => { this.Canvas = c; }} width={width} height={height}></canvas>
                 <canvas name="CalcImage" style={{zIndex: 1}} className={s.draw} ref={(c) => { this.CanvasImage = c; }} width={width} height={height}></canvas>
                 <canvas name="CalcSavedContours" style={{zIndex: 2}} className={s.draw} ref={(c) => { this.CanvasDraw = c; }} width={width} height={height}></canvas>
+                <canvas name="CalcGrid" style={{zIndex: 3}} className={s.draw} ref={(c) => { this.CalcGrid = c; }} width={width} height={height}></canvas>
               </div>
               <div className={s.contourRight}>
                 { ContoursList(contours, excludeContours, true, [baseContour], this.onExcludeChange) }
