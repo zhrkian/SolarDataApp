@@ -217,7 +217,7 @@ class ContourCalculatorModal extends React.Component {
               </div>
             </div>
 
-            <IconButton key={'Image'} icon="Image" label="Save image" simple={true} onClick={link => Draw.SaveMergedImage(['CalcImage', 'CalcSavedContours'], width, height, link, filename, 'areaInfoCalc', 'white')} link={true}/>
+            <IconButton key={'Image'} icon="Image" label="Save image" simple={true} onClick={link => Draw.SaveMergedImage(['CalcImage', 'CalcSavedContours', 'CalcGrid'], width, height, link, filename, 'areaInfoCalc', 'white')} link={true}/>
 
             {
               info ? <span className={s.tableHeading}>{tableHeading(baseContour, excludeContours)}</span> : null
