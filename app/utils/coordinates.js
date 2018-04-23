@@ -52,6 +52,8 @@ export const getContourAreaInfo = (contour, excludeContours, radiusValue, xCente
   let totalContourAreaPixels = 0
   let totalContourSphericalArea = 0.0
 
+  console.log(solarRadius)
+
   const SR = solarRadius || 695700
   const { x0, x1, y0, y1 } = getContourRect(contour)
 

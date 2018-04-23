@@ -24,7 +24,7 @@ class AreaInfo extends React.Component {
 
   getAreaInfo = (item, frame, markers, build) => {
     if (!build) return null
-    const contourAreaInfo = Coordinates.getContourAreaInfo(markers, [], item.radius, item.crpix_x, item.crpix_y)
+    const contourAreaInfo = Coordinates.getContourAreaInfo(markers, [], item.radius, item.crpix_x, item.crpix_y, item.solar_radius)
     const contourIntensityInfo = Coordinates.getContourIntensityInfo(markers, [], frame.array, item.width, item)
     return {...contourAreaInfo,...contourIntensityInfo}
   }
